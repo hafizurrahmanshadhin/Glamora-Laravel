@@ -151,20 +151,6 @@
 
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
-                                                    <label for="phone_number" class="form-label">Phone Number</label>
-                                                    <input type="text"
-                                                        class="form-control @error('phone_number') is-invalid @enderror"
-                                                        id="phone_number" name="phone_number"
-                                                        placeholder="Enter Your Phone Number"
-                                                        value="{{ Auth::user()->phone_number }}">
-                                                    @error('phone_number')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-6">
-                                                <div class="mb-3">
                                                     <label for="email" class="form-label">Email Address</label>
                                                     <input type="email"
                                                         class="form-control @error('email') is-invalid @enderror"
