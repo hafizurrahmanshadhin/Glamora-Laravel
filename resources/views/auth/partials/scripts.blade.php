@@ -1,8 +1,7 @@
-{{-- JAVASCRIPT --}}
-<script src="{{ asset('backend/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('backend/libs/simplebar/simplebar.min.js') }}"></script>
-<script src="{{ asset('backend/js/plugins.js') }}"></script>
-<script src="{{ asset('backend/js/pages/password-addon.init.js') }}"></script>
-<script src="{{ asset('backend/js/pages/passowrd-create.init.js') }}"></script>
+{{-- All Js Links --}}
+<script src="{{ asset('frontend/js/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ asset('frontend/js/plugins.js') }}"></script>
+<script src="{{ asset('frontend/js/main.js') }}"></script>
+<script src="{{ asset('frontend/js/joint-client.js') }}"></script>
 
 @stack('scripts')
