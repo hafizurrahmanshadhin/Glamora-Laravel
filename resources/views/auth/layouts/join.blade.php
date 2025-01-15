@@ -18,7 +18,7 @@
                         <input id="role" type="hidden" name="role" value="">
 
                         <div id="client" class="user-box client-tax-preparer-option-single"
-                            onclick="document.getElementById('role').value='client'; this.closest('form').submit();">
+                            onclick="document.getElementById('role').value='client';">
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"
                                     fill="none">
@@ -50,8 +50,8 @@
                             </span>
                         </div>
 
-                        <div id="tax-preparer" class="user-box client-tax-preparer-option-single"
-                            onclick="document.getElementById('role').value='beauty_expert'; this.closest('form').submit();">
+                        <div id="beauty_expert" class="user-box client-tax-preparer-option-single"
+                            onclick="document.getElementById('role').value='beauty_expert';">
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
                                     fill="none">
