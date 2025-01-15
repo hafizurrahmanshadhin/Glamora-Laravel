@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\BeautyExpertMiddleware;
+use App\Http\Middleware\ClientMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -24,12 +26,22 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware(['web', 'auth', 'admin'])
                 ->prefix('admin/settings')
                 ->group(base_path('routes/Web/settings.php'));
+
+            Route::middleware(['web', 'auth', 'verified', 'client'])
+                ->prefix('client')
+                ->group(base_path('routes/Web/client.php'));
+
+            Route::middleware(['web', 'auth', 'verified', 'beauty_expert'])
+                ->prefix('beauty-expert')
+                ->group(base_path('routes/Web/beauty-expert.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'admin'    => AdminMiddleware::class,
-            'auth.jwt' => Authenticate::class,
+            'admin'         => AdminMiddleware::class,
+            'client'        => ClientMiddleware::class,
+            'beauty_expert' => BeautyExpertMiddleware::class,
+            'auth.jwt'      => Authenticate::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

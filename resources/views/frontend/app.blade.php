@@ -45,12 +45,18 @@
     </div>
     <!-- explore more items end -->
 
-    @include('frontend.partials.header')
+    @if (Auth::check())
+        @include('frontend.partials.auth-header')
+    @else
+        @include('frontend.partials.header')
+    @endif
 
     @yield('content')
 
+    @if (!Auth::check())
+        @include('frontend.partials.footer')
+    @endif
 
-    @include('frontend.partials.footer')
     @include('frontend.partials.scripts')
 </body>
 

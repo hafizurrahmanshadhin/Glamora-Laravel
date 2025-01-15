@@ -36,9 +36,9 @@ class UserSeeder extends Seeder {
             ],
             [
                 'id'                => 3,
-                'first_name'        => 'beauty_expert',
-                'last_name'         => 'beauty_expert',
-                'email'             => 'beauty_expert@beauty_expert.com',
+                'first_name'        => 'beauty-expert',
+                'last_name'         => 'beauty-expert',
+                'email'             => 'beauty-expert@beauty-expert.com',
                 'email_verified_at' => Carbon::now(),
                 'password'          => Hash::make('12345678'),
                 'role'              => 'beauty_expert',
