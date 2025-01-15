@@ -17,6 +17,28 @@
 
                     <form class="tm-sign-in-up-form" method="POST" action="{{ route('register') }}">
                         @csrf
+                        <input type="hidden" name="role" value="{{ request('role') }}">
+
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="first_name" name="first_name"
+                                placeholder="Enter Your First Name" value="{{ old('first_name') }}">
+                            <label for="first_name">First Name</label>
+
+                            @error('first_name')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="last_name" name="last_name"
+                                placeholder="Enter Your Last Name" value="{{ old('last_name') }}">
+                            <label for="last_name">Last Name</label>
+
+                            @error('last_name')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="form-floating">
                             <input type="email" class="form-control" id="email" name="email"
                                 placeholder="Please Enter Your Email" value="{{ old('email') }}">

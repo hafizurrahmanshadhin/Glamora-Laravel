@@ -12,10 +12,13 @@
                     for your next treatment or you're a beauty expert ready to showcase your skills and expand your
                     client base, Glamora is here for you. Sign up now and start connecting within minutes.
                 </p>
-                <form action="sign-up.html">
+                <form method="GET" action="{{ route('register') }}">
+                    @csrf
                     <div class="client-tax-preparer-option">
-                        <input id="user-type" value="" type="hidden" name="user-type" />
-                        <div id="client" class="user-box client-tax-preparer-option-single">
+                        <input id="role" type="hidden" name="role" value="">
+
+                        <div id="client" class="user-box client-tax-preparer-option-single"
+                            onclick="document.getElementById('role').value='client'; this.closest('form').submit();">
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"
                                     fill="none">
@@ -47,7 +50,8 @@
                             </span>
                         </div>
 
-                        <div id="tax-preparer" class="user-box client-tax-preparer-option-single">
+                        <div id="tax-preparer" class="user-box client-tax-preparer-option-single"
+                            onclick="document.getElementById('role').value='beauty_expert'; this.closest('form').submit();">
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
                                     fill="none">
