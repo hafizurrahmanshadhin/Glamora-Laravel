@@ -72,18 +72,21 @@
                     fill="#222222" />
             </svg>
         </a>
+
         <div class="header-profile-container">
             <div class="header-profile-btn">
                 <img src="{{ asset('frontend/images/header-profile.png') }}" alt="">
             </div>
-        </div>
-
-        <div>
-            <a href="javascript:void(0);"
-                onclick="event.preventDefault(); document.getElementById('logoutForm').submit()">Logout</a>
-            <form action="{{ route('logout') }}" method="post" id="logoutForm">
-                @csrf
-            </form>
+            <div class="tm-profiledropdown">
+                <div class="tm-profile-dropdown-menu-wrapper">
+                    <a class="tm-profile-dropdown-item tm-see-profile" href="#">Profile</a>
+                    <a class="tm-profile-dropdown-item" href="javascript:void(0);"
+                        onclick="event.preventDefault(); document.getElementById('logoutForm').submit()">Log Out</a>
+                    <form action="{{ route('logout') }}" method="post" id="logoutForm">
+                        @csrf
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
