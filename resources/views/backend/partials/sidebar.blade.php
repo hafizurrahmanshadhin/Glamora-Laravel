@@ -87,7 +87,7 @@
                                 </a>
                             </li>
 
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('mail.setting') }}"
                                     class="nav-link {{ request()->routeIs('mail.setting') ? 'active' : '' }}"
                                     data-key="t-system-settings">
@@ -133,7 +133,7 @@
                                     data-key="t-terms-and-conditions">
                                     Privacy Policy
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </li>
