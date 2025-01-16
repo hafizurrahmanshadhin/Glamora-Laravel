@@ -54,7 +54,5 @@ class RegisteredUserController extends Controller {
         } else {
             return redirect()->route('beauty-expert-dashboard');
         }
-
-        // return redirect(route('dashboard', absolute: false));
     }
 }
