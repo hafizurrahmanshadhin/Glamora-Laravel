@@ -4,7 +4,7 @@
 
 {{-- App favicon --}}
 <link rel="shortcut icon" type="image/x-icon"
-    href="{{ isset($systemSetting->favicon) && !empty($systemSetting->favicon) ? asset($systemSetting->favicon) : asset('backend/images/favicon.ico') }}" />
+    href="{{ isset($systemSetting->favicon) && !empty($systemSetting->favicon) ? asset($systemSetting->favicon) : asset('frontend/favicon.png') }}" />
 
 {{-- Plugins CSS --}}
 <link rel="stylesheet" href="{{ asset('frontend/css/plugins/bootstrap.min.css') }}" />

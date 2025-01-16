@@ -33,7 +33,7 @@ class SystemSettingsController extends Controller {
             'title'          => 'nullable|string',
             'system_name'    => 'nullable|string',
             'email'          => 'nullable|string|email',
-            'phone_number'   => 'nullable|string|max:25',
+            'phone_number'   => 'nullable|string|max:25|regex:/^[0-9\s\-\(\)]+$/',
             'address'        => 'nullable|string',
             'copyright_text' => 'nullable|string',
             'description'    => 'nullable|string',

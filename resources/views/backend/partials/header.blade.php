@@ -11,23 +11,23 @@
                     <div class="navbar-brand-box horizontal-logo">
                         <a href="{{ route('dashboard') }}" class="logo logo-dark">
                             <span class="logo-sm">
-                                <img src="{{ asset($systemSetting->logo ?? 'backend/images/logo-sm.png') }}"
-                                    alt="Logo" height="22">
+                                <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="Logo"
+                                    style="width: 125px; height: 30px;">
                             </span>
                             <span class="logo-lg">
-                                <img src="{{ asset($systemSetting->logo ?? 'backend/images/logo-sm.png') }}"
-                                    alt="Logo" height="22">
+                                <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="Logo"
+                                    style="width: 125px; height: 30px;">
                             </span>
                         </a>
 
                         <a href="{{ route('dashboard') }}" class="logo logo-light">
                             <span class="logo-sm">
-                                <img src="{{ asset($systemSetting->logo ?? 'backend/images/logo-sm.png') }}"
-                                    alt="Logo" height="22">
+                                <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="Logo"
+                                    style="width: 125px; height: 30px;">
                             </span>
                             <span class="logo-lg">
-                                <img src="{{ asset($systemSetting->logo ?? 'backend/images/logo-sm.png') }}"
-                                    alt="Logo" height="22">
+                                <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="Logo"
+                                    style="width: 125px; height: 30px;">
                             </span>
                         </a>
                     </div>
