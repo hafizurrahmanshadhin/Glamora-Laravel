@@ -36,11 +36,12 @@ class RegisteredUserController extends Controller {
         ]);
 
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name'  => $request->last_name,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'role'       => $request->role,
+            'first_name'        => $request->first_name,
+            'last_name'         => $request->last_name,
+            'email'             => $request->email,
+            'email_verified_at' => now(),
+            'password'          => Hash::make($request->password),
+            'role'              => $request->role,
         ]);
 
         event(new Registered($user));
@@ -52,7 +53,7 @@ class RegisteredUserController extends Controller {
         } elseif ($user->role === 'client') {
             return redirect()->route('client-dashboard');
         } else {
-            return redirect()->route('beauty-expert-dashboard');
+            return redirect()->route('questionnaires');
         }
     }
 }

@@ -11,7 +11,23 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('business_information', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onDelete('restrict')
+                ->onUpdate('cascade');
+
+            $table->string('avatar');
+            $table->string('name');
+            $table->text('bio');
+            $table->string('business_name');
+            $table->string('professional_title');
+            $table->string('license');
+
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
         });
     }
 
