@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Auth;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessInformation;
 use Illuminate\Http\Request;
@@ -16,9 +17,6 @@ class BusinessInformationController extends Controller {
         return view('auth.layouts.business-information');
     }
 
-    /**
-     * Store the business information.
-     */
     public function store(Request $request) {
         $validated = $request->validate([
             'avatar'             => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
@@ -29,8 +27,12 @@ class BusinessInformationController extends Controller {
             'license'            => 'required|file|mimes:pdf,jpg,png|max:10240',
         ]);
 
-        $avatarPath  = $request->file('avatar')->store('avatars');
-        $licensePath = $request->file('license')->store('licenses');
+        $avatarPath  = Helper::fileUpload($request->file('avatar'), 'avatars', $validated['name']);
+        $licensePath = Helper::fileUpload($request->file('license'), 'licenses', $validated['name']);
+
+        if (!$avatarPath || !$licensePath) {
+            return redirect()->back()->with('t-error', 'Failed to upload files. Please try again.');
+        }
 
         BusinessInformation::create([
             'user_id'            => Auth::id(),

@@ -21,10 +21,6 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('register', [RegisteredUserController::class, 'store']);
 
-    Route::get('/questionnaires', [QuestionnairesController::class, 'index'])->name('Questionnaires');
-    Route::get('/business-information', [BusinessInformationController::class, 'index'])->name('business-information');
-    Route::post('/business-information/store', [BusinessInformationController::class, 'store'])->name('business-information.store');
-
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
@@ -36,6 +32,10 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/questionnaires', [QuestionnairesController::class, 'index'])->name('questionnaires');
+    Route::get('/business-information', [BusinessInformationController::class, 'index'])->name('business-information');
+    Route::post('/business-information/store', [BusinessInformationController::class, 'store'])->name('business-information.store');
+
     Route::get('verify-email', EmailVerificationPromptController::class)->name('verification.notice');
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])

@@ -14,7 +14,7 @@
 
 @section('content')
     <div class="section-padding-x m-top m-bottom">
-        <!-- step 1 start -->
+        {{-- step 1 start --}}
         <div id="service-provider-step-form-1">
             <div class="img-content">
                 <img src="{{ asset('frontend/images/dashboard-banner-right.png') }}" alt="">
@@ -38,7 +38,7 @@
                         </svg>
                         <span>Upload Photo</span>
                     </div>
-                    <input class="d-none" id="upload-profile-input" type="file" name="" id="">
+                    <input class="d-none" id="upload-profile-input" type="file" name="avatar" required>
                     <div class="upload-profile-img">
                         <img src="" alt="">
                         <svg class="upload-profile-img-close-btn" width="30px" xmlns="http://www.w3.org/2000/svg"
@@ -49,34 +49,37 @@
                     </div>
                 </div>
 
-                <!-- steps-inputs-container start -->
+                {{-- steps-inputs-container start --}}
                 <div class="steps-inputs-container my-4">
                     <div class="item">
-                        <label for="">Full Name</label>
-                        <input placeholder="Enter Your Full Name" type="text">
+                        <label for="name">Full Name</label>
+                        <input placeholder="Enter Your Full Name" type="text" name="name" id="name" required>
                     </div>
                     <div class="item">
-                        <label for="">Add Bio</label>
-                        <input placeholder="Write something about your service" type="text">
+                        <label for="bio">Add Bio</label>
+                        <input placeholder="Write something about your service" type="text" name="bio" id="bio"
+                            required>
                     </div>
                     <div class="item">
-                        <label for="">Business Name</label>
-                        <input placeholder="Enter your Business Address" type="text">
+                        <label for="business_name">Business Name</label>
+                        <input placeholder="Enter your Business Address" type="text" name="business_name"
+                            id="business_name" required>
                     </div>
                     <div class="item">
-                        <label for="">Professional Title</label>
-                        <input placeholder="Enter your Professional Title" type="text">
+                        <label for="professional_title">Professional Title</label>
+                        <input placeholder="Enter your Professional Title" type="text" name="professional_title"
+                            id="professional_title" required>
                     </div>
                 </div>
-                <!-- steps-inputs-container end -->
+                {{-- steps-inputs-container end --}}
 
-                <!-- upload documents start -->
+                {{-- upload documents start --}}
                 <div class="step-sub-title">
                     Upload License/Certifications
                 </div>
 
                 <div class="upload-documents-container mt-3">
-                    <input type="file" id="file-upload" accept=".txt, .pdf, .doc, .docx, .xls, .xlsx" multiple
+                    <input type="file" id="file-upload" name="license" accept=".pdf,.jpg,.png" required
                         style="display: none" />
                     <div class="upload-area" id="upload-area">
                         <div>
@@ -91,9 +94,9 @@
                     </div>
                     <div class="uploaded-files-list" id="uploaded-files-list"></div>
                 </div>
-                <!-- upload documents end -->
+                {{-- upload documents end --}}
 
-                <!-- step progress start -->
+                {{-- step progress start --}}
                 <div class="d-flex align-items-center mt-4 justify-content-between gap-3 flex-wrap ">
                     <div class="step-progress-container d-flex align-items-center gap-2 ">
                         <div class="step-count">33%</div>
@@ -105,14 +108,22 @@
                         <a href="" id="step-1-back-btn" class="step-back-btn">
                             Back
                         </a>
-                        <div id="step-1-next-btn" class="step-next-btn">
+                        <button id="step-1-next-btn" class="step-next-btn">
                             Next
-                        </div>
+                        </button>
                     </div>
                 </div>
-                <!-- step progress end -->
+                {{-- step progress end --}}
             </div>
         </div>
+        {{-- step 1 end --}}
+
+
+
+
+
+
+
 
 
 
@@ -257,6 +268,14 @@
                 <!-- step progress end -->
             </div>
         </div>
+
+
+
+
+
+
+
+
 
         <!-- step 3 start -->
         <div style="display: none;" id="service-provider-step-form-3">
@@ -1126,6 +1145,10 @@
         });
     </script>
 
+
+
+
+
     <!-- for changing steps -->
     <script>
         const step1 = document.getElementById('service-provider-step-form-1');
@@ -1136,13 +1159,41 @@
         const step2BackBtn = document.getElementById('step-2-back-btn');
         const step2NextBtn = document.getElementById('step-2-next-btn');
         const step3BackBtn = document.getElementById('step-3-back-btn');
+        const step3NextBtn = document.getElementById('step-3-next-btn');
 
-        step1NextBtn.addEventListener('click', () => {
-            step1.style.display = "none";
-            step2.style.display = "flex";
-            step2.style.opacity = 1;
-            step2.style.visibility = "visible";
-        })
+        step1NextBtn.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData();
+            formData.append('avatar', document.getElementById('upload-profile-input').files[0]);
+            formData.append('name', document.querySelector('input[placeholder="Enter Your Full Name"]').value);
+            formData.append('bio', document.querySelector('input[placeholder="Write something about your service"]')
+                .value);
+            formData.append('business_name', document.querySelector(
+                'input[placeholder="Enter your Business Address"]').value);
+            formData.append('professional_title', document.querySelector(
+                'input[placeholder="Enter your Professional Title"]').value);
+            formData.append('license', document.getElementById('file-upload').files[0]);
+
+            axios.post('{{ route('business-information.store') }}', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    // Handle success response
+                    console.log(response.data);
+                    // Proceed to the next step
+                    step1.style.display = "none";
+                    step2.style.display = "flex";
+                    step2.style.opacity = 1;
+                    step2.style.visibility = "visible";
+                })
+                .catch(error => {
+                    // Handle error response
+                    console.error(error);
+                });
+        });
 
         step2BackBtn.addEventListener('click', () => {
             step2.style.display = "none";
@@ -1157,6 +1208,13 @@
         step3BackBtn.addEventListener('click', () => {
             step3.style.display = "none";
             step2.style.display = "flex";
+        })
+
+        step3NextBtn.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Redirect to the dashboard
+            window.location.href = '{{ route('beauty-expert-dashboard') }}';
         })
     </script>
 @endpush
