@@ -21,7 +21,7 @@ class Service extends Model {
         return [
             'id'            => 'integer',
             'services_name' => 'string',
-            'platform_fee'  => 'decimal:2',
+            'platform_fee'  => 'integer',
             'status'        => 'string',
             'created_at'    => 'datetime',
             'updated_at'    => 'datetime',

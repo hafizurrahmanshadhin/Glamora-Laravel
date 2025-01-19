@@ -25,6 +25,9 @@ class ServiceController extends Controller {
             $data = Service::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('platform_fee', function ($service) {
+                    return $service->platform_fee . '%';
+                })
                 ->addColumn('status', function ($service) {
                     $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
                     $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $service->id . '" ' . ($service->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $service->id . ')">';
@@ -45,7 +48,7 @@ class ServiceController extends Controller {
                             </div>
                         ';
                 })
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['platform_fee', 'status', 'action'])
                 ->make();
         }
         return view('backend.layouts.service.index');

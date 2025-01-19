@@ -44,7 +44,7 @@
                                         <input type="number"
                                             class="form-control @error('platform_fee') is-invalid @enderror"
                                             id="platform_fee" name="platform_fee" placeholder="Please Enter Platform Fee"
-                                            value="{{ old('platform_fee', $service->platform_fee) }}" step="0.01">
+                                            value="{{ old('platform_fee', $service->platform_fee) }}">
                                         @error('platform_fee')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('services_name')->nullable(false);
-            $table->decimal('platform_fee', 10, 2)->nullable(false);
+            $table->integer('platform_fee')->nullable(false);
 
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamp('created_at')->useCurrent();
