@@ -119,15 +119,6 @@
         {{-- step 1 end --}}
 
 
-
-
-
-
-
-
-
-
-
         <!-- step 2 start select price per radius KM -->
         <div style="opacity: 0; top: 0; visibility: hidden;" id="service-provider-step-form-2">
             <div class="map-container">
@@ -270,14 +261,7 @@
         </div>
 
 
-
-
-
-
-
-
-
-        <!-- step 3 start -->
+        {{-- step 3 start --}}
         <div style="display: none;" id="service-provider-step-form-3">
             <div class="step-count-title text-center">
                 <span>3</span>/3 Create Profile
@@ -296,499 +280,98 @@
                             <th scope="col">Add Photo</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        <tr>
-                            <td>
-                                Non-Bridal Makeup Only
-                            </td>
-                            <td>
-                                <div class="d-flex select-service-container align-items-center gap-3">
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option1" id="yes">
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="yes">Yes</label>
+                        @foreach ($services as $service)
+                            <tr>
+                                <td>{{ $service->services_name }}</td>
+
+                                <td>
+                                    <div class="d-flex select-service-container align-items-center gap-3">
+                                        <div class="form-check d-flex align-items-center gap-2">
+                                            <input style="cursor: pointer;" class="form-check-input" type="radio"
+                                                name="option{{ $service->id }}" id="yes{{ $service->id }}">
+                                            <label style="cursor: pointer;" class="form-check-label"
+                                                for="yes{{ $service->id }}">Yes</label>
+                                        </div>
+                                        <div class="form-check d-flex align-items-center gap-2">
+                                            <input style="cursor: pointer;" class="form-check-input" type="radio"
+                                                name="option{{ $service->id }}" id="no{{ $service->id }}" checked>
+                                            <label style="cursor: pointer;" class="form-check-label"
+                                                for="no{{ $service->id }}">No</label>
+                                        </div>
                                     </div>
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option1" id="no" checked>
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="no">No</label>
+                                </td>
+
+                                <td>
+                                    <div class="service-value-input disabled">
+                                        <input value="" type="number" name="" id="">
+                                        <span>$</span>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input disabled">
-                                    <input value="200" type="number" name="" id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input disabled class="service-charge" value="20%" type="text" name=""
-                                        id="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                        viewBox="0 0 25 24" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2.90234 12.0781C2.90234 6.51213 7.41447 2 12.9805 2C18.5465 2 23.0586 6.51213 23.0586 12.0781C23.0586 17.6442 18.5465 22.1562 12.9805 22.1562C7.41447 22.1562 2.90234 17.6442 2.90234 12.0781ZM12.9805 10.9062C13.3688 10.9062 13.6836 11.2211 13.6836 11.6094V16.2969C13.6836 16.6852 13.3688 17 12.9805 17C12.5922 17 12.2773 16.6852 12.2773 16.2969V11.6094C12.2773 11.2211 12.5922 10.9062 12.9805 10.9062ZM13.5125 8.32883C13.7723 8.04019 13.7488 7.59561 13.4602 7.33584C13.1715 7.07606 12.727 7.09946 12.4672 7.3881L12.4578 7.39852C12.198 7.68716 12.2215 8.13174 12.5101 8.39151C12.7988 8.65129 13.2433 8.62789 13.5031 8.33924L13.5125 8.32883Z"
-                                            fill="#6B6B6B" />
-                                    </svg>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="total-charge" disabled value="240" type="number" name=""
-                                        id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input upload-service-img-container ">
-                                    <div style="cursor: pointer;" class="service-upload-img-btn">
+                                </td>
+
+                                <td>
+                                    <div class="service-value-input">
+                                        <input disabled class="service-charge" value="{{ $service->platform_fee }}%"
+                                            type="text" name="platform_fee{{ $service->id }}"
+                                            id="platform_fee{{ $service->id }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
                                             viewBox="0 0 25 24" fill="none">
-                                            <path
-                                                d="M9.75 22H15.75C20.75 22 22.75 20 22.75 15V9C22.75 4 20.75 2 15.75 2H9.75C4.75 2 2.75 4 2.75 9V15C2.75 20 4.75 22 9.75 22Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M9.75 10C10.8546 10 11.75 9.10457 11.75 8C11.75 6.89543 10.8546 6 9.75 6C8.64543 6 7.75 6.89543 7.75 8C7.75 9.10457 8.64543 10 9.75 10Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M3.42188 18.95L8.35187 15.64C9.14187 15.11 10.2819 15.17 10.9919 15.78L11.3219 16.07C12.1019 16.74 13.3619 16.74 14.1419 16.07L18.3019 12.5C19.0819 11.83 20.3419 11.83 21.1219 12.5L22.7519 13.9"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M2.90234 12.0781C2.90234 6.51213 7.41447 2 12.9805 2C18.5465 2 23.0586 6.51213 23.0586 12.0781C23.0586 17.6442 18.5465 22.1562 12.9805 22.1562C7.41447 22.1562 2.90234 17.6442 2.90234 12.0781ZM12.9805 10.9062C13.3688 10.9062 13.6836 11.2211 13.6836 11.6094V16.2969C13.6836 16.6852 13.3688 17 12.9805 17C12.5922 17 12.2773 16.6852 12.2773 16.2969V11.6094C12.2773 11.2211 12.5922 10.9062 12.9805 10.9062ZM13.5125 8.32883C13.7723 8.04019 13.7488 7.59561 13.4602 7.33584C13.1715 7.07606 12.727 7.09946 12.4672 7.3881L12.4578 7.39852C12.198 7.68716 12.2215 8.13174 12.5101 8.39151C12.7988 8.65129 13.2433 8.62789 13.5031 8.33924L13.5125 8.32883Z"
+                                                fill="#6B6B6B" />
                                         </svg>
-                                        <span>Upload</span>
-                                        <input class="service-file-input d-none" type="file" name=""
-                                            id="">
                                     </div>
-                                    <img style="max-width: 80px; max-height: 60px; border-radius: 4px; display: flex;
-                                margin: 0 auto; object-fit: cover;"
-                                        class="service-uploaded-img" src="" alt="">
+                                </td>
 
-                                    <svg width="20px" class="service-delete-btn" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 512 512">
-                                        <path
-                                            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Hair Up Only
-                            </td>
-                            <td>
-                                <div class="d-flex select-service-container align-items-center gap-3">
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option2" id="yes2">
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="yes2">Yes</label>
+                                <td>
+                                    <div class="service-value-input">
+                                        <input class="total-charge" disabled value="" type="number"
+                                            name="" id="">
+                                        <span>$</span>
                                     </div>
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option2" id="no2" checked>
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="no2">No</label>
-                                    </div>
-                                </div>
+                                </td>
 
+                                <td>
+                                    <div class="service-value-input upload-service-img-container">
+                                        <div style="cursor: pointer;" class="service-upload-img-btn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
+                                                viewBox="0 0 25 24" fill="none">
+                                                <path
+                                                    d="M9.75 22H15.75C20.75 22 22.75 20 22.75 15V9C22.75 4 20.75 2 15.75 2H9.75C4.75 2 2.75 4 2.75 9V15C2.75 20 4.75 22 9.75 22Z"
+                                                    stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path
+                                                    d="M9.75 10C10.8546 10 11.75 9.10457 11.75 8C11.75 6.89543 10.8546 6 9.75 6C8.64543 6 7.75 6.89543 7.75 8C7.75 9.10457 8.64543 10 9.75 10Z"
+                                                    stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path
+                                                    d="M3.42188 18.95L8.35187 15.64C9.14187 15.11 10.2819 15.17 10.9919 15.78L11.3219 16.07C12.1019 16.74 13.3619 16.74 14.1419 16.07L18.3019 12.5C19.0819 11.83 20.3419 11.83 21.1219 12.5L22.7519 13.9"
+                                                    stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                            </svg>
+                                            <span>Upload</span>
+                                            <input class="service-file-input d-none" type="file" name=""
+                                                id="">
+                                        </div>
+                                        <img style="max-width: 80px; max-height: 60px; border-radius: 4px; display: flex;
+                                    margin: 0 auto; object-fit: cover;"
+                                            class="service-uploaded-img" src="" alt="">
 
-
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input value="200" type="number" name="" id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="service-charge" disabled value="20%" type="text" name=""
-                                        id="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                        viewBox="0 0 25 24" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2.90234 12.0781C2.90234 6.51213 7.41447 2 12.9805 2C18.5465 2 23.0586 6.51213 23.0586 12.0781C23.0586 17.6442 18.5465 22.1562 12.9805 22.1562C7.41447 22.1562 2.90234 17.6442 2.90234 12.0781ZM12.9805 10.9062C13.3688 10.9062 13.6836 11.2211 13.6836 11.6094V16.2969C13.6836 16.6852 13.3688 17 12.9805 17C12.5922 17 12.2773 16.6852 12.2773 16.2969V11.6094C12.2773 11.2211 12.5922 10.9062 12.9805 10.9062ZM13.5125 8.32883C13.7723 8.04019 13.7488 7.59561 13.4602 7.33584C13.1715 7.07606 12.727 7.09946 12.4672 7.3881L12.4578 7.39852C12.198 7.68716 12.2215 8.13174 12.5101 8.39151C12.7988 8.65129 13.2433 8.62789 13.5031 8.33924L13.5125 8.32883Z"
-                                            fill="#6B6B6B" />
-                                    </svg>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="total-charge" disabled value="240" type="number" name=""
-                                        id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input upload-service-img-container ">
-                                    <div style="cursor: pointer;" class="service-upload-img-btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                            viewBox="0 0 25 24" fill="none">
+                                        <svg width="20px" class="service-delete-btn" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 512 512">
                                             <path
-                                                d="M9.75 22H15.75C20.75 22 22.75 20 22.75 15V9C22.75 4 20.75 2 15.75 2H9.75C4.75 2 2.75 4 2.75 9V15C2.75 20 4.75 22 9.75 22Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M9.75 10C10.8546 10 11.75 9.10457 11.75 8C11.75 6.89543 10.8546 6 9.75 6C8.64543 6 7.75 6.89543 7.75 8C7.75 9.10457 8.64543 10 9.75 10Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M3.42188 18.95L8.35187 15.64C9.14187 15.11 10.2819 15.17 10.9919 15.78L11.3219 16.07C12.1019 16.74 13.3619 16.74 14.1419 16.07L18.3019 12.5C19.0819 11.83 20.3419 11.83 21.1219 12.5L22.7519 13.9"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
+                                                d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                         </svg>
-                                        <span>Upload</span>
-                                        <input class="service-file-input d-none" type="file" name=""
-                                            id="">
                                     </div>
-                                    <img style="max-width: 80px; max-height: 60px; border-radius: 4px; display: flex;
-                                margin: 0 auto; object-fit: cover;"
-                                        class="service-uploaded-img" src="" alt="">
-
-                                    <svg width="20px" class="service-delete-btn" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 512 512">
-                                        <path
-                                            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Hair Down Only
-                            </td>
-                            <td>
-                                <div class="d-flex select-service-container align-items-center gap-3">
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option3" id="yes3">
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="yes3">Yes</label>
-                                    </div>
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option3" id="no3" checked>
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="no3">No</label>
-                                    </div>
-                                </div>
-
-
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input value="200" type="number" name="" id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="service-charge" disabled value="20%" type="text" name=""
-                                        id="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                        viewBox="0 0 25 24" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2.90234 12.0781C2.90234 6.51213 7.41447 2 12.9805 2C18.5465 2 23.0586 6.51213 23.0586 12.0781C23.0586 17.6442 18.5465 22.1562 12.9805 22.1562C7.41447 22.1562 2.90234 17.6442 2.90234 12.0781ZM12.9805 10.9062C13.3688 10.9062 13.6836 11.2211 13.6836 11.6094V16.2969C13.6836 16.6852 13.3688 17 12.9805 17C12.5922 17 12.2773 16.6852 12.2773 16.2969V11.6094C12.2773 11.2211 12.5922 10.9062 12.9805 10.9062ZM13.5125 8.32883C13.7723 8.04019 13.7488 7.59561 13.4602 7.33584C13.1715 7.07606 12.727 7.09946 12.4672 7.3881L12.4578 7.39852C12.198 7.68716 12.2215 8.13174 12.5101 8.39151C12.7988 8.65129 13.2433 8.62789 13.5031 8.33924L13.5125 8.32883Z"
-                                            fill="#6B6B6B" />
-                                    </svg>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="total-charge" disabled value="240" type="number" name=""
-                                        id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input upload-service-img-container ">
-                                    <div style="cursor: pointer;" class="service-upload-img-btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                            viewBox="0 0 25 24" fill="none">
-                                            <path
-                                                d="M9.75 22H15.75C20.75 22 22.75 20 22.75 15V9C22.75 4 20.75 2 15.75 2H9.75C4.75 2 2.75 4 2.75 9V15C2.75 20 4.75 22 9.75 22Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M9.75 10C10.8546 10 11.75 9.10457 11.75 8C11.75 6.89543 10.8546 6 9.75 6C8.64543 6 7.75 6.89543 7.75 8C7.75 9.10457 8.64543 10 9.75 10Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M3.42188 18.95L8.35187 15.64C9.14187 15.11 10.2819 15.17 10.9919 15.78L11.3219 16.07C12.1019 16.74 13.3619 16.74 14.1419 16.07L18.3019 12.5C19.0819 11.83 20.3419 11.83 21.1219 12.5L22.7519 13.9"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                        <span>Upload</span>
-                                        <input class="service-file-input d-none" type="file" name=""
-                                            id="">
-                                    </div>
-                                    <img style="max-width: 80px; max-height: 60px; border-radius: 4px; display: flex;
-                                margin: 0 auto; object-fit: cover;"
-                                        class="service-uploaded-img" src="" alt="">
-
-                                    <svg width="20px" class="service-delete-btn" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 512 512">
-                                        <path
-                                            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Half Up, Half Down Only
-                            </td>
-                            <td>
-                                <div class="d-flex select-service-container align-items-center gap-3">
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option4" id="yes4">
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="yes4">Yes</label>
-                                    </div>
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option4" id="no4" checked>
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="no4">No</label>
-                                    </div>
-                                </div>
-
-
-
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input value="200" type="number" name="" id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="service-charge" disabled value="20%" type="text" name=""
-                                        id="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                        viewBox="0 0 25 24" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2.90234 12.0781C2.90234 6.51213 7.41447 2 12.9805 2C18.5465 2 23.0586 6.51213 23.0586 12.0781C23.0586 17.6442 18.5465 22.1562 12.9805 22.1562C7.41447 22.1562 2.90234 17.6442 2.90234 12.0781ZM12.9805 10.9062C13.3688 10.9062 13.6836 11.2211 13.6836 11.6094V16.2969C13.6836 16.6852 13.3688 17 12.9805 17C12.5922 17 12.2773 16.6852 12.2773 16.2969V11.6094C12.2773 11.2211 12.5922 10.9062 12.9805 10.9062ZM13.5125 8.32883C13.7723 8.04019 13.7488 7.59561 13.4602 7.33584C13.1715 7.07606 12.727 7.09946 12.4672 7.3881L12.4578 7.39852C12.198 7.68716 12.2215 8.13174 12.5101 8.39151C12.7988 8.65129 13.2433 8.62789 13.5031 8.33924L13.5125 8.32883Z"
-                                            fill="#6B6B6B" />
-                                    </svg>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="total-charge" disabled value="240" type="number" name=""
-                                        id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input upload-service-img-container ">
-                                    <div style="cursor: pointer;" class="service-upload-img-btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                            viewBox="0 0 25 24" fill="none">
-                                            <path
-                                                d="M9.75 22H15.75C20.75 22 22.75 20 22.75 15V9C22.75 4 20.75 2 15.75 2H9.75C4.75 2 2.75 4 2.75 9V15C2.75 20 4.75 22 9.75 22Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M9.75 10C10.8546 10 11.75 9.10457 11.75 8C11.75 6.89543 10.8546 6 9.75 6C8.64543 6 7.75 6.89543 7.75 8C7.75 9.10457 8.64543 10 9.75 10Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M3.42188 18.95L8.35187 15.64C9.14187 15.11 10.2819 15.17 10.9919 15.78L11.3219 16.07C12.1019 16.74 13.3619 16.74 14.1419 16.07L18.3019 12.5C19.0819 11.83 20.3419 11.83 21.1219 12.5L22.7519 13.9"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                        <span>Upload</span>
-                                        <input class="service-file-input d-none" type="file" name=""
-                                            id="">
-                                    </div>
-                                    <img style="max-width: 80px; max-height: 60px; border-radius: 4px; display: flex;
-                                margin: 0 auto; object-fit: cover;"
-                                        class="service-uploaded-img" src="" alt="">
-
-                                    <svg width="20px" class="service-delete-btn" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 512 512">
-                                        <path
-                                            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Makeup with Hair Up
-                            </td>
-                            <td>
-                                <div class="d-flex select-service-container align-items-center gap-3">
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option5" id="yes5">
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="yes5">Yes</label>
-                                    </div>
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option5" id="no5" checked>
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="no5">No</label>
-                                    </div>
-                                </div>
-
-
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input value="200" type="number" name="" id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="service-charge" disabled value="20%" type="text" name=""
-                                        id="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                        viewBox="0 0 25 24" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2.90234 12.0781C2.90234 6.51213 7.41447 2 12.9805 2C18.5465 2 23.0586 6.51213 23.0586 12.0781C23.0586 17.6442 18.5465 22.1562 12.9805 22.1562C7.41447 22.1562 2.90234 17.6442 2.90234 12.0781ZM12.9805 10.9062C13.3688 10.9062 13.6836 11.2211 13.6836 11.6094V16.2969C13.6836 16.6852 13.3688 17 12.9805 17C12.5922 17 12.2773 16.6852 12.2773 16.2969V11.6094C12.2773 11.2211 12.5922 10.9062 12.9805 10.9062ZM13.5125 8.32883C13.7723 8.04019 13.7488 7.59561 13.4602 7.33584C13.1715 7.07606 12.727 7.09946 12.4672 7.3881L12.4578 7.39852C12.198 7.68716 12.2215 8.13174 12.5101 8.39151C12.7988 8.65129 13.2433 8.62789 13.5031 8.33924L13.5125 8.32883Z"
-                                            fill="#6B6B6B" />
-                                    </svg>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="total-charge" disabled value="240" type="number" name=""
-                                        id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input upload-service-img-container ">
-                                    <div style="cursor: pointer;" class="service-upload-img-btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                            viewBox="0 0 25 24" fill="none">
-                                            <path
-                                                d="M9.75 22H15.75C20.75 22 22.75 20 22.75 15V9C22.75 4 20.75 2 15.75 2H9.75C4.75 2 2.75 4 2.75 9V15C2.75 20 4.75 22 9.75 22Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M9.75 10C10.8546 10 11.75 9.10457 11.75 8C11.75 6.89543 10.8546 6 9.75 6C8.64543 6 7.75 6.89543 7.75 8C7.75 9.10457 8.64543 10 9.75 10Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M3.42188 18.95L8.35187 15.64C9.14187 15.11 10.2819 15.17 10.9919 15.78L11.3219 16.07C12.1019 16.74 13.3619 16.74 14.1419 16.07L18.3019 12.5C19.0819 11.83 20.3419 11.83 21.1219 12.5L22.7519 13.9"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                        <span>Upload</span>
-                                        <input class="service-file-input d-none" type="file" name=""
-                                            id="">
-                                    </div>
-                                    <img style="max-width: 80px; max-height: 60px; border-radius: 4px; display: flex;
-                                margin: 0 auto; object-fit: cover;"
-                                        class="service-uploaded-img" src="" alt="">
-
-                                    <svg width="20px" class="service-delete-btn" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 512 512">
-                                        <path
-                                            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Makeup with Hair Down
-                            </td>
-                            <td>
-                                <div class="d-flex select-service-container align-items-center gap-3">
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option6" id="yes6">
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="yes6">Yes</label>
-                                    </div>
-                                    <div class="form-check d-flex align-items-center gap-2">
-                                        <input style="cursor: pointer;" class="form-check-input" type="radio"
-                                            name="option6" id="no6" checked>
-                                        <label style="cursor: pointer;" class="form-check-label"
-                                            for="no6">No</label>
-                                    </div>
-                                </div>
-
-
-
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input value="200" type="number" name="" id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="service-charge" disabled value="20%" type="text" name=""
-                                        id="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                        viewBox="0 0 25 24" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2.90234 12.0781C2.90234 6.51213 7.41447 2 12.9805 2C18.5465 2 23.0586 6.51213 23.0586 12.0781C23.0586 17.6442 18.5465 22.1562 12.9805 22.1562C7.41447 22.1562 2.90234 17.6442 2.90234 12.0781ZM12.9805 10.9062C13.3688 10.9062 13.6836 11.2211 13.6836 11.6094V16.2969C13.6836 16.6852 13.3688 17 12.9805 17C12.5922 17 12.2773 16.6852 12.2773 16.2969V11.6094C12.2773 11.2211 12.5922 10.9062 12.9805 10.9062ZM13.5125 8.32883C13.7723 8.04019 13.7488 7.59561 13.4602 7.33584C13.1715 7.07606 12.727 7.09946 12.4672 7.3881L12.4578 7.39852C12.198 7.68716 12.2215 8.13174 12.5101 8.39151C12.7988 8.65129 13.2433 8.62789 13.5031 8.33924L13.5125 8.32883Z"
-                                            fill="#6B6B6B" />
-                                    </svg>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input">
-                                    <input class="total-charge" disabled value="240" type="number" name=""
-                                        id="">
-                                    <span>$</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="service-value-input upload-service-img-container ">
-                                    <div style="cursor: pointer;" class="service-upload-img-btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
-                                            viewBox="0 0 25 24" fill="none">
-                                            <path
-                                                d="M9.75 22H15.75C20.75 22 22.75 20 22.75 15V9C22.75 4 20.75 2 15.75 2H9.75C4.75 2 2.75 4 2.75 9V15C2.75 20 4.75 22 9.75 22Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M9.75 10C10.8546 10 11.75 9.10457 11.75 8C11.75 6.89543 10.8546 6 9.75 6C8.64543 6 7.75 6.89543 7.75 8C7.75 9.10457 8.64543 10 9.75 10Z"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M3.42188 18.95L8.35187 15.64C9.14187 15.11 10.2819 15.17 10.9919 15.78L11.3219 16.07C12.1019 16.74 13.3619 16.74 14.1419 16.07L18.3019 12.5C19.0819 11.83 20.3419 11.83 21.1219 12.5L22.7519 13.9"
-                                                stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                        <span>Upload</span>
-                                        <input class="service-file-input d-none" type="file" name=""
-                                            id="">
-                                    </div>
-                                    <img style="max-width: 80px; max-height: 60px; border-radius: 4px; display: flex;
-                                margin: 0 auto; object-fit: cover;"
-                                        class="service-uploaded-img" src="" alt="">
-
-                                    <svg width="20px" class="service-delete-btn" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 512 512">
-                                        <path
-                                            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
-                                    </svg>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
 
-            <!-- step progress start -->
+            {{-- step progress start --}}
             <div class="d-flex align-items-center mt-4 justify-content-between gap-3 flex-wrap ">
                 <div class="step-progress-container d-flex align-items-center gap-2 ">
                     <div class="step-count">85%</div>
@@ -805,8 +388,9 @@
                     </button>
                 </div>
             </div>
-            <!-- step progress end -->
+            {{-- step progress end --}}
         </div>
+        {{-- step 3 end --}}
     </div>
 @endsection
 
