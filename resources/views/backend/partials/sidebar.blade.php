@@ -57,6 +57,15 @@
                     </a>
                 </li>
 
+                {{-- Service --}}
+                <li class="nav-item">
+                    <a href="{{ route('service.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('service.*') ? 'active' : '' }}">
+                        <i class="ri-tools-line"></i>
+                        <span data-key="t-faq">Service</span>
+                    </a>
+                </li>
+
                 <hr>
                 {{-- Settings --}}
                 <li class="nav-item">
@@ -87,7 +96,7 @@
                                 </a>
                             </li>
 
-                            {{-- <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('mail.setting') }}"
                                     class="nav-link {{ request()->routeIs('mail.setting') ? 'active' : '' }}"
                                     data-key="t-system-settings">
@@ -111,7 +120,7 @@
                                 </a>
                             </li>
 
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('settings.dynamic_page.index') }}"
                                     class="nav-link {{ request()->routeIs('settings.dynamic_page.*') ? 'active' : '' }}"
                                     data-key="t-dynamic-page-settings">
