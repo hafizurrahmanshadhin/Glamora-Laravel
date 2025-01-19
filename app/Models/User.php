@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Models\BusinessInformation;
+use App\Models\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -50,5 +52,9 @@ class User extends Authenticatable implements JWTSubject {
 
     public function businessInformation(): HasOne {
         return $this->hasOne(BusinessInformation::class);
+    }
+
+    public function userServices(): HasMany {
+        return $this->hasMany(UserService::class);
     }
 }
