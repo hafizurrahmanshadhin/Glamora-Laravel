@@ -34,6 +34,9 @@ class UserService extends Model {
             'total_price'   => 'decimal',
             'image'         => 'string',
             'status'        => 'string',
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
         ];
     }
 

@@ -119,7 +119,7 @@
         {{-- step 1 end --}}
 
 
-        <!-- step 2 start select price per radius KM -->
+        {{-- step 2 start --}}
         <div style="opacity: 0; top: 0; visibility: hidden;" id="service-provider-step-form-2">
             <div class="map-container">
                 <div id="map"></div>
@@ -259,6 +259,7 @@
                 <!-- step progress end -->
             </div>
         </div>
+        {{-- step 2 end --}}
 
 
         {{-- step 3 start --}}
@@ -729,8 +730,6 @@
         });
     </script>
 
-
-
     <script>
         document.querySelectorAll('table tbody tr').forEach((row) => {
             const yesRadio = row.querySelector('input[id^="yes"]');
@@ -767,7 +766,6 @@
             });
         });
     </script>
-
 
     <!-- for changing steps -->
     <script>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\BusinessInformation;
+use App\Models\TravelRadius;
 use App\Models\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -56,5 +57,9 @@ class User extends Authenticatable implements JWTSubject {
 
     public function userServices(): HasMany {
         return $this->hasMany(UserService::class);
+    }
+
+    public function travelRadius(): HasOne {
+        return $this->hasOne(TravelRadius::class);
     }
 }
