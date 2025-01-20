@@ -180,7 +180,7 @@
                                 Charge for this radius
                             </div>
                             <div class="range-price-input mt-3">
-                                <input value="50" type="number" name="" id="">
+                                <input value="50" type="number" name="" id="travel-charge">
                                 <span>$</span>
                             </div>
                         </div>
@@ -207,7 +207,7 @@
                                 Charge for this radius
                             </div>
                             <div class="range-price-input mt-3">
-                                <input value="100" type="number" name="" id="">
+                                <input value="100" type="number" name="" id="max-charge">
                                 <span>$</span>
                             </div>
                         </div>
@@ -218,9 +218,7 @@
                                 <input class="form-check-input" type="checkbox" name=""
                                     id="minimum-booking-checkbox">
                                 <label
-                                    style="
-                            color: var(--Foundation-Black-black-500, #222);font-family: Helvetica Neue; font-style: normal;font-weight: 400;line-height: 150%;
-                         "
+                                    style="color: var(--Foundation-Black-black-500, #222);font-family: Helvetica Neue; font-style: normal;font-weight: 400;line-height: 150%;"
                                     for="">
                                     Do you want to set any minimum booking value for traveling this far?
                                 </label>
@@ -239,7 +237,7 @@
 
                 </div>
 
-                <!-- step progress start -->
+                {{-- step progress start --}}
                 <div class="d-flex align-items-center mt-4 justify-content-between gap-3 flex-wrap ">
                     <div class="step-progress-container d-flex align-items-center gap-2 ">
                         <div class="step-count">70%</div>
@@ -256,7 +254,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- step progress end -->
+                {{-- step progress end --}}
             </div>
         </div>
         {{-- step 2 end --}}
@@ -396,7 +394,7 @@
 @endsection
 
 @push('scripts')
-    <!-- for map -->
+    {{-- for map --}}
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         const openMapBtn = document.getElementById('step-1-next-btn');
@@ -467,7 +465,7 @@
         });
     </script>
 
-    <!--  for range slider  -->
+    {{-- for range slider --}}
     <script>
         // Helper function to update the slider value and position
         function updateSliderValue(slider, indicator) {
@@ -516,7 +514,7 @@
         });
     </script>
 
-    <!-- max price set -->
+    {{-- max price set --}}
     <script>
         // JavaScript
         const checkbox = document.getElementById('minimum-booking-checkbox');
@@ -538,7 +536,7 @@
         });
     </script>
 
-    <!-- upload profile image js -->
+    {{-- upload profile image js --}}
     <script>
         document.querySelector('.upload-profile-circle').addEventListener('click', function() {
             document.getElementById('upload-profile-input').click();
@@ -566,7 +564,7 @@
         });
     </script>
 
-    <!-- upload documents js -->
+    {{-- upload documents js --}}
     <script>
         const uploadBtn = document.getElementById('upload-btn');
         const fileInput = document.getElementById('file-upload');
@@ -642,7 +640,7 @@
         }
     </script>
 
-    <!-- for upload table img -->
+    {{-- for upload table img --}}
     <script>
         // Get all upload containers
         const uploadContainers = document.querySelectorAll('.upload-service-img-container');
@@ -686,7 +684,7 @@
         });
     </script>
 
-    <!-- for yes or no btn clicked for table row -->
+    {{-- for yes or no btn clicked for table row --}}
     <script>
         // Select all rows in the table
         document.querySelectorAll("tr").forEach((row) => {
@@ -767,7 +765,7 @@
         });
     </script>
 
-    <!-- for changing steps -->
+    {{-- for changing steps --}}
     <script>
         const step1 = document.getElementById('service-provider-step-form-1');
         const step2 = document.getElementById('service-provider-step-form-2');
@@ -816,17 +814,37 @@
         step2BackBtn.addEventListener('click', () => {
             step2.style.display = "none";
             step1.style.display = "flex";
-        })
+        });
 
-        step2NextBtn.addEventListener('click', () => {
-            step2.style.display = "none";
-            step3.style.display = "block";
-        })
+        step2NextBtn.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData();
+            formData.append('free_radius', document.getElementById('free-radius').value);
+            formData.append('travel_radius', document.getElementById('travel-radius').value);
+            formData.append('travel_charge', document.getElementById('travel-charge').value);
+            formData.append('max_radius', document.getElementById('max-radius').value);
+            formData.append('max_charge', document.getElementById('max-charge').value);
+            formData.append('min_booking_value', document.getElementById('minimum-booking-input').value);
+
+            axios.post('{{ route('business-information.store') }}', formData)
+                .then(response => {
+                    // Handle success response
+                    console.log(response.data);
+                    // Proceed to the next step
+                    step2.style.display = "none";
+                    step3.style.display = "block";
+                })
+                .catch(error => {
+                    // Handle error response
+                    console.error(error);
+                });
+        });
 
         step3BackBtn.addEventListener('click', () => {
             step3.style.display = "none";
             step2.style.display = "flex";
-        })
+        });
 
         document.getElementById('step-3-next-btn').addEventListener('click', async (event) => {
             event.preventDefault();
@@ -862,7 +880,7 @@
 
             try {
                 await axios.post("{{ route('business-information.store') }}", formData);
-                window.location.href = "{{ route('beauty-expert-dashboard') }}";
+                window.location.href = "{{ route('profile-submitted') }}";
             } catch (err) {
                 console.error(err);
                 alert('Failed to save services');
