@@ -854,7 +854,7 @@
                 const yesRadio = row.querySelector(`#yes${serviceId}`);
                 if (!yesRadio.checked) return; // Skip if "No" is selected
                 const offeredPriceInput = row.querySelector(
-                    '.service-value-input input[type="number"]');
+                '.service-value-input input[type="number"]');
                 const totalChargeInput = row.querySelector('.total-charge');
                 servicesData.push({
                     service_id: serviceId,

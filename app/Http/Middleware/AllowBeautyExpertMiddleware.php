@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class BeautyExpertMiddleware {
+class AllowBeautyExpertMiddleware {
     /**
      * Handle an incoming request.
      *
@@ -19,14 +19,7 @@ class BeautyExpertMiddleware {
         if (Auth::check()) {
             $user = Auth::user();
             if ($user->role === 'beauty_expert') {
-                if ($user->status === 'inactive') {
-                    return redirect()->route('profile-submitted');
-                }
                 return $next($request);
-            } elseif ($user->role === 'admin') {
-                return redirect()->route('dashboard');
-            } else {
-                return redirect()->route('client-dashboard');
             }
         }
 

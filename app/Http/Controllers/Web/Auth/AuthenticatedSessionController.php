@@ -25,15 +25,24 @@ class AuthenticatedSessionController extends Controller {
 
         $request->session()->regenerate();
 
-        if (Auth::user()->role === 'admin') {
+        $user = Auth::user();
+
+        if ($user->role === 'beauty_expert' && $user->status === 'inactive') {
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('profile-submitted')->with('status', 'Your profile is under review. Please wait for approval.');
+        }
+
+        if ($user->role === 'admin') {
             return redirect()->route('dashboard');
-        } elseif (Auth::user()->role === 'client') {
+        } elseif ($user->role === 'client') {
             return redirect()->route('client-dashboard');
         } else {
             return redirect()->route('beauty-expert-dashboard');
         }
-
-        // return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

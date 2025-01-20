@@ -31,11 +31,13 @@ Route::middleware('guest')->group(function () {
     Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'allow_beauty_expert'])->group(function () {
     Route::get('/questionnaires', [QuestionnairesController::class, 'index'])->name('questionnaires');
     Route::get('/business-information', [BusinessInformationController::class, 'index'])->name('business-information');
     Route::post('/business-information/store', [BusinessInformationController::class, 'store'])->name('business-information.store');
+});
 
+Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)->name('verification.notice');
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
@@ -55,3 +57,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/login/google', [SocialiteController::class, 'GoogleRedirect'])->name('google-login');
 Route::get('/login/google/callback', [SocialiteController::class, 'GoogleCallback']);
+
+Route::get('/profile-submitted', function () {
+    return view('auth.layouts.profile-submitted');
+})->name('profile-submitted');

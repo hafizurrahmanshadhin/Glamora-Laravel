@@ -42,9 +42,15 @@ class RegisteredUserController extends Controller {
             'email_verified_at' => now(),
             'password'          => Hash::make($request->password),
             'role'              => $request->role,
+            'status'            => $request->role === 'beauty_expert' ? 'inactive' : 'active',
         ]);
 
         event(new Registered($user));
+
+        if ($user->role === 'beauty_expert' && $user->status === 'inactive') {
+            Auth::login($user);
+            return redirect()->route('business-information')->with('status', 'Please complete your business information.');
+        }
 
         Auth::login($user);
 

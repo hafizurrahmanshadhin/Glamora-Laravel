@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\AllowBeautyExpertMiddleware;
 use App\Http\Middleware\BeautyExpertMiddleware;
 use App\Http\Middleware\ClientMiddleware;
 use Illuminate\Foundation\Application;
@@ -38,10 +39,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'admin'         => AdminMiddleware::class,
-            'client'        => ClientMiddleware::class,
-            'beauty_expert' => BeautyExpertMiddleware::class,
-            'auth.jwt'      => Authenticate::class,
+            'admin'               => AdminMiddleware::class,
+            'client'              => ClientMiddleware::class,
+            'beauty_expert'       => BeautyExpertMiddleware::class,
+            'allow_beauty_expert' => AllowBeautyExpertMiddleware::class,
+            'auth.jwt'            => Authenticate::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
