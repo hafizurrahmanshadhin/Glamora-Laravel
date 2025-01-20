@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/questionnaires', [QuestionnairesController::class, 'index'])->name('questionnaires');
     Route::get('/business-information', [BusinessInformationController::class, 'index'])->name('business-information');
     Route::post('/business-information/store', [BusinessInformationController::class, 'store'])->name('business-information.store');
+    Route::post('/business-information/step3', [BusinessInformationController::class, 'storeStep3'])
+        ->name('business-information.storeStep3');
 
     Route::get('verify-email', EmailVerificationPromptController::class)->name('verification.notice');
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)

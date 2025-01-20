@@ -731,6 +731,42 @@
 
 
 
+    <script>
+        document.querySelectorAll('table tbody tr').forEach((row) => {
+            const yesRadio = row.querySelector('input[id^="yes"]');
+            const noRadio = row.querySelector('input[id^="no"]');
+            const offeredPriceInput = row.querySelector('.service-value-input input[type="number"]');
+            const platformFeeInput = row.querySelector('.service-charge');
+            const totalChargeInput = row.querySelector('.total-charge');
+            const uploadBtn = row.querySelector('.service-upload-img-btn');
+            const deleteBtn = row.querySelector('.service-delete-btn');
+
+            function toggleFields(enabled) {
+                offeredPriceInput.disabled = !enabled;
+                totalChargeInput.disabled = true;
+                uploadBtn.style.pointerEvents = enabled ? 'auto' : 'none';
+                deleteBtn.style.pointerEvents = enabled ? 'auto' : 'none';
+                row.querySelector('.service-value-input').classList.toggle('disabled', !enabled);
+            }
+
+            yesRadio.addEventListener('change', () => {
+                if (yesRadio.checked) toggleFields(true);
+            });
+            noRadio.addEventListener('change', () => {
+                if (noRadio.checked) {
+                    toggleFields(false);
+                    offeredPriceInput.value = '';
+                    totalChargeInput.value = '';
+                }
+            });
+
+            offeredPriceInput.addEventListener('input', () => {
+                const fee = parseFloat(platformFeeInput.value.replace('%', '')) || 0;
+                const price = parseFloat(offeredPriceInput.value) || 0;
+                totalChargeInput.value = (((price * fee) / 100) + price).toFixed(2);
+            });
+        });
+    </script>
 
 
     <!-- for changing steps -->
@@ -794,11 +830,45 @@
             step2.style.display = "flex";
         })
 
-        step3NextBtn.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent the default form submission
+        document.getElementById('step-3-next-btn').addEventListener('click', async (event) => {
+            event.preventDefault();
+            const servicesData = [];
+            document.querySelectorAll('table tbody tr').forEach((row) => {
+                const serviceId = row.querySelector('input[type="radio"]').name.replace('option', '');
+                const yesRadio = row.querySelector(`#yes${serviceId}`);
+                if (!yesRadio.checked) return; // Skip if "No" is selected
+                const offeredPriceInput = row.querySelector(
+                    '.service-value-input input[type="number"]');
+                const totalChargeInput = row.querySelector('.total-charge');
+                servicesData.push({
+                    service_id: serviceId,
+                    selected: 1,
+                    offered_price: offeredPriceInput.value || 0,
+                    total_price: totalChargeInput.value || 0,
+                });
+            });
 
-            // Redirect to the dashboard
-            window.location.href = '{{ route('beauty-expert-dashboard') }}';
-        })
+            const formData = new FormData();
+            servicesData.forEach((service, index) => {
+                formData.append(`services[${index}][service_id]`, service.service_id);
+                formData.append(`services[${index}][selected]`, service.selected);
+                formData.append(`services[${index}][offered_price]`, service.offered_price);
+                formData.append(`services[${index}][total_price]`, service.total_price);
+                const rowFileInput = document.querySelector(`#yes${service.service_id}`)
+                    .closest('tr')
+                    .querySelector('.service-file-input').files[0];
+                if (rowFileInput) {
+                    formData.append(`services[${index}][image]`, rowFileInput);
+                }
+            });
+
+            try {
+                await axios.post("{{ route('business-information.storeStep3') }}", formData);
+                window.location.href = "{{ route('beauty-expert-dashboard') }}";
+            } catch (err) {
+                console.error(err);
+                alert('Failed to save services');
+            }
+        });
     </script>
 @endpush

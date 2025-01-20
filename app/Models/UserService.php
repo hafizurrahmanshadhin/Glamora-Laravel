@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,5 +39,9 @@ class UserService extends Model {
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    public function service(): BelongsTo {
+        return $this->belongsTo(Service::class);
     }
 }
