@@ -57,6 +57,15 @@
                     </a>
                 </li>
 
+                {{-- Users --}}
+                <li class="nav-item">
+                    <a href="{{ route('user.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('user.index') ? 'active' : '' }}">
+                        <i class="ri-group-line"></i>
+                        <span data-key="t-dashboard">Users</span>
+                    </a>
+                </li>
+
                 {{-- Service --}}
                 <li class="nav-item">
                     <a href="{{ route('service.index') }}"
