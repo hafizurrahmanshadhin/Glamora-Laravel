@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessInformation;
 use App\Models\Service;
+use App\Models\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -20,6 +21,41 @@ class BusinessInformationController extends Controller {
     }
 
     public function store(Request $request) {
+        // If "services" present => store step 3 data
+        if ($request->has('services')) {
+            $validated = $request->validate([
+                'services'                 => 'required|array',
+                'services.*.service_id'    => 'required|exists:services,id',
+                'services.*.selected'      => 'boolean',
+                'services.*.offered_price' => 'numeric',
+                'services.*.total_price'   => 'numeric',
+                'services.*.image'         => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+            ]);
+
+            foreach ($validated['services'] as $data) {
+                $imagePath = null;
+                if (!empty($data['image'])) {
+                    $imagePath = Helper::fileUpload($data['image'], 'user_services_images', Auth::id());
+                }
+
+                UserService::updateOrCreate(
+                    [
+                        'user_id'    => Auth::id(),
+                        'service_id' => $data['service_id'],
+                    ],
+                    [
+                        'selected'      => $data['selected'],
+                        'offered_price' => $data['offered_price'],
+                        'total_price'   => $data['total_price'],
+                        'image'         => $imagePath,
+                    ]
+                );
+            }
+
+            return response()->json(['status' => 'ok']);
+        }
+
+        // Otherwise store step 1 data
         $validated = $request->validate([
             'avatar'             => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             'name'               => 'required|string|max:255',
@@ -46,39 +82,7 @@ class BusinessInformationController extends Controller {
             'license'            => $licensePath,
         ]);
 
-        return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Business information updated successfully.');
-    }
-
-    public function storeStep3(Request $request) {
-        $validated = $request->validate([
-            'services'                 => 'required|array',
-            'services.*.service_id'    => 'required|exists:services,id',
-            'services.*.selected'      => 'boolean',
-            'services.*.offered_price' => 'numeric',
-            'services.*.total_price'   => 'numeric',
-            'services.*.image'         => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
-        ]);
-
-        foreach ($validated['services'] as $data) {
-            $imagePath = null;
-            if (!empty($data['image'])) {
-                $imagePath = Helper::fileUpload($data['image'], 'user_services_images', Auth::id());
-            }
-
-            \App\Models\UserService::updateOrCreate(
-                [
-                    'user_id'    => Auth::id(),
-                    'service_id' => $data['service_id'],
-                ],
-                [
-                    'selected'      => $data['selected'],
-                    'offered_price' => $data['offered_price'],
-                    'total_price'   => $data['total_price'],
-                    'image'         => $imagePath,
-                ]
-            );
-        }
-
-        return response()->json(['status' => 'ok']);
+        return redirect()->route('beauty-expert-dashboard')
+            ->with('t-success', 'Business information updated successfully.');
     }
 }

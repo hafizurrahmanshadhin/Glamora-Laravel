@@ -863,7 +863,7 @@
             });
 
             try {
-                await axios.post("{{ route('business-information.storeStep3') }}", formData);
+                await axios.post("{{ route('business-information.store') }}", formData);
                 window.location.href = "{{ route('beauty-expert-dashboard') }}";
             } catch (err) {
                 console.error(err);
