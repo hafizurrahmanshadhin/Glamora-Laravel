@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Web\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
-class HomeController extends Controller {
+class AvailableServicesController extends Controller {
     /**
-     * Display the home page.
+     * Display the available beauty services page.
      *
      * @return View
      */
     public function index(): View {
-        return view('frontend.layouts.home.index');
+        return view('frontend.layouts.available_services.index');
     }
 }
