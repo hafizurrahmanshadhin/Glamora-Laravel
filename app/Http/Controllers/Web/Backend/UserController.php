@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Web\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Mail\StatusUpdateMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
@@ -34,10 +36,33 @@ class UserController extends Controller {
 
                     return $status;
                 })
-                ->rawColumns(['name', 'status'])
+                ->addColumn('action', function ($user) {
+                    return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
+                                <a href="javascript:void(0);" onclick="showUserDetails(' . $user->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewUserModal">
+                                    <i class="ri-eye-line" style="font-size: 24px;"></i>
+                                </a>
+                            </div>';
+                })
+                ->rawColumns(['name', 'status', 'action'])
                 ->make();
         }
         return view('backend.layouts.users.index');
+    }
+
+    /**
+     * Display the specified user details.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse {
+        $user = User::findOrFail($id);
+        return response()->json([
+            'name'   => $user->first_name . ' ' . $user->last_name,
+            'email'  => $user->email,
+            'role'   => $user->role,
+            'status' => $user->status,
+        ]);
     }
 
     /**
@@ -54,6 +79,9 @@ class UserController extends Controller {
         if ($status === 'active' || $status === 'inactive') {
             $user->status = $status;
             $user->save();
+
+            // Queue the status update email
+            Mail::to($user->email)->queue(new StatusUpdateMail($user));
 
             return response()->json([
                 'success' => true,

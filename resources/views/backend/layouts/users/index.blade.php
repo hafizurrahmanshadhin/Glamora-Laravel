@@ -37,6 +37,7 @@
                                         <th class="column-content">Email</th>
                                         <th class="column-content">Role</th>
                                         <th class="column-content">Status</th>
+                                        <th class="column-content text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,6 +46,27 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal for viewing user details --}}
+    <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="userModalLabel" class="modal-title">User Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Name:</strong> <span id="userName"></span></p>
+                    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                    <p><strong>Role:</strong> <span id="userRole"></span></p>
+                    <p><strong>Status:</strong> <span id="userStatus"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -121,6 +143,13 @@
                             searchable: false,
                             className: 'text-center'
                         },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false,
+                            className: 'text-center'
+                        },
                     ],
                 });
 
@@ -139,17 +168,36 @@
             }
         });
 
+        // Fetch and display user details
+        function showUserDetails(id) {
+            let url = '{{ route('user.show', ':id') }}';
+            url = url.replace(':id', id);
+
+            axios.get(url)
+                .then(function(response) {
+                    let data = response.data;
+                    $('#userName').text(data.name);
+                    $('#userEmail').text(data.email);
+                    $('#userRole').text(data.role);
+                    $('#userStatus').text(data.status);
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    toastr.error('Could not fetch user details.');
+                });
+        }
+
         // Status Change
         function changeStatus(id, status) {
             let url = '{{ route('user.status', ':id') }}';
-            $.ajax({
-                type: "POST",
-                url: url.replace(':id', id),
-                data: {
+            url = url.replace(':id', id);
+
+            axios.post(url, {
                     status: status,
                     _token: '{{ csrf_token() }}'
-                },
-                success: function(resp) {
+                })
+                .then(function(response) {
+                    let resp = response.data;
                     console.log(resp);
                     $('#datatable').DataTable().ajax.reload();
                     if (resp.success === true) {
@@ -159,12 +207,11 @@
                     } else {
                         toastr.error(resp.message);
                     }
-                },
-                error: function(error) {
+                })
+                .catch(function(error) {
                     console.error(error);
                     toastr.error('An error occurred. Please try again.');
-                }
-            });
+                });
         }
     </script>
 @endpush

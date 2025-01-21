@@ -11,6 +11,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 //! Route for Users Page
 Route::controller(UserController::class)->group(function () {
     Route::get('/user', 'index')->name('user.index');
+    Route::get('/user/show/{id}', 'show')->name('user.show');
     Route::post('/user/status/{id}', 'status')->name('user.status');
 });
 

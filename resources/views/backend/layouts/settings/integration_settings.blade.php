@@ -30,11 +30,7 @@
                                         data-bs-target="#google" type="button" role="tab" aria-controls="google"
                                         aria-selected="true">Google</button>
                                 </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="facebook-tab" data-bs-toggle="tab"
-                                        data-bs-target="#facebook" type="button" role="tab" aria-controls="facebook"
-                                        aria-selected="false">Facebook</button>
-                                </li>
+
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="stripe-tab" data-bs-toggle="tab" data-bs-target="#stripe"
                                         type="button" role="tab" aria-controls="stripe"
@@ -92,55 +88,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="facebook" role="tabpanel" aria-labelledby="facebook-tab">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>Facebook Settings</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <form method="POST" action="{{ route('facebook.update') }}">
-                                                @csrf
-                                                @method('PATCH')
-                                                <div class="row gy-4">
-                                                    <div class="col-md-6">
-                                                        <div class="mb-3">
-                                                            <label for="FACEBOOK_CLIENT_ID" class="form-label">Facebook
-                                                                Client Id:</label>
-                                                            <input type="text"
-                                                                class="form-control @error('FACEBOOK_CLIENT_ID') is-invalid @enderror"
-                                                                name="FACEBOOK_CLIENT_ID" id="FACEBOOK_CLIENT_ID"
-                                                                placeholder="Please Enter Your Facebook Client Id"
-                                                                value="{{ env('FACEBOOK_CLIENT_ID') }}">
-                                                            @error('FACEBOOK_CLIENT_ID')
-                                                                <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
 
-                                                    <div class="col-md-6">
-                                                        <div class="mb-3">
-                                                            <label for="FACEBOOK_CLIENT_SECRET"
-                                                                class="form-label">Facebook Client Secret:</label>
-                                                            <input type="text"
-                                                                class="form-control @error('FACEBOOK_CLIENT_SECRET') is-invalid @enderror"
-                                                                name="FACEBOOK_CLIENT_SECRET" id="FACEBOOK_CLIENT_SECRET"
-                                                                placeholder="Please Enter Your Facebook Client Secret"
-                                                                value="{{ env('FACEBOOK_CLIENT_SECRET') }}">
-                                                            @error('FACEBOOK_CLIENT_SECRET')
-                                                                <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 mt-3">
-                                                        <button type="submit" class="btn btn-primary">Save Facebook
-                                                            Settings</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="tab-pane fade" id="stripe" role="tabpanel" aria-labelledby="stripe-tab">
                                     <div class="card">
                                         <div class="card-header">

@@ -50,37 +50,6 @@ class IntegrationController extends Controller {
     }
 
     /**
-     * Update facebook credentials settings.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function updateFacebookCredentials(Request $request): RedirectResponse {
-        $request->validate([
-            'FACEBOOK_CLIENT_ID'     => 'nullable|string',
-            'FACEBOOK_CLIENT_SECRET' => 'nullable|string',
-        ]);
-        try {
-            $envContent = File::get(base_path('.env'));
-            $lineBreak  = "\n";
-            $envContent = preg_replace([
-                '/FACEBOOK_CLIENT_ID=(.*)\s/',
-                '/FACEBOOK_CLIENT_SECRET=(.*)\s/',
-            ], [
-                'FACEBOOK_CLIENT_ID=' . $request->FACEBOOK_CLIENT_ID . $lineBreak,
-                'FACEBOOK_CLIENT_SECRET=' . $request->FACEBOOK_CLIENT_SECRET . $lineBreak,
-            ], $envContent);
-
-            if ($envContent !== null) {
-                File::put(base_path('.env'), $envContent);
-            }
-            return redirect()->back()->with('t-success', 'FACEBOOK Setting Update Successfully.');
-        } catch (Exception) {
-            return redirect()->back()->with('t-error', 'FACEBOOK Setting Update Failed');
-        }
-    }
-
-    /**
      * Update stripe credentials settings.
      *
      * @param Request $request
