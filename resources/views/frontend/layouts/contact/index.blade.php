@@ -50,18 +50,21 @@
                 </div>
 
                 <div class="armie-contact-form">
-                    <form action="#" method="POST">
-                        <label for="armie-name">Name</label>
-                        <input type="text" id="armie-name" name="name" placeholder="Enter your name" required>
+                    <form id="contactForm">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your name"
+                            value="{{ old('name') }}" required>
 
-                        <label for="armie-email">Email</label>
-                        <input type="email" id="armie-email" name="email" placeholder="Enter your Email" required>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your Email"
+                            value="{{ old('name') }}" required>
 
-                        <label for="armie-phone">Phone</label>
-                        <input type="tel" id="armie-phone" name="phone" placeholder="Enter your phone" required>
+                        <label for="phone_number">Phone</label>
+                        <input type="tel" id="phone_number" name="phone_number" placeholder="Enter your phone"
+                            value="{{ old('phone_number') }}" required>
 
-                        <label for="armie-subject">Subject</label>
-                        <textarea id="armie-subject" name="subject" placeholder="Type your text" required></textarea>
+                        <label for="Message">Subject</label>
+                        <textarea id="Message" name="Message" placeholder="Type your text" required>{{ old('Message') }}</textarea>
 
                         <button type="submit">Submit</button>
                     </form>
@@ -73,12 +76,14 @@
             <div class="join-us-section-content">
                 <h3>Join Us</h3>
                 <h2>Discover Beauty Services</h2>
-                <p>Step into a world of top-rated beauty professionals ready
+                <p>
+                    Step into a world of top-rated beauty professionals ready
                     to cater to your unique needs. Whether you're looking
                     for a new look or routine care, our platform connects
                     you with the best beauty experts in your area. Explore a
                     variety of services and easily book appointments that
-                    fit your schedule.</p>
+                    fit your schedule.
+                </p>
                 <a href="{{ route('join') }}" class="common-btn">Sign Up Now</a>
             </div>
         </section>
@@ -87,4 +92,44 @@
 
 @push('scripts')
     <script src="{{ asset('frontend/js/owl.carousel.min.js') }}"></script>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Clear previous error messages
+            document.getElementById('nameError').innerText = '';
+            document.getElementById('emailError').innerText = '';
+            document.getElementById('phoneNumberError').innerText = '';
+            document.getElementById('messageError').innerText = '';
+
+            const formData = new FormData(this);
+
+            axios.post('{{ route('contact.store') }}', formData)
+                .then(response => {
+                    toastr.success('Your message has been sent successfully!');
+                    document.getElementById('contactForm').reset();
+                })
+                .catch(error => {
+                    if (error.response && error.response.data.errors) {
+                        const errors = error.response.data.errors;
+                        if (errors.name) {
+                            document.getElementById('nameError').innerText = errors.name[0];
+                        }
+                        if (errors.email) {
+                            document.getElementById('emailError').innerText = errors.email[0];
+                        }
+                        if (errors.phone_number) {
+                            document.getElementById('phoneNumberError').innerText = errors.phone_number[0];
+                        }
+                        if (errors.Message) {
+                            document.getElementById('messageError').innerText = errors.Message[0];
+                        }
+                        toastr.error('Please fix the errors and try again.');
+                    } else {
+                        toastr.error('An unexpected error occurred. Please try again later.');
+                    }
+                });
+        });
+    </script>
 @endpush

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contact;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -23,16 +24,16 @@ class ContactController extends Controller {
      * @param  Request  $request
      * @return JsonResponse
      */
-    // public function store(Request $request): JsonResponse {
-    //     $validatedData = $request->validate([
-    //         'firstName'    => 'required|string|max:255',
-    //         'lastName'     => 'required|string|max:255',
-    //         'phone_number' => 'required|string|max:25',
-    //         'Message'      => 'required|string',
-    //     ]);
+    public function store(Request $request): JsonResponse {
+        $validatedData = $request->validate([
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|string|email|max:255',
+            'phone_number' => 'required|string|max:25|regex:/^([0-9\s\-\+\(\)]*)$/',
+            'Message'      => 'required|string',
+        ]);
 
-    //     Contact::create($validatedData);
+        Contact::create($validatedData);
 
-    //     return response()->json(['success' => 'Your message has been sent successfully!']);
-    // }
+        return response()->json(['success' => 'Your message has been sent successfully!']);
+    }
 }
