@@ -27,8 +27,9 @@
                 <svg class="text-svg" xmlns="http://www.w3.org/2000/svg" xml:lang="en"
                     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500">
                     <defs>
-                        <path id="textcircle" d="M250,400
-                                                             a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
+                        <path id="textcircle"
+                            d="M250,400
+                                                                                                         a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
                             transform="rotate(12,250,250)" />
                     </defs>
                     <g class="textcircle">
@@ -284,19 +285,6 @@
     </div>
     <!-- home italic text container end -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     {{-- home beauty services start --}}
     <div class="home-beauty-services m-bottom">
         <div data-aos="fade-right" data-aos-delay="100" class="section-sub-title-italic text-center">
@@ -305,62 +293,36 @@
         <div data-aos="fade-left" data-aos-delay="200" class="section-sub-title text-center">
             Available Beauty Services
         </div>
+
         <div class="slider">
-            <div class="item">
-                <div class="img-content">
-                    <img src="{{ asset('frontend/images/home-beauty-service-1.png') }}" alt="" />
-                </div>
-                <div class="text-content">
-                    <div class="left">
-                        <div class="title">Hair Style</div>
-                        <div class="text">20+ Stylers Available</div>
+            @foreach ($approvedServices as $userService)
+                <div class="item">
+                    <div class="img-content">
+                        <img src="{{ $userService->image ? asset($userService->image) : asset('frontend/images/default.png') }}"
+                            alt="Service Image" />
                     </div>
-                    <a href="./Service-provider-profile.html" class="right action">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14"
-                            fill="none">
-                            <path d="M16.5 7L1.5 7" stroke="" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M10.4492 0.975414L16.4992 6.99941L10.4492 13.0244" stroke="" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="item">
-                <div class="img-content">
-                    <img src="{{ asset('frontend/images/home-beauty-service-1.png') }}" alt="" />
-                </div>
-                <div class="text-content">
-                    <div class="left">
-                        <div class="title">Hair Style</div>
-                        <div class="text">20+ Stylers Available</div>
+                    <div class="text-content">
+                        <div class="left">
+                            <div class="title">{{ $userService->service->services_name }}</div>
+                            <div class="text">{{ $userService->styler_count }}+ Stylers Available</div>
+                        </div>
+
+                        <a href="{{ route('available-services', ['serviceId' => $userService->service_id]) }}"
+                            class="right action">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14"
+                                fill="none">
+                                <path d="M16.5 7L1.5 7" stroke="" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M10.4492 0.975414L16.4992 6.99941L10.4492 13.0244" stroke=""
+                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </a>
                     </div>
-                    <a href="./Service-provider-profile.html" class="right action">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14"
-                            fill="none">
-                            <path d="M16.5 7L1.5 7" stroke="" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M10.4492 0.975414L16.4992 6.99941L10.4492 13.0244" stroke="" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
                 </div>
-            </div>
+            @endforeach
         </div>
     </div>
     {{-- home beauty services end --}}
-
-
-
-
-
-
-
-
-
-
-
-
 
     <!-- home user type container start -->
     <div class="section-padding-x home-user-type m-bottom ">

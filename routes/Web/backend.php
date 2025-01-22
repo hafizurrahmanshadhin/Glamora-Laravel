@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\Backend\AvailableServicesController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\ServiceController;
 use App\Http\Controllers\Web\Backend\UserController;
@@ -24,4 +25,10 @@ Route::controller(ServiceController::class)->group(function () {
     Route::put('/service/update/{id}', 'update')->name('service.update');
     Route::get('/service/status/{id}', 'status')->name('service.status');
     Route::delete('/service/destroy/{id}', 'destroy')->name('service.destroy');
+});
+
+//! Route for Available Beauty Services Page
+Route::controller(AvailableServicesController::class)->group(function () {
+    Route::get('/available-services', 'index')->name('available.services.index');
+    Route::post('/available-services/status/{id}', 'status')->name('available.services.status');
 });

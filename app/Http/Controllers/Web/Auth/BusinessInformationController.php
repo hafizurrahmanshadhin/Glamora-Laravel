@@ -90,10 +90,10 @@ class BusinessInformationController extends Controller {
                 'services.*.image'         => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
             ]);
 
-            foreach ($validated['services'] as $data) {
+            foreach ($validated['services'] as $index => $data) {
                 $imagePath = null;
                 if (!empty($data['image'])) {
-                    $imagePath = Helper::fileUpload($data['image'], 'user_services_images', Auth::id());
+                    $imagePath = Helper::fileUpload($data['image'], 'user_services_images', 'service_image_' . $index);
                 }
 
                 UserService::updateOrCreate(

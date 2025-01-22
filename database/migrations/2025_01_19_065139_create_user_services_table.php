@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->decimal('total_price', 10, 2)->nullable(false);
             $table->string('image')->nullable();
 
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();

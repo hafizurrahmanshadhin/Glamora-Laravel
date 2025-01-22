@@ -75,6 +75,15 @@
                     </a>
                 </li>
 
+                {{-- Available Beauty Services --}}
+                <li class="nav-item">
+                    <a href="{{ route('available.services.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('available.services.*') ? 'active' : '' }}">
+                        <i class="ri-scissors-cut-line"></i>
+                        <span data-key="t-faq">Available Service</span>
+                    </a>
+                </li>
+
                 <hr>
                 {{-- Settings --}}
                 <li class="nav-item">
@@ -129,7 +138,7 @@
                                 </a>
                             </li>
 
-                            {{-- <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('settings.dynamic_page.index') }}"
                                     class="nav-link {{ request()->routeIs('settings.dynamic_page.*') ? 'active' : '' }}"
                                     data-key="t-dynamic-page-settings">
@@ -151,7 +160,7 @@
                                     data-key="t-terms-and-conditions">
                                     Privacy Policy
                                 </a>
-                            </li> --}}
+                            </li>
                         </ul>
                     </div>
                 </li>
