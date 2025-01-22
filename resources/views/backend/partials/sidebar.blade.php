@@ -84,6 +84,15 @@
                     </a>
                 </li>
 
+                {{-- Frequently Asked Questions --}}
+                <li class="nav-item">
+                    <a href="{{ route('faq.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('faq.*') ? 'active' : '' }}">
+                        <i class="ri-question-line"></i>
+                        <span data-key="t-faq">FAQ</span>
+                    </a>
+                </li>
+
                 <hr>
                 {{-- Settings --}}
                 <li class="nav-item">

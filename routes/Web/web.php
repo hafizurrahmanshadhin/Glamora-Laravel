@@ -3,6 +3,7 @@
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\Web\Frontend\AvailableServicesController;
 use App\Http\Controllers\Web\Frontend\ContactController;
+use App\Http\Controllers\Web\Frontend\FAQController;
 use App\Http\Controllers\Web\Frontend\HomeController;
 use App\Http\Controllers\Web\Frontend\ServiceProviderProfileController;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,7 @@ Route::get('/reset', [ResetController::class, 'RunMigrations'])->name('reset');
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/available-services/{serviceId}', [AvailableServicesController::class, 'index'])->name('available-services');
 Route::get('/service-provider-profile', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile');
+Route::get('/faq', [FAQController::class, 'index'])->name('faq');
 
 Route::controller(ContactController::class)->group(function () {
     Route::get('/contact', 'index')->name('contact');

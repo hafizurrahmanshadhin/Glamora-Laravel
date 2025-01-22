@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\DynamicPageSeeder;
+use Database\Seeders\FAQSeeder;
 use Database\Seeders\ServiceSeeder;
 use Database\Seeders\SocialMediaSeeder;
 use Database\Seeders\SystemSettingSeeder;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder {
             SocialMediaSeeder::class,
             ContentSeeder::class,
             ServiceSeeder::class,
+            FAQSeeder::class,
         ]);
     }
 }

@@ -53,7 +53,7 @@
         </div>
         <a class="item" href="{{ route('register', ['role' => 'beauty_expert']) }}">Join as a Beauty Expert</a>
         <a class="item" href="{{ route('contact') }}">Contact</a>
-        <a class="item" href="">Faq</a>
+        <a class="item" href="{{ route('faq') }}">Faq</a>
     </div>
 
     <div class="header-actions">

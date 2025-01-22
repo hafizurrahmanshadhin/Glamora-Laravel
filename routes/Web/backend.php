@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\Backend\AvailableServicesController;
 use App\Http\Controllers\Web\Backend\DashboardController;
+use App\Http\Controllers\Web\Backend\FAQController;
 use App\Http\Controllers\Web\Backend\ServiceController;
 use App\Http\Controllers\Web\Backend\UserController;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +32,15 @@ Route::controller(ServiceController::class)->group(function () {
 Route::controller(AvailableServicesController::class)->group(function () {
     Route::get('/available-services', 'index')->name('available.services.index');
     Route::post('/available-services/status/{id}', 'status')->name('available.services.status');
+});
+
+//! Route for FAQ Page
+Route::controller(FAQController::class)->group(function () {
+    Route::get('/faq', 'index')->name('faq.index');
+    Route::get('/faq/create', 'create')->name('faq.create');
+    Route::post('/faq/store', 'store')->name('faq.store');
+    Route::get('/faq/edit/{id}', 'edit')->name('faq.edit');
+    Route::put('/faq/update/{id}', 'update')->name('faq.update');
+    Route::get('/faq/status/{id}', 'status')->name('faq.status');
+    Route::delete('/faq/destroy/{id}', 'destroy')->name('faq.destroy');
 });

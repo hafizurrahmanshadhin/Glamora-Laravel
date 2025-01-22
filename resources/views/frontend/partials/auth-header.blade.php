@@ -65,8 +65,8 @@
                 @endif
             ">Dashboard</a>
         <a class="item" href="./upcoming-appointments.html">My Bookings</a>
-        <a class="item" href="./contact.html">Contact</a>
-        <a class="item" href="./faq.html">Faq</a>
+        <a class="item" href="{{ route('contact') }}">Contact</a>
+        <a class="item" href="{{ route('faq') }}">Faq</a>
     </div>
     <div class="header-actions">
         <a href="" class="">
