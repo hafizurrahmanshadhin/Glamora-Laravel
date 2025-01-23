@@ -93,6 +93,15 @@
                     </a>
                 </li>
 
+                {{-- Contacts --}}
+                <li class="nav-item">
+                    <a href="{{ route('contacts.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('contacts.*') ? 'active' : '' }}">
+                        <i class="ri-contacts-book-line"></i>
+                        <span data-key="t-Contact">Contacts</span>
+                    </a>
+                </li>
+
                 <hr>
                 {{-- Settings --}}
                 <li class="nav-item">

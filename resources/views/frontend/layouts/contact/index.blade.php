@@ -29,7 +29,7 @@
                         </span>
                         <div class="contact-address-para">
                             <p class="contact-address-text">CALL US FOR immediate SUPPORT</p>
-                            <a class="contact-address-way" href="tel:+666-888-0000">666-888-0000</a>
+                            <a class="contact-address-way">{{ $systemSettings->phone_number }}</a>
                         </div>
                     </div>
 
@@ -44,7 +44,7 @@
                         </span>
                         <div class="contact-address-para">
                             <p class="contact-address-text">SEND US EMAIL FOR INQUIRY</p>
-                            <a class="contact-address-way" href="mailto:electrico@gmail.com"> electrico@gmail.com </a>
+                            <a class="contact-address-way">{{ $systemSettings->email }}</a>
                         </div>
                     </div>
                 </div>
@@ -52,19 +52,20 @@
                 <div class="armie-contact-form">
                     <form id="contactForm">
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name" placeholder="Enter your name"
-                            value="{{ old('name') }}" required>
+                        <span id="nameError" style="color:red;"></span>
+                        <input type="text" id="name" name="name" ...existing code...>
 
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your Email"
-                            value="{{ old('name') }}" required>
+                        <span id="emailError" style="color:red;"></span>
+                        <input type="email" id="email" name="email" ...existing code...>
 
                         <label for="phone_number">Phone</label>
-                        <input type="tel" id="phone_number" name="phone_number" placeholder="Enter your phone"
-                            value="{{ old('phone_number') }}" required>
+                        <span id="phoneNumberError" style="color:red;"></span>
+                        <input type="tel" id="phone_number" name="phone_number" ...existing code...>
 
-                        <label for="Message">Subject</label>
-                        <textarea id="Message" name="Message" placeholder="Type your text" required>{{ old('Message') }}</textarea>
+                        <label for="message">Subject</label>
+                        <span id="messageError" style="color:red;"></span>
+                        <textarea id="message" name="message" ...existing code...></textarea>
 
                         <button type="submit">Submit</button>
                     </form>

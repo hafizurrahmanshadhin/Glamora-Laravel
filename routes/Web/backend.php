@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\Backend\AvailableServicesController;
+use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
 use App\Http\Controllers\Web\Backend\ServiceController;
@@ -43,4 +44,11 @@ Route::controller(FAQController::class)->group(function () {
     Route::put('/faq/update/{id}', 'update')->name('faq.update');
     Route::get('/faq/status/{id}', 'status')->name('faq.status');
     Route::delete('/faq/destroy/{id}', 'destroy')->name('faq.destroy');
+});
+
+//! Route for Contacts Page
+Route::controller(ContactController::class)->group(function () {
+    Route::get('/contacts', 'index')->name('contacts.index');
+    Route::get('/contacts/status/{id}', 'status')->name('contacts.status');
+    Route::delete('/contacts/destroy/{id}', 'destroy')->name('contacts.destroy');
 });

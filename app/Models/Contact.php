@@ -19,14 +19,15 @@ class Contact extends Model {
 
     protected function casts(): array {
         return [
-            'id'         => 'integer',
-            'name'       => 'string',
-            'email'      => 'string',
-            'message'    => 'string',
-            'status'     => 'string',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
+            'id'           => 'integer',
+            'name'         => 'string',
+            'email'        => 'string',
+            'phone_number' => 'string',
+            'message'      => 'string',
+            'status'       => 'string',
+            'created_at'   => 'datetime',
+            'updated_at'   => 'datetime',
+            'deleted_at'   => 'datetime',
         ];
     }
 }

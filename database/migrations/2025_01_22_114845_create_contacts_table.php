@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('name')->nullable(false);
             $table->string('email')->nullable(false);
             $table->string('phone_number')->nullable(false);
-            $table->text('Message')->nullable(false);
+            $table->text('message')->nullable(false);
 
             $table->enum('status', ['active', 'inactive'])->default('active');
 
