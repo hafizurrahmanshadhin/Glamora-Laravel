@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 class Helper {
@@ -105,5 +106,24 @@ class Helper {
         }
 
         return response()->json($response, $code);
+    }
+
+    /**
+     * Check if the current route should show the footer.
+     *
+     * @return bool
+     */
+    public static function shouldShowFooter(): bool {
+        $routesWithFooter = [
+            'index',
+            'available-services',
+            'service-category',
+            'service-provider-profile',
+            'faq',
+            'contact',
+            'contact.store',
+        ];
+
+        return in_array(Route::currentRouteName(), $routesWithFooter);
     }
 }

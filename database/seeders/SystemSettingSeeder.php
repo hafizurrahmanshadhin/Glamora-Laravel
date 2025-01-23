@@ -15,7 +15,7 @@ class SystemSettingSeeder extends Seeder {
                 'email'          => 'support@Glamora.com',
                 'phone_number'   => '0123456789',
                 'address'        => '123 Main St, Suite 101, City, State, ZIP',
-                'copyright_text' => '©Glamora',
+                'copyright_text' => '© 2024 Glamora. All rights reserved.',
                 'description'    => '<p>About System...</p>',
                 'logo'           => null,
                 'favicon'        => null,

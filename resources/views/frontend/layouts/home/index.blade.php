@@ -29,7 +29,7 @@
                     <defs>
                         <path id="textcircle"
                             d="M250,400
-                                                                                                         a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
+                                                                                                                             a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
                             transform="rotate(12,250,250)" />
                     </defs>
                     <g class="textcircle">
@@ -324,7 +324,7 @@
     </div>
     {{-- home beauty services end --}}
 
-    <!-- home user type container start -->
+    {{-- home user type container start --}}
     <div class="section-padding-x home-user-type m-bottom ">
         <div style="
           background: linear-gradient(
@@ -343,10 +343,11 @@
                     scheduling.
                 </div>
                 <div class="mt-4">
-                    <a href="./sign-up.html" class="common-btn">Join</a>
+                    <a href="{{ route('register', ['role' => 'beauty_expert']) }}" class="common-btn">Join</a>
                 </div>
             </div>
         </div>
+
         <div style="
           background: linear-gradient(
               180deg,
@@ -364,12 +365,12 @@
                     your convenience.
                 </div>
                 <div class="mt-4">
-                    <a href="./service-category.html" class="common-btn">Search</a>
+                    <a href="{{ route('service-category') }}" class="common-btn">Search</a>
                 </div>
             </div>
         </div>
     </div>
-    <!-- home user type container end -->
+    {{-- home user type container end --}}
 
     <!-- home testimonial section start -->
     <div class="home-testimonial section-padding-x m-bottom ">

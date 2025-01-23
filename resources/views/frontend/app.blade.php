@@ -53,7 +53,7 @@
 
     @yield('content')
 
-    @if (!Auth::check())
+    @if (!Auth::check() || \App\Helpers\Helper::shouldShowFooter())
         @include('frontend.partials.footer')
     @endif
 
