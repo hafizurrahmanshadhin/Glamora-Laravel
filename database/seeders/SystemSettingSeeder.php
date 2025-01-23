@@ -10,12 +10,12 @@ class SystemSettingSeeder extends Seeder {
         DB::table('system_settings')->insert([
             [
                 'id'             => 1,
-                'title'          => 'Admin_Dashboard_Dosix',
-                'system_name'    => 'Admin_Dashboard_Dosix',
-                'email'          => 'info@support.com',
-                'phone_number'   => '01915696677',
-                'address'        => 'Mohammadpur, Dhaka, Bangladesh',
-                'copyright_text' => '©Admin_Dashboard_Dosix',
+                'title'          => 'Glamora',
+                'system_name'    => 'Glamora',
+                'email'          => 'support@Glamora.com',
+                'phone_number'   => '0123456789',
+                'address'        => '123 Main St, Suite 101, City, State, ZIP',
+                'copyright_text' => '©Glamora',
                 'description'    => '<p>About System...</p>',
                 'logo'           => null,
                 'favicon'        => null,
