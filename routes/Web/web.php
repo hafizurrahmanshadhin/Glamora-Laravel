@@ -18,7 +18,7 @@ Route::get('/reset', [ResetController::class, 'RunMigrations'])->name('reset');
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/available-services/{serviceId}', [AvailableServicesController::class, 'index'])->name('available-services');
 Route::get('/service-category', [ServiceCategoryController::class, 'index'])->name('service-category');
-Route::get('/service-provider-profile', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile');
+Route::get('/service-provider-profile/{userId}', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile');
 Route::get('/faq', [FAQController::class, 'index'])->name('faq');
 
 Route::controller(ContactController::class)->group(function () {

@@ -55,16 +55,25 @@
                         <label for="name">Full Name</label>
                         <input placeholder="Enter Your Full Name" type="text" name="name" id="name" required>
                     </div>
+
                     <div class="item">
                         <label for="bio">Add Bio</label>
                         <input placeholder="Write something about your service" type="text" name="bio" id="bio"
                             required>
                     </div>
+
                     <div class="item">
                         <label for="business_name">Business Name</label>
-                        <input placeholder="Enter your Business Address" type="text" name="business_name"
-                            id="business_name" required>
+                        <input placeholder="Enter your Business Name" type="text" name="business_name" id="business_name"
+                            required>
                     </div>
+
+                    <div class="item">
+                        <label for="business_address">Business Address</label>
+                        <input placeholder="Enter your Business Address" type="text" name="business_address"
+                            id="business_address" required>
+                    </div>
+
                     <div class="item">
                         <label for="professional_title">Professional Title</label>
                         <input placeholder="Enter your Professional Title" type="text" name="professional_title"
@@ -786,6 +795,8 @@
             formData.append('bio', document.querySelector('input[placeholder="Write something about your service"]')
                 .value);
             formData.append('business_name', document.querySelector(
+                'input[placeholder="Enter your Business Name"]').value);
+            formData.append('business_address', document.querySelector(
                 'input[placeholder="Enter your Business Address"]').value);
             formData.append('professional_title', document.querySelector(
                 'input[placeholder="Enter your Professional Title"]').value);
@@ -854,7 +865,7 @@
                 const yesRadio = row.querySelector(`#yes${serviceId}`);
                 if (!yesRadio.checked) return; // Skip if "No" is selected
                 const offeredPriceInput = row.querySelector(
-                '.service-value-input input[type="number"]');
+                    '.service-value-input input[type="number"]');
                 const totalChargeInput = row.querySelector('.total-charge');
                 servicesData.push({
                     service_id: serviceId,

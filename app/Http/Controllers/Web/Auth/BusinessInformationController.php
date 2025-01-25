@@ -25,12 +25,13 @@ class BusinessInformationController extends Controller {
         // store step 1 data
         if ($request->hasFile('avatar')) {
             $validated = $request->validate([
-                'avatar'             => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+                'avatar'             => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:20480',
                 'name'               => 'required|string|max:255',
                 'bio'                => 'required|string',
                 'business_name'      => 'required|string|max:255',
+                'business_address'   => 'required|string',
                 'professional_title' => 'required|string|max:255',
-                'license'            => 'required|file|mimes:pdf,jpg,png|max:10240',
+                'license'            => 'required|file|mimes:pdf,jpg,png|max:20480',
             ]);
 
             $avatarPath  = Helper::fileUpload($request->file('avatar'), 'avatars', $validated['name']);
@@ -46,6 +47,7 @@ class BusinessInformationController extends Controller {
                 'name'               => $validated['name'],
                 'bio'                => $validated['bio'],
                 'business_name'      => $validated['business_name'],
+                'business_address'   => $validated['business_address'],
                 'professional_title' => $validated['professional_title'],
                 'license'            => $licensePath,
             ]);
@@ -87,7 +89,7 @@ class BusinessInformationController extends Controller {
                 'services.*.selected'      => 'boolean',
                 'services.*.offered_price' => 'numeric',
                 'services.*.total_price'   => 'numeric',
-                'services.*.image'         => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+                'services.*.image'         => 'nullable|file|mimes:jpg,jpeg,png|max:20480',
             ]);
 
             foreach ($validated['services'] as $index => $data) {

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('name');
             $table->text('bio');
             $table->string('business_name');
+            $table->text('business_address');
             $table->string('professional_title');
             $table->string('license');
 

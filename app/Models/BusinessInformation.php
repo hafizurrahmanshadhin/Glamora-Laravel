@@ -22,6 +22,7 @@ class BusinessInformation extends Model {
             'name'               => 'string',
             'bio'                => 'string',
             'business_name'      => 'string',
+            'business_address'   => 'string',
             'professional_title' => 'string',
             'license'            => 'string',
             'status'             => 'string',
