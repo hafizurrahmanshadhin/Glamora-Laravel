@@ -7,6 +7,9 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+{{-- Sweet Alerts js --}}
+<script src="{{ asset('backend/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+
 <script>
     AOS.init({
         duration: 800,

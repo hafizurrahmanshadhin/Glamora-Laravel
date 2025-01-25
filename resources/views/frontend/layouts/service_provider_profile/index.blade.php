@@ -96,9 +96,9 @@
 
                 <div class="service-profile-provider-content-right">
                     <div class="booking-box">
-                        <h3>Want to book Sophia Grace?</h3>
+                        <h3>Want to book {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}?</h3>
                         <p>Select the services you need and check availability</p>
-                        <a class="armie-check-availability" href="./multiStepForm.html">Check Availability</a>
+                        <a class="armie-check-availability" href="javascript:void(0);">Check Availability</a>
                     </div>
 
                     <div class="tools-used">
@@ -228,6 +228,42 @@
     <script>
         $(document).ready(function() {
             $("select").niceSelect();
+        });
+    </script>
+
+    <script>
+        document.querySelector('.armie-check-availability').addEventListener('click', function() {
+            @if (Auth::check())
+                // User is logged in, show the SweetAlert
+                Swal.fire({
+                    title: "Do you want to save the changes?",
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: "Save",
+                    denyButtonText: `Don't save`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire("Saved!", "", "success");
+                    } else if (result.isDenied) {
+                        Swal.fire("Changes are not saved", "", "info");
+                    }
+                });
+            @else
+                // User is not logged in, show the login modal
+                Swal.fire({
+                    title: "You need to sign in to check availability",
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: "Sign In",
+                    denyButtonText: `Sign In Later`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ route('login') }}";
+                    } else if (result.isDenied) {
+                        Swal.fire("You can sign in later", "", "info");
+                    }
+                });
+            @endif
         });
     </script>
 @endpush

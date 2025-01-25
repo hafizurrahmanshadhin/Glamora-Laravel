@@ -26,6 +26,9 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
+{{-- Sweet Alert css --}}
+<link href="{{ asset('backend/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css">
+
 {{-- toaster css --}}
 <link href="{{ asset('backend/css/toastr.css') }}" rel="stylesheet" />
 {{-- toastr start --}}
