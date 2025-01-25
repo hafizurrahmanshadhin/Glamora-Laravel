@@ -13,7 +13,7 @@
                 <div class="sign-in-up-form-area">
                     <div class="form-header-para">
                         <h1>Sign in</h1>
-                        <p>New user? <a href="sign-up.html">Create an account</a></p>
+                        <p>New user? <a href="{{ route('join') }}">Create an account</a></p>
                     </div>
 
                     <form class="tm-sign-in-up-form" action="{{ route('login') }}" method="POST">
@@ -39,18 +39,8 @@
                         </div>
 
                         <button type="submit">Sign In</button>
-                        <p class="tm-create-btn-link">Don't have an account? <a href="sign-up.html">Sign Up</a></p>
-
-                        <div class="or-wrapper">
-                            <div class="or-line"></div>
-                            <p class="or-text">or</p>
-                            <div class="or-line"></div>
-                        </div>
-
-                        <a class="google-link" href="#">
-                            <img src="{{ asset('frontend/images/google.png') }}" alt="">
-                            Continue with Google
-                        </a>
+                        <p class="tm-create-btn-link">Forgot Password? <a href="{{ route('password.request') }}">Click
+                                Here</a></p>
                     </form>
                 </div>
             </div>

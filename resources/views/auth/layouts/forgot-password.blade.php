@@ -3,57 +3,46 @@
 @section('title', 'Forgot Password')
 
 @section('content')
-    <div class="col-lg-8 col-xxl-4 mx-auto order-first order-xl-last">
-        <div class="card shadow-lg border-none m-lg-5">
-            <div class="card-body">
-                <div class="text-center mt-4">
-                    <div class="mb-4 pb-2">
-                        <a href="{{ route('index') }}" class="auth-logo">
-                            <img src="{{ asset('backend/images/logo-dark.png') }}" alt="" height="30"
-                                class="auth-logo-dark mx-auto">
-                            <img src="{{ asset('backend/images/logo-light.png') }}" alt="" height="30"
-                                class="auth-logo-light mx-auto">
-                        </a>
-                    </div>
-                    <h5 class="fs-3xl">Forgot Your Password?</h5>
-                    <p class="text-muted">No problem. Just let us know your email address and we will email you a password
-                        reset link that will allow you to choose a new one.</p>
+    <section class="sign-in-up-common-section">
+        <div class="container">
+            <div class="sign-in-up-content-wrapper">
+                <div class="sign-in-up-image-area">
+                    <img src="{{ asset('frontend/images/sign-in-banner.png') }}" alt="Forgot Password">
                 </div>
 
-                <div class="p-2 mt-4">
-                    {{-- Session Status --}}
-                    @if (session('status'))
-                        <div class="mb-4 font-medium text-sm text-green-600">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                <div class="sign-in-up-form-area">
+                    <div class="form-header-para">
+                        <h1>Forgot Password?</h1>
+                        <p>Enter your email address, and we'll send you a link to reset your password.</p>
+                    </div>
 
-                    <form method="POST" action="{{ route('password.email') }}">
+                    <form class="tm-sign-in-up-form" method="POST" action="{{ route('password.email') }}">
                         @csrf
-
-                        {{-- Email Address --}}
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <div class="position-relative">
-                                <input type="email" class="form-control" id="email" name="email"
-                                    placeholder="Enter email" value="{{ old('email') }}" required autofocus>
-                            </div>
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="Please Enter Your Email" value="{{ old('email') }}" required autofocus>
+                            <label for="email">Email address</label>
 
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        <div class="mt-3 text-end">
-                            <a href="{{ route('login') }}" class="text-muted">Back to Login</a>
-                        </div>
+                        @if (session('status'))
+                            <div class="alert alert-success mt-3" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
 
-                        <div class="mt-4">
-                            <button class="btn btn-primary w-100" type="submit">Email Password Reset Link</button>
+                        <button type="submit">Send Password Reset Link</button>
+
+                        <div class="mt-3 text-center">
+                            <p class="tm-create-btn-link">Remember your password? <a href="{{ route('login') }}">Sign In</a>
+                            </p>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

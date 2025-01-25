@@ -72,17 +72,6 @@
                         <button class="sign-up-common-btn" type="submit">Sign Up</button>
                         <p class="tm-create-btn-link">Already have an account?? <a href="{{ route('login') }}">Sign In</a>
                         </p>
-
-                        <div class="or-wrapper">
-                            <div class="or-line"></div>
-                            <p class="or-text">or</p>
-                            <div class="or-line"></div>
-                        </div>
-
-                        <a class="google-link" href="#">
-                            <img src="{{ asset('frontend/images/google.png') }}" alt="">
-                            Continue with Google
-                        </a>
                     </form>
                 </div>
             </div>

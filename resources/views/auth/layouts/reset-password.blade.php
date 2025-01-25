@@ -3,76 +3,61 @@
 @section('title', 'Reset Password')
 
 @section('content')
-    <div class="col-lg-8 col-xxl-4 mx-auto order-first order-xl-last">
-        <div class="card shadow-lg border-none m-lg-5">
-            <div class="card-body">
-                <div class="text-center mt-4">
-                    <div class="mb-4 pb-2">
-                        <a href="{{ route('index') }}" class="auth-logo">
-                            <img src="{{ asset('backend/images/logo-dark.png') }}" alt="" height="30"
-                                class="auth-logo-dark mx-auto">
-                            <img src="{{ asset('backend/images/logo-light.png') }}" alt="" height="30"
-                                class="auth-logo-light mx-auto">
-                        </a>
-                    </div>
-                    <h5 class="fs-3xl">Reset Your Password</h5>
-                    <p class="text-muted">Enter your email address and new password to reset your password.</p>
+    <section class="sign-in-up-common-section">
+        <div class="container">
+            <div class="sign-in-up-content-wrapper">
+                <div class="sign-in-up-image-area">
+                    <img src="{{ asset('frontend/images/sign-in-banner.png') }}" alt="Reset Password">
                 </div>
 
-                <div class="p-2 mt-4">
-                    <form method="POST" action="{{ route('password.store') }}">
+                <div class="sign-in-up-form-area">
+                    <div class="form-header-para">
+                        <h1>Reset Password</h1>
+                        <p>Remembered your password? <a href="{{ route('login') }}">Sign In</a></p>
+                    </div>
+
+                    <form class="tm-sign-in-up-form" action="{{ route('password.store') }}" method="POST">
                         @csrf
 
                         {{-- Password Reset Token --}}
                         <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-                        {{-- Email Address --}}
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <div class="position-relative">
-                                <input type="email" class="form-control" id="email" name="email"
-                                    placeholder="Enter email" value="{{ old('email', $request->email) }}" required autofocus
-                                    autocomplete="username">
-                            </div>
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="Enter Your Email" value="{{ old('email', $request->email) }}" required
+                                autofocus autocomplete="username">
+                            <label for="email">Email Address</label>
 
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        {{-- Password --}}
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                            <div class="position-relative">
-                                <input type="password" class="form-control" id="password" name="password" required
-                                    autocomplete="new-password">
-                            </div>
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Enter Your New Password" required autocomplete="new-password">
+                            <label for="password">New Password</label>
 
                             @error('password')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        {{-- Confirm Password --}}
-                        <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">Confirm Password <span
-                                    class="text-danger">*</span></label>
-                            <div class="position-relative">
-                                <input type="password" class="form-control" id="password_confirmation"
-                                    name="password_confirmation" required autocomplete="new-password">
-                            </div>
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="password_confirmation"
+                                name="password_confirmation" placeholder="Confirm Your New Password" required
+                                autocomplete="new-password">
+                            <label for="password_confirmation">Confirm New Password</label>
 
                             @error('password_confirmation')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        <div class="mt-4">
-                            <button class="btn btn-primary w-100" type="submit">Reset Password</button>
-                        </div>
+                        <button type="submit">Reset Password</button>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection
