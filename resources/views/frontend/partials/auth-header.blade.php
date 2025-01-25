@@ -9,7 +9,8 @@
                 d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z" />
         </svg>
         <a href="{{ route('index') }}" class="logo">
-            <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="" style="width: 194px; height: 42px;">
+            <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt=""
+                style="width: 194px; height: 42px;">
         </a>
     </div>
 
@@ -67,7 +68,8 @@
 
         <div class="header-profile-container">
             <div class="header-profile-btn">
-                <img src="{{ asset('frontend/images/header-profile.png') }}" alt="">
+                <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
+                    alt="Profile Image">
             </div>
             <div class="tm-profiledropdown">
                 <div class="tm-profile-dropdown-menu-wrapper">

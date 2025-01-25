@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\Web\Frontend\AvailableServicesController;
+use App\Http\Controllers\Web\Frontend\BookServiceController;
 use App\Http\Controllers\Web\Frontend\ContactController;
 use App\Http\Controllers\Web\Frontend\DynamicPageController;
 use App\Http\Controllers\Web\Frontend\FAQController;
@@ -20,6 +21,8 @@ Route::get('/available-services/{serviceId}', [AvailableServicesController::clas
 Route::get('/service-category', [ServiceCategoryController::class, 'index'])->name('service-category');
 Route::get('/service-provider-profile/{userId}', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile');
 Route::get('/faq', [FAQController::class, 'index'])->name('faq');
+
+Route::get('/booking-service', [BookServiceController::class, 'index'])->middleware('auth')->name('booking-service');
 
 Route::controller(ContactController::class)->group(function () {
     Route::get('/contact', 'index')->name('contact');

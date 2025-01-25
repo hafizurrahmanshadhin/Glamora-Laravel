@@ -234,20 +234,13 @@
     <script>
         document.querySelector('.armie-check-availability').addEventListener('click', function() {
             @if (Auth::check())
-                // User is logged in, show the SweetAlert
-                Swal.fire({
-                    title: "Do you want to save the changes?",
-                    showDenyButton: true,
-                    showCancelButton: false,
-                    confirmButtonText: "Save",
-                    denyButtonText: `Don't save`
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire("Saved!", "", "success");
-                    } else if (result.isDenied) {
-                        Swal.fire("Changes are not saved", "", "info");
-                    }
-                });
+                @if (Auth::user()->role === 'client')
+                    // User is logged in and role is 'client', directly open the route
+                    window.location.href = "{{ route('booking-service') }}";
+                @else
+                    // User is logged in but not a 'client', show an alert
+                    Swal.fire("Only clients can book services.", "", "info");
+                @endif
             @else
                 // User is not logged in, show the login modal
                 Swal.fire({

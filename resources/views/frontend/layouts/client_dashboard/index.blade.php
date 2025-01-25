@@ -15,12 +15,14 @@
             <div class="dashboard-profile-container">
                 <div class="top">
                     <div class="img-content">
-                        <img src="{{ asset('frontend/images/dashboard-profile.png') }}" alt="">
+                        <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
+                            alt="">
                         <div class="active-status"></div>
                     </div>
                     <div class="text-content">
-                        <div class="profile-title">John Doe, CPA</div>
-                        <div class="profile-text">New York, NY</div>
+                        <div class="profile-title">
+                            {{ ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) ?? '' }}</div>
+                        <div class="profile-text">{{ Auth::user()->email ?? '' }}</div>
                     </div>
                 </div>
                 <div class="bottom">
