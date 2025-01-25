@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Service;
 use Illuminate\View\View;
 
 class ServiceCategoryController extends Controller {
@@ -12,6 +13,7 @@ class ServiceCategoryController extends Controller {
      * @return View
      */
     public function index(): View {
-        return view('frontend.layouts.service_category.index');
+        $services = Service::withCount('userServices')->where('status', 'active')->get();
+        return view('frontend.layouts.service_category.index', compact('services'));
     }
 }

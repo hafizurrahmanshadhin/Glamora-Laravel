@@ -123,111 +123,26 @@
         <div class="categories-tax-service-section">
             <div class="section-padding-x">
                 <div class="categories-tax-card-wrapper">
-                    <div class="categories-tax-single-card">
-                        <div class="catagories-tax-card-hover d-none"></div>
-                        <h3> Flawless Hair Styling and <br class="d-none d-md-block" />
-                            Color Treatments
-                        </h3>
-                        <div class="categories-text-wrapper">
-                            <p>
-                                <img src="{{ asset('frontend/images/people-tick.svg') }}" alt srcset>
-                                250 expert
-                            </p>
-                            <div class="line-between-div"></div>
-                            <p>
-                                <img src="{{ asset('frontend/images/tick-Icon.svg') }}" alt srcset>
-                                40 works in progress
-                            </p>
+                    @foreach ($services as $service)
+                        <div class="categories-tax-single-card">
+                            <div class="catagories-tax-card-hover d-none"></div>
+                            <h3>{{ $service->services_name ?? '' }}</h3>
+                            <div class="categories-text-wrapper">
+                                <p>
+                                    <img src="{{ asset('frontend/images/people-tick.svg') }}" alt>
+                                    {{ $service->user_services_count ?? '' }} expert
+                                </p>
+                                <div class="line-between-div"></div>
+                                <p>
+                                    <img src="{{ asset('frontend/images/tick-Icon.svg') }}" alt>
+                                    40 works in progress
+                                </p>
+                            </div>
+                            <a href="{{ route('available-services', ['serviceId' => $service->id]) }}">Explore
+                                <img src="{{ asset('frontend/images/arrow-right.svg') }}" alt>
+                            </a>
                         </div>
-
-                        <a href="services.html">Explore
-                            <img src="{{ asset('frontend/images/arrow-right.svg') }}" alt srcset>
-                        </a>
-                    </div>
-                    <div class="categories-tax-single-card">
-                        <div class="catagories-tax-card-hover d-none"></div>
-                        <h3> Flawless Hair Styling and <br class="d-none d-md-block" />
-                            Color Treatments
-                        </h3>
-                        <div class="categories-text-wrapper">
-                            <p>
-                                <img src="{{ asset('frontend/images/people-tick.svg') }}" alt srcset>
-                                250 expert
-                            </p>
-                            <div class="line-between-div"></div>
-                            <p>
-                                <img src="{{ asset('frontend/images/tick-Icon.svg') }}" alt srcset>
-                                40 works in progress
-                            </p>
-                        </div>
-
-                        <a href="services.html">Explore
-                            <img src="{{ asset('frontend/images/arrow-right.svg') }}" alt srcset>
-                        </a>
-                    </div>
-                    <div class="categories-tax-single-card">
-                        <div class="catagories-tax-card-hover d-none"></div>
-                        <h3> Flawless Hair Styling and <br class="d-none d-md-block" />
-                            Color Treatments
-                        </h3>
-                        <div class="categories-text-wrapper">
-                            <p>
-                                <img src="{{ asset('frontend/images/people-tick.svg') }}" alt srcset>
-                                250 expert
-                            </p>
-                            <div class="line-between-div"></div>
-                            <p>
-                                <img src="{{ asset('frontend/images/tick-Icon.svg') }}" alt srcset>
-                                40 works in progress
-                            </p>
-                        </div>
-
-                        <a href="services.html">Explore
-                            <img src="{{ asset('frontend/images/arrow-right.svg') }}" alt srcset>
-                        </a>
-                    </div>
-                    <div class="categories-tax-single-card">
-                        <div class="catagories-tax-card-hover d-none"></div>
-                        <h3> Flawless Hair Styling and <br class="d-none d-md-block" />
-                            Color Treatments
-                        </h3>
-                        <div class="categories-text-wrapper">
-                            <p>
-                                <img src="{{ asset('frontend/images/people-tick.svg') }}" alt srcset>
-                                250 expert
-                            </p>
-                            <div class="line-between-div"></div>
-                            <p>
-                                <img src="{{ asset('frontend/images/tick-Icon.svg') }}" alt srcset>
-                                40 works in progress
-                            </p>
-                        </div>
-
-                        <a href="services.html">Explore
-                            <img src="{{ asset('frontend/images/arrow-right.svg') }}" alt srcset>
-                        </a>
-                    </div>
-                    <div class="categories-tax-single-card">
-                        <div class="catagories-tax-card-hover d-none"></div>
-                        <h3> Flawless Hair Styling and <br class="d-none d-md-block" />
-                            Color Treatments
-                        </h3>
-                        <div class="categories-text-wrapper">
-                            <p>
-                                <img src="{{ asset('frontend/images/people-tick.svg') }}" alt srcset>
-                                250 expert
-                            </p>
-                            <div class="line-between-div"></div>
-                            <p>
-                                <img src="{{ asset('frontend/images/tick-Icon.svg') }}" alt srcset>
-                                40 works in progress
-                            </p>
-                        </div>
-
-                        <a href="services.html">Explore
-                            <img src="{{ asset('frontend/images/arrow-right.svg') }}" alt srcset>
-                        </a>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
