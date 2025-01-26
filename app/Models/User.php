@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Booking;
 use App\Models\BusinessInformation;
 use App\Models\TravelRadius;
 use App\Models\UserService;
@@ -61,5 +62,9 @@ class User extends Authenticatable implements JWTSubject {
 
     public function travelRadius(): HasOne {
         return $this->hasOne(TravelRadius::class);
+    }
+
+    public function bookings(): HasMany {
+        return $this->hasMany(Booking::class);
     }
 }

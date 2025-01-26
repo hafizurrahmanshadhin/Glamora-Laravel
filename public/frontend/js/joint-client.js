@@ -1,6 +1,5 @@
-
 document.querySelectorAll('.user-box').forEach(box => {
-    box.addEventListener('click', function() {
+    box.addEventListener('click', function () {
         // Remove active class from all user boxes
         document.querySelectorAll('.user-box').forEach(item => {
             item.classList.remove('active-user-box');

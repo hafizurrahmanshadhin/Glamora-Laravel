@@ -1128,3 +1128,157 @@ main {
     background-color: #333;
     /* Different hover effect for profile link */
 }
+
+/* notifications design */
+.notifications-container {
+    position: relative;
+}
+
+.notification-list-container {
+    position: absolute;
+    right: -80px;
+    background: #fff;
+    box-shadow: 0px 25px 50px 0px rgba(34, 34, 34, 0.25);
+    width: 320px;
+    padding: 20px;
+
+    top: 120px;
+    transition: top 0.5s ease, opacity 0.3s ease, visibility 0.5s ease;
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.notification-list-container.open {
+    top: 70px;
+    opacity: 1;
+    z-index: 100;
+    visibility: visible;
+}
+
+.header .notification-icon {
+    position: relative;
+    cursor: pointer;
+}
+
+.header .notification-count {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ff3939;
+    color: #e6eeff;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-list-container .title {
+    color: var(--black);
+    font-family: "Helvetica Neue";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    padding: 8px 20px;
+}
+
+.notification-list-container .title .count {
+    width: 31px;
+    height: 33px;
+    border-radius: 4px;
+    background: var(--primary);
+    color: #222;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+    /* 177.778% */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 360px;
+    overflow-y: auto;
+}
+
+.notification-list::-webkit-scrollbar {
+    width: 0.4rem;
+    background-color: #f2f2f2;
+    border-radius: 0.4rem;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+    width: 0.4rem;
+    height: 3rem;
+    background: var(--pink);
+    border-radius: 0.4rem;
+}
+
+.notification-list .item {
+    padding: 8px;
+    display: flex;
+    gap: 20px;
+    border-radius: 8px;
+    transition: var(--base-transition);
+}
+
+.notification-list .item:hover {
+    background: var(--primary);
+}
+
+.notification-list .item .left {
+    padding: 8px 7px;
+    height: 30px;
+    transition: var(--base-transition);
+}
+
+.notification-list .item .left svg {
+    width: 15.12px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--base-transition);
+}
+
+.notification-list .item:hover .left {
+    border-radius: 2px;
+    background: #FFF;
+}
+
+.notification-list .item-text {
+    color: #6b6b6b;
+    font-family: "Helvetica Neue";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    transition: var(--base-transition);
+}
+
+.notification-list .item:hover .item-text {
+    color: #222;
+}
+
+.notification-list .item-time {
+    color: #222;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    margin-top: 16px;
+    font-family: "Helvetica Neue";
+}

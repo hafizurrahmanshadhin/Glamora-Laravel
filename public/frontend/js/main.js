@@ -89,3 +89,22 @@ document.querySelector('.tm-profiledropdown').addEventListener('click', function
     event.stopPropagation();
 });
 
+// notifications toggle
+document.addEventListener('DOMContentLoaded', function () {
+    const openModalButton = document.querySelector('.notification-icon');
+    const modalContainer = document.querySelector('.notification-list-container');
+
+    openModalButton.addEventListener('click', function () {
+        console.log('working');
+        modalContainer.classList.toggle('open');
+    });
+
+    // Close modal if clicked outside of it
+    document.addEventListener('click', function (event) {
+        if (!modalContainer.contains(event.target) &&
+            !openModalButton.contains(event.target)) {
+            modalContainer.classList.remove('open');
+
+        }
+    });
+});
