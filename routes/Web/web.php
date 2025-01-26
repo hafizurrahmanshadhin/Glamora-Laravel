@@ -24,6 +24,7 @@ Route::get('/faq', [FAQController::class, 'index'])->name('faq');
 
 Route::get('/booking-service', [BookServiceController::class, 'index'])->middleware('auth')->name('booking-service');
 Route::post('/booking-store', [BookServiceController::class, 'store'])->middleware('auth')->name('booking.store');
+Route::get('/booking-service/negotiate', [BookServiceController::class, 'viewNegotiate'])->middleware('auth')->name('negotiate-request');
 
 Route::controller(ContactController::class)->group(function () {
     Route::get('/contact', 'index')->name('contact');

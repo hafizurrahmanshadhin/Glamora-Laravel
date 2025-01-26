@@ -18,6 +18,7 @@
                 <input type="hidden" name="service_type" id="serviceType">
                 <input type="hidden" name="appointment_date" id="appointmentDate">
                 <input type="hidden" name="appointment_time" id="appointmentTime">
+                <input type="hidden" name="service_provider_id" value="{{ request('service_provider_id') }}">
 
                 {{-- Step - 1: How you want to take this service? START --}}
                 <div class="tm-multi-step-form-step active">
@@ -303,7 +304,8 @@
                 axios.post("{{ route('booking.store') }}", {
                         service_type: $('#serviceType').val(),
                         appointment_date: $('#appointmentDate').val(),
-                        appointment_time: $('#appointmentTime').val()
+                        appointment_time: $('#appointmentTime').val(),
+                        service_provider_id: $('input[name="service_provider_id"]').val()
                     }, {
                         headers: {
                             'X-CSRF-TOKEN': token

@@ -98,7 +98,9 @@
                     <div class="booking-box">
                         <h3>Want to book {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}?</h3>
                         <p>Select the services you need and check availability</p>
-                        <a class="armie-check-availability" href="javascript:void(0);">Check Availability</a>
+                        {{-- <a class="armie-check-availability" href="javascript:void(0);">Check Availability</a> --}}
+                        <a class="armie-check-availability" href="javascript:void(0);"
+                            data-service-provider-id="{{ $user->id }}">Check Availability</a>
                     </div>
 
                     <div class="tools-used">
@@ -233,10 +235,13 @@
 
     <script>
         document.querySelector('.armie-check-availability').addEventListener('click', function() {
+            const serviceProviderId = this.getAttribute('data-service-provider-id');
+
             @if (Auth::check())
                 @if (Auth::user()->role === 'client')
                     // User is logged in and role is 'client', directly open the route
-                    window.location.href = "{{ route('booking-service') }}";
+                    window.location.href = "{{ route('booking-service') }}" + "?service_provider_id=" +
+                        serviceProviderId;
                 @else
                     // User is logged in but not a 'client', show an alert
                     Swal.fire("Only clients can book services.", "", "info");
