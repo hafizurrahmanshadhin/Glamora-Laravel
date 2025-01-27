@@ -19,17 +19,15 @@ class Service extends Model {
         'status',
     ];
 
-    protected function casts(): array {
-        return [
-            'id'            => 'integer',
-            'services_name' => 'string',
-            'platform_fee'  => 'integer',
-            'status'        => 'string',
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'id'            => 'integer',
+        'services_name' => 'string',
+        'platform_fee'  => 'integer',
+        'status'        => 'string',
+        'created_at'    => 'datetime',
+        'updated_at'    => 'datetime',
+        'deleted_at'    => 'datetime',
+    ];
 
     public function userServices(): HasMany {
         return $this->hasMany(UserService::class);

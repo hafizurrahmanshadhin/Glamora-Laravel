@@ -79,30 +79,8 @@
                                                 <img src="{{ asset('frontend/images/location.svg') }}" alt="location">
                                             </div>
                                             <div class="tm-multi-step-summary-item-component-right">
-                                                <p class="genarel-para-new">Stylist comes to you in</p>
-                                                <p class="genarel-para-new-bold">Bronx, New York, United States</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="tm-multi-step-summary-item-component">
-                                            <div class="tm-multi-step-summary-item-component-left">
-                                                <img src="{{ asset('frontend/images/shopping-bag.svg') }}" alt="location">
-                                            </div>
-                                            <div class="tm-multi-step-summary-item-component-right">
-                                                <p class="genarel-para-new">Stylist comes to you in</p>
-                                                <p class="genarel-para-new-bold">Bronx, New York, United States</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="tm-multi-step-summary-item-component">
-                                            <div class="tm-multi-step-summary-item-component-left">
-                                                <img src="{{ asset('frontend/images/shopping-bag.svg') }}" alt="location">
-                                            </div>
-                                            <div class="tm-multi-step-summary-item-component-right">
-                                                <p class="genarel-para-new">Services</p>
-                                                <p class="genarel-para-new-bold">2x People</p>
-                                                <p class="genarel-para-new new-makeup-notice">Bridesmaid makeup only
-                                                    Bride Mackup Only</p>
+                                                <p class="genarel-para-new">Service:</p>
+                                                <p class="genarel-para-new-bold">{{ $serviceName ?? '' }}</p>
                                             </div>
                                         </div>
                                     </div>

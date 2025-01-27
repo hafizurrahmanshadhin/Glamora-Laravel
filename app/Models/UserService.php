@@ -24,21 +24,19 @@ class UserService extends Model {
         'status',
     ];
 
-    protected function casts(): array {
-        return [
-            'id'            => 'integer',
-            'user_id'       => 'integer',
-            'service_id'    => 'integer',
-            'selected'      => 'boolean',
-            'offered_price' => 'decimal:2',
-            'total_price'   => 'decimal:2',
-            'image'         => 'string',
-            'status'        => 'string',
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'id'            => 'integer',
+        'user_id'       => 'integer',
+        'service_id'    => 'integer',
+        'selected'      => 'boolean',
+        'offered_price' => 'decimal:2',
+        'total_price'   => 'decimal:2',
+        'image'         => 'string',
+        'status'        => 'string',
+        'created_at'    => 'datetime',
+        'updated_at'    => 'datetime',
+        'deleted_at'    => 'datetime',
+    ];
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);

@@ -21,20 +21,18 @@ class Booking extends Model {
         'status',
     ];
 
-    protected function casts(): array {
-        return [
-            'id'               => 'integer',
-            'user_id'          => 'integer',
-            'service_type'     => 'string',
-            'appointment_date' => 'date',
-            'appointment_time' => 'string',
-            'price'            => 'decimal:2',
-            'status'           => 'string',
-            'created_at'       => 'datetime',
-            'updated_at'       => 'datetime',
-            'deleted_at'       => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'id'               => 'integer',
+        'user_id'          => 'integer',
+        'service_type'     => 'string',
+        'appointment_date' => 'date',
+        'appointment_time' => 'string',
+        'price'            => 'decimal:2',
+        'status'           => 'string',
+        'created_at'       => 'datetime',
+        'updated_at'       => 'datetime',
+        'deleted_at'       => 'datetime',
+    ];
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);

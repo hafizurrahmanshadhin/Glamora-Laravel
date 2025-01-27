@@ -157,32 +157,28 @@
                                 <div class="tm-multi-step-summary-item-component-wrapper">
                                     <div class="tm-multi-step-summary-item-component">
                                         <div class="tm-multi-step-summary-item-component-left">
-                                            <img src="{{ asset('frontend/images/location.svg') }}" alt="location">
+                                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <g id="vuesax/linear/shopping-bag">
+                                                    <g id="shopping-bag">
+                                                        <path id="Vector"
+                                                            d="M11.2 8.66699H20.8C25.3334 8.66699 25.7867 10.787 26.0934 13.3737L27.2934 23.3737C27.68 26.6537 26.6667 29.3337 22 29.3337H10.0134C5.33337 29.3337 4.32003 26.6537 4.72003 23.3737L5.92004 13.3737C6.21338 10.787 6.6667 8.66699 11.2 8.66699Z"
+                                                            stroke="#FFB6C1" stroke-width="1.5" stroke-linecap="round"
+                                                            stroke-linejoin="round" />
+                                                        <path id="Vector_2"
+                                                            d="M10.6719 10.667V6.00033C10.6719 4.00033 12.0052 2.66699 14.0052 2.66699H18.0052C20.0052 2.66699 21.3385 4.00033 21.3385 6.00033V10.667"
+                                                            stroke="#FFB6C1" stroke-width="1.5" stroke-linecap="round"
+                                                            stroke-linejoin="round" />
+                                                        <path id="Vector_3" d="M27.2185 22.707H10.6719" stroke="#FFB6C1"
+                                                            stroke-width="1.5" stroke-linecap="round"
+                                                            stroke-linejoin="round" />
+                                                    </g>
+                                                </g>
+                                            </svg>
                                         </div>
                                         <div class="tm-multi-step-summary-item-component-right">
-                                            <p class="genarel-para-new">Stylist comes to you in</p>
-                                            <p class="genarel-para-new-bold">Bronx, New York, United States</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="tm-multi-step-summary-item-component">
-                                        <div class="tm-multi-step-summary-item-component-left">
-                                            <img src="{{ asset('frontend/images/location.svg') }}" alt="location">
-                                        </div>
-                                        <div class="tm-multi-step-summary-item-component-right">
-                                            <p class="genarel-para-new">Stylist comes to you in</p>
-                                            <p class="genarel-para-new-bold">Bronx, New York, United States</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="tm-multi-step-summary-item-component">
-                                        <div class="tm-multi-step-summary-item-component-left">
-                                            <img src="{{ asset('frontend/images/location.svg') }}" alt="location">
-                                        </div>
-                                        <div class="tm-multi-step-summary-item-component-right">
-                                            <p class="genarel-para-new">Services</p>
-                                            <p class="genarel-para-new-bold">2x People</p>
-                                            <p class="new-makeup-notice">Bridesmaid makeup only Bride Mackup Only</p>
+                                            <p class="genarel-para-new">Service:</p>
+                                            <p class="genarel-para-new-bold">{{ $serviceName ?? '' }}</p>
                                         </div>
                                     </div>
                                 </div>

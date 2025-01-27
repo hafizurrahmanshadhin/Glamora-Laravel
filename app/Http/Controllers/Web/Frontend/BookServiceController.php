@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Service;
 use App\Models\User;
 use App\Models\UserService;
 use App\Notifications\BookingNotification;
@@ -24,14 +25,16 @@ class BookServiceController extends Controller {
         $serviceProviderId = $request->query('service_provider_id');
         $serviceId         = $request->query('service_id');
 
-        // Fetch the total_price from user_services table
-        $userService = UserService::where('user_id', $serviceProviderId)
+        // Fetch the UserService with the related Service
+        $userService = UserService::with('service')
+            ->where('user_id', $serviceProviderId)
             ->where('service_id', $serviceId)
             ->firstOrFail();
 
-        $price = $userService->total_price;
+        $price       = $userService->total_price;
+        $serviceName = $userService->service->services_name;
 
-        return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId', 'price'));
+        return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId', 'price', 'serviceName'));
     }
 
     /**
@@ -93,4 +96,23 @@ class BookServiceController extends Controller {
     public function viewNegotiate(Booking $booking): View {
         return view('frontend.layouts.negotiated_date_and_time.index', compact('booking'));
     }
+
+    // public function viewNegotiate(Booking $booking): View {
+    //     // Eager load the service relationship
+    //     $booking->load('service');
+
+    //     return view('frontend.layouts.negotiated_date_and_time.index', compact('booking'));
+    // }
+
+    // public function viewNegotiate(Booking $booking): View {
+    //     // Fetch the service associated with the booking based on service_type
+    //     $service = Service::where('services_name', $booking->service_type)->first();
+
+    //     // Handle the case where the service might not be found
+    //     if (!$service) {
+    //         abort(404, 'Service not found.');
+    //     }
+
+    //     return view('frontend.layouts.negotiated_date_and_time.index', compact('booking', 'service'));
+    // }
 }
