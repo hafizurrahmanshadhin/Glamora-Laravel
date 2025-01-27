@@ -166,38 +166,52 @@
                             <label for="appointment-date">Date:</label>
                             <div class="date-input-wrapper">
                                 <input type="text" id="appointment-date-new" class="date-input"
-                                    placeholder="09 | Oct | 2024" disabled />
+                                    placeholder="09 | Oct | 2024"
+                                    value="{{ \Carbon\Carbon::parse($booking->appointment_date)->format('d | M | Y') }}"
+                                    disabled />
                             </div>
                         </div>
 
+                        @php
+                            $times = [
+                                '08:00 AM',
+                                '09:00 AM',
+                                '10:00 AM',
+                                '11:00 AM',
+                                '12:00 PM',
+                                '01:00 PM',
+                                '02:00 PM',
+                                '03:00 PM',
+                                '04:00 PM',
+                                '05:00 PM',
+                                '06:00 PM',
+                                '07:00 PM',
+                                '08:00 PM',
+                                '09:00 PM',
+                                '10:00 PM',
+                                '11:00 PM',
+                                '12:00 AM',
+                                '01:00 AM',
+                                '02:00 AM',
+                                '03:00 AM',
+                                '04:00 AM',
+                                '05:00 AM',
+                                '06:00 AM',
+                                '07:00 AM',
+                            ];
+
+                            $formattedTime = \Carbon\Carbon::parse($booking->appointment_time)->format('h:i A');
+                        @endphp
                         <div class="tm-available-label-input-wrapper">
                             <label for="appointment-time">Time:</label>
                             <select id="appointment-time" class="time-dropdown" disabled>
-                                <option value disabled selected>Select Time</option>
-                                <option value="08:00 AM">08:00 AM</option>
-                                <option value="09:00 AM">09:00 AM</option>
-                                <option value="10:00 AM">10:00 AM</option>
-                                <option value="11:00 AM">11:00 AM</option>
-                                <option value="12:00 PM">12:00 PM</option>
-                                <option value="01:00 PM">01:00 PM</option>
-                                <option value="02:00 PM">02:00 PM</option>
-                                <option value="03:00 PM">03:00 PM</option>
-                                <option value="04:00 PM">04:00 PM</option>
-                                <option value="05:00 PM">05:00 PM</option>
-                                <option value="06:00 PM">06:00 PM</option>
-                                <option value="07:00 PM">07:00 PM</option>
-                                <option value="08:00 PM">08:00 PM</option>
-                                <option value="09:00 PM">09:00 PM</option>
-                                <option value="10:00 PM">10:00 PM</option>
-                                <option value="11:00 PM">11:00 PM</option>
-                                <option value="12:00 AM">12:00 AM</option>
-                                <option value="01:00 AM">01:00 AM</option>
-                                <option value="02:00 AM">02:00 AM</option>
-                                <option value="03:00 AM">03:00 AM</option>
-                                <option value="04:00 AM">04:00 AM</option>
-                                <option value="05:00 AM">05:00 AM</option>
-                                <option value="06:00 AM">06:00 AM</option>
-                                <option value="07:00 AM">07:00 AM</option>
+                                <option value disabled {{ !$booking->appointment_time ? 'selected' : '' }}>Select Time
+                                </option>
+                                @foreach ($times as $time)
+                                    <option value="{{ $time }}" {{ $formattedTime == $time ? 'selected' : '' }}>
+                                        {{ $time }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

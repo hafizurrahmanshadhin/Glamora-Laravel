@@ -20,11 +20,6 @@ class BookServiceController extends Controller {
      *
      * @return View
      */
-    // public function index(Request $request): View {
-    //     $serviceProviderId = $request->query('service_provider_id');
-    //     $serviceId         = $request->query('service_id');
-    //     return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId'));
-    // }
     public function index(Request $request): View {
         $serviceProviderId = $request->query('service_provider_id');
         $serviceId         = $request->query('service_id');
