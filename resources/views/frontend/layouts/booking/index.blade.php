@@ -18,7 +18,8 @@
                 <input type="hidden" name="service_type" id="serviceType">
                 <input type="hidden" name="appointment_date" id="appointmentDate">
                 <input type="hidden" name="appointment_time" id="appointmentTime">
-                <input type="hidden" name="service_provider_id" value="{{ request('service_provider_id') }}">
+                <input type="hidden" name="service_provider_id" id="serviceProviderId" value="{{ $serviceProviderId }}">
+                <input type="hidden" name="service_id" id="serviceId" value="{{ $serviceId }}">
 
                 {{-- Step - 1: How you want to take this service? START --}}
                 <div class="tm-multi-step-form-step active">
@@ -246,6 +247,11 @@
         </div>
     </div>
     {{-- Approval Modal End --}}
+
+    <div id="loader"
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+        <img src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="Loading...">
+    </div>
 @endsection
 
 @push('scripts')
@@ -261,12 +267,14 @@
             function showStep(step) {
                 steps.removeClass("active").eq(step).addClass("active");
             }
+
             $(".tm-multi-step-next-step").click(function() {
                 if (currentStep < steps.length - 1) {
                     currentStep++;
                     showStep(currentStep);
                 }
             });
+
             $(".tm-multi-step-prev-step").click(function() {
                 if (currentStep > 0) {
                     currentStep--;
@@ -300,12 +308,18 @@
 
             // Submit with Axios
             $("#submitBooking").click(function() {
+                console.log('Form is being submitted');
+                console.log('Service ID:', $('#serviceId').val()); // Add this line to log the service_id
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const loader = document.getElementById('loader');
+                loader.style.display = 'block'; // Show loader
+
                 axios.post("{{ route('booking.store') }}", {
                         service_type: $('#serviceType').val(),
                         appointment_date: $('#appointmentDate').val(),
                         appointment_time: $('#appointmentTime').val(),
-                        service_provider_id: $('input[name="service_provider_id"]').val()
+                        service_provider_id: $('#serviceProviderId').val(),
+                        service_id: $('#serviceId').val() // Ensure service_id is passed correctly
                     }, {
                         headers: {
                             'X-CSRF-TOKEN': token
@@ -313,11 +327,13 @@
                     })
                     .then(response => {
                         console.log('Success:', response.data);
+                        loader.style.display = 'none'; // Hide loader
                         // Show success modal or message, or redirect, etc.
                     })
                     .catch(error => {
                         console.error('Error:', error.response ? error.response.data : error);
                         // Handle validation errors or other issues
+                        loader.style.display = 'none'; // Hide loader
                     });
             });
         });

@@ -32,6 +32,11 @@ class AvailableServicesController extends Controller {
             return $userService;
         });
 
-        return view('frontend.layouts.available_services.index', compact('approvedServices'));
+        $compact = [
+            'serviceId'        => $serviceId,
+            'approvedServices' => $approvedServices,
+        ];
+
+        return view('frontend.layouts.available_services.index', $compact);
     }
 }

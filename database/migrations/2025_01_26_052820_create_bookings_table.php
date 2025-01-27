@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->enum('service_type', ['mobile_services', 'salon_services'])->nullable(false);
             $table->date('appointment_date')->nullable(false);
             $table->string('appointment_time')->nullable(false);
+            $table->decimal('price', 10, 2)->nullable();
 
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamp('created_at')->useCurrent();

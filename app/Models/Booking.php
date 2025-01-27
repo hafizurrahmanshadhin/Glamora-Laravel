@@ -17,6 +17,7 @@ class Booking extends Model {
         'service_type',
         'appointment_date',
         'appointment_time',
+        'price',
         'status',
     ];
 
@@ -27,6 +28,7 @@ class Booking extends Model {
             'service_type'     => 'string',
             'appointment_date' => 'date',
             'appointment_time' => 'string',
+            'price'            => 'decimal:2',
             'status'           => 'string',
             'created_at'       => 'datetime',
             'updated_at'       => 'datetime',

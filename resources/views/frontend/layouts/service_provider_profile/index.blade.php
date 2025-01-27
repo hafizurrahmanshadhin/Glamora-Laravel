@@ -98,9 +98,10 @@
                     <div class="booking-box">
                         <h3>Want to book {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}?</h3>
                         <p>Select the services you need and check availability</p>
-                        {{-- <a class="armie-check-availability" href="javascript:void(0);">Check Availability</a> --}}
                         <a class="armie-check-availability" href="javascript:void(0);"
-                            data-service-provider-id="{{ $user->id }}">Check Availability</a>
+                            data-service-provider-id="{{ $user->id }}" data-service-id="{{ $serviceId }}">
+                            Check Availability
+                        </a>
                     </div>
 
                     <div class="tools-used">
@@ -234,34 +235,37 @@
     </script>
 
     <script>
-        document.querySelector('.armie-check-availability').addEventListener('click', function() {
-            const serviceProviderId = this.getAttribute('data-service-provider-id');
+        document.querySelectorAll('.armie-check-availability').forEach(function(element) {
+            element.addEventListener('click', function() {
+                const serviceProviderId = this.getAttribute('data-service-provider-id');
+                const serviceId = this.getAttribute('data-service-id'); // Get the service_id
 
-            @if (Auth::check())
-                @if (Auth::user()->role === 'client')
-                    // User is logged in and role is 'client', directly open the route
-                    window.location.href = "{{ route('booking-service') }}" + "?service_provider_id=" +
-                        serviceProviderId;
+                @if (Auth::check())
+                    @if (Auth::user()->role === 'client')
+                        // User is logged in and role is 'client', directly open the route
+                        window.location.href = "{{ route('booking-service') }}" + "?service_provider_id=" +
+                            serviceProviderId + "&service_id=" + serviceId;
+                    @else
+                        // User is logged in but not a 'client', show an alert
+                        Swal.fire("Only clients can book services.", "", "info");
+                    @endif
                 @else
-                    // User is logged in but not a 'client', show an alert
-                    Swal.fire("Only clients can book services.", "", "info");
+                    // User is not logged in, show the login modal
+                    Swal.fire({
+                        title: "You need to sign in to check availability",
+                        showDenyButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: "Sign In",
+                        denyButtonText: `Sign In Later`
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ route('login') }}";
+                        } else if (result.isDenied) {
+                            Swal.fire("You can sign in later", "", "info");
+                        }
+                    });
                 @endif
-            @else
-                // User is not logged in, show the login modal
-                Swal.fire({
-                    title: "You need to sign in to check availability",
-                    showDenyButton: true,
-                    showCancelButton: false,
-                    confirmButtonText: "Sign In",
-                    denyButtonText: `Sign In Later`
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "{{ route('login') }}";
-                    } else if (result.isDenied) {
-                        Swal.fire("You can sign in later", "", "info");
-                    }
-                });
-            @endif
+            });
         });
     </script>
 @endpush

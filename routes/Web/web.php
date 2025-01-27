@@ -19,12 +19,12 @@ Route::get('/reset', [ResetController::class, 'RunMigrations'])->name('reset');
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/available-services/{serviceId}', [AvailableServicesController::class, 'index'])->name('available-services');
 Route::get('/service-category', [ServiceCategoryController::class, 'index'])->name('service-category');
-Route::get('/service-provider-profile/{userId}', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile');
+Route::get('/service-provider-profile/{userId}/service/{serviceId}', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile');
 Route::get('/faq', [FAQController::class, 'index'])->name('faq');
 
 Route::get('/booking-service', [BookServiceController::class, 'index'])->middleware('auth')->name('booking-service');
 Route::post('/booking-store', [BookServiceController::class, 'store'])->middleware('auth')->name('booking.store');
-Route::get('/booking-service/negotiate', [BookServiceController::class, 'viewNegotiate'])->middleware('auth')->name('negotiate-request');
+Route::get('/booking-service/negotiate/{booking}', [BookServiceController::class, 'viewNegotiate'])->middleware('auth')->name('negotiate-request');
 
 Route::controller(ContactController::class)->group(function () {
     Route::get('/contact', 'index')->name('contact');

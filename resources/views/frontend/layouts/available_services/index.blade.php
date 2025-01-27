@@ -89,7 +89,7 @@
                                     </h4>
                                     <div class="check-availability-bookmarks">
                                         <a
-                                            href="{{ route('service-provider-profile', ['userId' => $userService->user_id]) }}">
+                                            href="{{ route('service-provider-profile', ['userId' => $userService->user_id, 'serviceId' => $serviceId]) }}">
                                             Check Availability
                                         </a>
                                         <button>

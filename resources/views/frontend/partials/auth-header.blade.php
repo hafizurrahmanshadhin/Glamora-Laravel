@@ -69,7 +69,8 @@
                 <div class="title">Notifications <span class="count">{{ $notifications->count() }}</span></div>
                 <div class="notification-list">
                     @foreach ($notifications as $notification)
-                        <a href="#" class="item">
+                        <a href="{{ route('negotiate-request', ['booking' => $notification->data['booking_id']]) }}"
+                            class="item">
                             <div class="left">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="19"
                                     viewBox="0 0 16 19" fill="none">

@@ -62,8 +62,12 @@
                         <h2 class="tm-multistep-form-heading tm-multistep-form-heading-2">Negotiated Time and Date</h2>
                         <div class="tm-multi-step-summary">
                             <div class="tm-multi-step-summary-item">
-                                <h3>Date: <span id="summary-date">Monday, April 10th, 2024</span></h3>
-                                <h3>Time: <span id="summary-time">08:00 PM</span></h3>
+                                <h3>Date:
+                                    <span id="summary-date">
+                                        {{ \Carbon\Carbon::parse($booking->appointment_date)->format('l, F jS, Y') }}
+                                    </span>
+                                </h3>
+                                <h3>Time: <span id="summary-time">{{ $booking->appointment_time ?? '' }}</span></h3>
                             </div>
 
                             <div class="tm-booking-summary-new-design">
@@ -122,7 +126,7 @@
                                             </p>
                                         </div>
                                         <p class="tm-multi-step-summary-total">
-                                            <span class="tm-multistep-total-value">$990</span>
+                                            <span class="tm-multistep-total-value">${{ $booking->price ?? '' }}</span>
                                         </p>
                                     </div>
                                 </div>
