@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\Frontend\ContactController;
 use App\Http\Controllers\Web\Frontend\DynamicPageController;
 use App\Http\Controllers\Web\Frontend\FAQController;
 use App\Http\Controllers\Web\Frontend\HomeController;
+use App\Http\Controllers\Web\Frontend\PaymentController;
 use App\Http\Controllers\Web\Frontend\ServiceCategoryController;
 use App\Http\Controllers\Web\Frontend\ServiceProviderProfileController;
 use App\Models\Content;
@@ -25,6 +26,9 @@ Route::get('/faq', [FAQController::class, 'index'])->name('faq');
 Route::get('/booking-service', [BookServiceController::class, 'index'])->middleware('auth')->name('booking-service');
 Route::post('/booking-store', [BookServiceController::class, 'store'])->middleware('auth')->name('booking.store');
 Route::get('/booking-service/negotiate/{booking}', [BookServiceController::class, 'viewNegotiate'])->middleware('auth')->name('negotiate-request');
+
+// Route::get('/make-payment/{booking}', [BookServiceController::class, 'makePayment'])->middleware('auth')->name('make-payment');
+Route::get('/make-payment', [PaymentController::class, 'makePayment'])->middleware('auth')->name('make-payment');
 
 Route::controller(ContactController::class)->group(function () {
     Route::get('/contact', 'index')->name('contact');

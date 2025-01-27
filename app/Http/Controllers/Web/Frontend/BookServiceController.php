@@ -12,7 +12,6 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
@@ -72,7 +71,7 @@ class BookServiceController extends Controller {
             // Create the booking with user_service_id
             $booking = Booking::create([
                 'user_id'          => Auth::id(),
-                'user_service_id'  => $userService->id, // Added user_service_id
+                'user_service_id'  => $userService->id,
                 'service_type'     => $request->service_type,
                 'appointment_date' => $request->appointment_date,
                 'appointment_time' => $request->appointment_time,
@@ -96,50 +95,9 @@ class BookServiceController extends Controller {
      *
      * @return View
      */
-    // public function viewNegotiate(Booking $booking): View {
-    //     return view('frontend.layouts.negotiated_date_and_time.index', compact('booking'));
-    // }
-
-    // public function viewNegotiate(Booking $booking): View {
-    //     // Eager load the service relationship
-    //     $booking->load('service');
-
-    //     return view('frontend.layouts.negotiated_date_and_time.index', compact('booking'));
-    // }
-
-    // public function viewNegotiate(Booking $booking): View {
-    //     // Fetch the service associated with the booking based on service_type
-    //     $service = Service::where('services_name', $booking->service_type)->first();
-
-    //     // Handle the case where the service might not be found
-    //     if (!$service) {
-    //         abort(404, 'Service not found.');
-    //     }
-
-    //     return view('frontend.layouts.negotiated_date_and_time.index', compact('booking', 'service'));
-    // }
-
     public function viewNegotiate(Booking $booking): View {
-        // Log the booking details for debugging
-        Log::info('Booking Details:', ['booking' => $booking]);
-
-        // Ensure that the booking has an associated user service
-        if (!$booking->userService) {
-            Log::error('User Service not found for Booking ID:', ['id' => $booking->id]);
-            abort(404, 'User Service not found for this booking.');
-        }
-
         // Fetch the service via the user service relationship
         $service = $booking->userService->service;
-
-        // Handle the case where the service might not be found
-        if (!$service) {
-            Log::error('Service not found for User Service ID:', ['user_service_id' => $booking->user_service_id]);
-            abort(404, 'Service not found for this booking.');
-        }
-
-        // Log the found service
-        Log::info('Service found:', ['service' => $service]);
 
         return view('frontend.layouts.negotiated_date_and_time.index', compact('booking', 'service'));
     }
