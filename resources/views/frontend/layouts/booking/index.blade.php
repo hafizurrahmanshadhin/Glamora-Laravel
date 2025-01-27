@@ -56,7 +56,7 @@
                             <div id="tax-preparer" class="user-box client-tax-preparer-option-single">
                                 <h3 class="armie-multistep-select-heading">Salon services</h3>
                                 <h4 class="armie-multistep-select-para">Enjoy a professional experience at our salon and get
-                                    20% off on your booking!</h4>
+                                    10% off on your booking!</h4>
                                 <h5 class="armie-multistep-select-discount">
                                     Discount <span>10%</span>
                                 </h5>

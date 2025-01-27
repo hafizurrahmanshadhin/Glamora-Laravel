@@ -80,7 +80,7 @@
                                         </span>
                                     </p>
                                     <h5 class="tm-price">
-                                        {{ $userService->offered_price ?? 0 }}$
+                                        {{ $userService->total_price ?? 0 }}$
                                     </h5>
                                 </div>
                                 <div class="explore-card-heading-para">

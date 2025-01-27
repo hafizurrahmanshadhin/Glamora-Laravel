@@ -8,8 +8,10 @@ use App\Models\User;
 use App\Models\UserService;
 use App\Notifications\BookingNotification;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class BookServiceController extends Controller {
@@ -24,15 +26,25 @@ class BookServiceController extends Controller {
         return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId'));
     }
 
-    public function store(Request $request) {
+    /**
+     * Store a newly created booking in storage.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request): RedirectResponse {
         try {
-            $validatedData = $request->validate([
+            $validator = Validator::make($request->all(), [
                 'service_type'        => 'required|string',
                 'appointment_date'    => 'required|date',
                 'appointment_time'    => 'required|string',
                 'service_provider_id' => 'required|integer',
                 'service_id'          => 'required|integer',
             ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
 
             // Fetch the total_price from user_services table
             $userService = UserService::where('user_id', $request->service_provider_id)
