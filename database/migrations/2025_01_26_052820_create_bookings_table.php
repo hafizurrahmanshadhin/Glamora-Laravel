@@ -17,6 +17,11 @@ return new class extends Migration {
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
 
+            $table->unsignedBigInteger('user_service_id');
+            $table->foreign('user_service_id')->references('id')->on('user_services')
+                ->onDelete('restrict')
+                ->onUpdate('cascade');
+
             $table->enum('service_type', ['mobile_services', 'salon_services'])->nullable(false);
             $table->date('appointment_date')->nullable(false);
             $table->string('appointment_time')->nullable(false);

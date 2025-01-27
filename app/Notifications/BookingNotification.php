@@ -22,6 +22,7 @@ class BookingNotification extends Notification {
         return [
             'message'          => 'New booking created by a client',
             'booking_id'       => $this->booking->id,
+            'user_service_id'  => $this->booking->user_service_id,
             'service_type'     => $this->booking->service_type,
             'appointment_date' => $this->booking->appointment_date,
             'appointment_time' => $this->booking->appointment_time,

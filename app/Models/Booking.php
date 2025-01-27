@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,7 @@ class Booking extends Model {
 
     protected $fillable = [
         'user_id',
+        'user_service_id',
         'service_type',
         'appointment_date',
         'appointment_time',
@@ -24,6 +26,7 @@ class Booking extends Model {
     protected $casts = [
         'id'               => 'integer',
         'user_id'          => 'integer',
+        'user_service_id'  => 'integer',
         'service_type'     => 'string',
         'appointment_date' => 'date',
         'appointment_time' => 'string',
@@ -36,5 +39,9 @@ class Booking extends Model {
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    public function userService(): BelongsTo {
+        return $this->belongsTo(UserService::class, 'user_service_id');
     }
 }

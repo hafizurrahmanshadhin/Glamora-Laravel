@@ -80,7 +80,8 @@
                                             </div>
                                             <div class="tm-multi-step-summary-item-component-right">
                                                 <p class="genarel-para-new">Service:</p>
-                                                <p class="genarel-para-new-bold">{{ $serviceName ?? '' }}</p>
+                                                <p class="genarel-para-new-bold">
+                                                    {{ $service->services_name ?? '' }}</p>
                                             </div>
                                         </div>
                                     </div>
