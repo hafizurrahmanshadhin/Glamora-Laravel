@@ -20,10 +20,23 @@ class BookServiceController extends Controller {
      *
      * @return View
      */
+    // public function index(Request $request): View {
+    //     $serviceProviderId = $request->query('service_provider_id');
+    //     $serviceId         = $request->query('service_id');
+    //     return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId'));
+    // }
     public function index(Request $request): View {
         $serviceProviderId = $request->query('service_provider_id');
         $serviceId         = $request->query('service_id');
-        return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId'));
+
+        // Fetch the total_price from user_services table
+        $userService = UserService::where('user_id', $serviceProviderId)
+            ->where('service_id', $serviceId)
+            ->firstOrFail();
+
+        $price = $userService->total_price;
+
+        return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId', 'price'));
     }
 
     /**
@@ -51,12 +64,18 @@ class BookServiceController extends Controller {
                 ->where('service_id', $request->service_id)
                 ->firstOrFail();
 
+            // Calculate the price with discount if service_type is salon_services
+            $price = $userService->total_price;
+            if ($request->service_type === 'salon_services') {
+                $price = $price - ($price * 0.10);
+            }
+
             $booking = Booking::create([
                 'user_id'          => Auth::id(),
                 'service_type'     => $request->service_type,
                 'appointment_date' => $request->appointment_date,
                 'appointment_time' => $request->appointment_time,
-                'price'            => $userService->total_price,
+                'price'            => $price,
             ]);
 
             // After storing: Only notify if the user is a “beauty_expert”.

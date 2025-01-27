@@ -20,6 +20,7 @@
                 <input type="hidden" name="appointment_time" id="appointmentTime">
                 <input type="hidden" name="service_provider_id" id="serviceProviderId" value="{{ $serviceProviderId }}">
                 <input type="hidden" name="service_id" id="serviceId" value="{{ $serviceId }}">
+                <input type="hidden" name="price" id="price" value="{{ $price }}">
 
                 {{-- Step - 1: How you want to take this service? START --}}
                 <div class="tm-multi-step-form-step active">
@@ -146,8 +147,8 @@
                     <h2 class="tm-multistep-form-heading tm-multistep-form-heading-2">Booking Summary</h2>
                     <div class="tm-multi-step-summary">
                         <div class="tm-multi-step-summary-item">
-                            <h3>Date: <span id="summary-date">Monday, April 10th, 2024</span></h3>
-                            <h3>Time: <span id="summary-time">08:00 PM</span></h3>
+                            <h3>Date: <span id="summary-date"></span></h3>
+                            <h3>Time: <span id="summary-time"></span></h3>
                         </div>
 
                         <div class="tm-booking-summary-new-design">
@@ -204,7 +205,7 @@
                                         </p>
                                     </div>
                                     <p class="tm-multi-step-summary-total">
-                                        <span class="tm-multistep-total-value">$990</span>
+                                        <span class="tm-multistep-total-value"></span>
                                     </p>
                                 </div>
                             </div>
@@ -257,6 +258,7 @@
 @push('scripts')
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
     <script src="{{ asset('frontend/js/joint-client.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -266,6 +268,9 @@
 
             function showStep(step) {
                 steps.removeClass("active").eq(step).addClass("active");
+                if (step === 2) { // Step 3 is the third step (index 2)
+                    updateSummary();
+                }
             }
 
             $(".tm-multi-step-next-step").click(function() {
@@ -306,10 +311,27 @@
                 $('#appointmentTime').val($(this).text());
             });
 
+            // Update summary
+            function updateSummary() {
+                const date = $('#appointmentDate').val();
+                const time = $('#appointmentTime').val();
+                const serviceType = $('#serviceType').val();
+                let price = {{ $price }};
+
+                // Apply discount if service type is salon_services
+                if (serviceType === 'salon_services') {
+                    price = price - (price * 0.10);
+                }
+
+                const formattedDate = moment(date).format('dddd, MMMM Do, YYYY');
+
+                $('#summary-date').text(formattedDate);
+                $('#summary-time').text(time);
+                $('.tm-multistep-total-value').text(`$${price.toFixed(2)}`);
+            }
+
             // Submit with Axios
             $("#submitBooking").click(function() {
-                console.log('Form is being submitted');
-                console.log('Service ID:', $('#serviceId').val()); // Add this line to log the service_id
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 const loader = document.getElementById('loader');
                 loader.style.display = 'block'; // Show loader
@@ -319,7 +341,7 @@
                         appointment_date: $('#appointmentDate').val(),
                         appointment_time: $('#appointmentTime').val(),
                         service_provider_id: $('#serviceProviderId').val(),
-                        service_id: $('#serviceId').val() // Ensure service_id is passed correctly
+                        service_id: $('#serviceId').val()
                     }, {
                         headers: {
                             'X-CSRF-TOKEN': token
