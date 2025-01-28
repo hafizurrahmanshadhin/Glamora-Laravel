@@ -28,7 +28,7 @@ Route::post('/booking-store', [BookServiceController::class, 'store'])->middlewa
 Route::get('/booking-service/negotiate/{booking}', [BookServiceController::class, 'viewNegotiate'])->middleware('auth')->name('negotiate-request');
 Route::post('/booking-service/respond-availability', [BookServiceController::class, 'respondAvailability'])->middleware('auth')->name('booking.respondAvailability');
 
-Route::get('/make-payment', [PaymentController::class, 'makePayment'])->middleware('auth')->name('make-payment');
+Route::get('/make-payment/{booking}', [PaymentController::class, 'makePayment'])->middleware('auth')->name('make-payment');
 
 Route::controller(ContactController::class)->group(function () {
     Route::get('/contact', 'index')->name('contact');
