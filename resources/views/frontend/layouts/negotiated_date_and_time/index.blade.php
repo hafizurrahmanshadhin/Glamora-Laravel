@@ -197,13 +197,40 @@
                 </div>
 
                 <div class="confirm-time-lower-area">
-                    <button class="cancel-btn">Cancel</button>
-                    <button class="submit-btn">I’m Available </button>
+                    {{-- Cancel always shown --}}
+                    <form action="{{ route('booking.respondAvailability') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                        <input type="hidden" name="action_type" value="cancel">
+                        <button type="submit" class="cancel-btn">Cancel</button>
+                    </form>
+
+                    {{-- “I’m Available” form (shown if availability=yes) --}}
+                    <form action="{{ route('booking.respondAvailability') }}" method="POST" id="yesForm"
+                        style="display:none;">
+                        @csrf
+                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                        <input type="hidden" name="action_type" value="yes">
+                        <button type="submit" class="submit-btn">I’m Available</button>
+                    </form>
+
+                    {{-- “Send Offer” form (shown if availability=no) --}}
+                    <form action="{{ route('booking.respondAvailability') }}" method="POST" id="noForm"
+                        style="display:none;">
+                        @csrf
+                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                        <input type="hidden" name="action_type" value="offer">
+                        <input type="text" name="new_date" placeholder="New Date">
+                        <input type="text" name="new_time" placeholder="New Time">
+                        <input type="hidden" name="new_price" value="{{ $booking->price }}">
+                        <button type="submit" class="submit-btn">Send Offer</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
 
 @push('scripts')
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -211,26 +238,16 @@
 
     <script>
         (function() {
-            // Alert for submit button
-            document.querySelector('.submit-btn').addEventListener('click', () => {
-                alert('Booking Request Sent!');
-            });
-
-            // Alert for cancel button
-            document.querySelector('.cancel-btn').addEventListener('click', () => {
-                alert('Booking Canceled!');
-            });
-
-            // Handle label active state
+            // Label active state
             const labels = document.querySelectorAll('.confirm-time-left-label-wrapper label');
             labels.forEach((label) => {
                 label.addEventListener('click', () => {
-                    labels.forEach((lbl) => lbl.classList.remove('active')); // Remove active from all
-                    label.classList.add('active'); // Add active to clicked
+                    labels.forEach((lbl) => lbl.classList.remove('active'));
+                    label.classList.add('active');
                 });
             });
 
-            // Handle enabling/disabling of date and time fields and other UI changes
+            // Main DOMContentLoaded logic
             document.addEventListener('DOMContentLoaded', function() {
                 const radioButtons = document.querySelectorAll('input[name="availability"]');
                 const dateInput = document.getElementById('appointment-date-new');
@@ -238,41 +255,38 @@
                 const negotiateNotice = document.querySelector('.negotiate-time-notice');
                 const submitButton = document.querySelector('.submit-btn');
 
-                // Initially hide the notice and set the submit button text
+                // Show/hide forms for yes/no
+                const yesForm = document.getElementById('yesForm');
+                const noForm = document.getElementById('noForm');
+                yesForm.style.display = 'none';
+                noForm.style.display = 'none';
+
+                // Hide negotiate notice initially
                 negotiateNotice.style.display = 'none';
                 submitButton.textContent = 'I’m Available';
 
-                // Enable or disable fields and toggle visibility/text
+                // Enable or disable fields
                 function toggleFieldsAndUI(enable) {
                     if (enable) {
+                        // For "No" => show new offer form
+                        yesForm.style.display = 'none';
+                        noForm.style.display = 'inline-block';
+                        negotiateNotice.style.display = 'block';
                         dateInput.removeAttribute('disabled');
                         timeDropdown.removeAttribute('disabled');
-                        negotiateNotice.style.display = 'block';
-                        submitButton.textContent = 'Send Offer';
-
-                        // Change background to white
-                        dateInput.style.background = '#fff';
-                        timeDropdown.style.background = '#fff';
-                        dateInput.style.border = '1px solid #222';
-                        timeDropdown.style.border = '1px solid #222';
                     } else {
+                        // For "Yes" => show available form
+                        yesForm.style.display = 'inline-block';
+                        noForm.style.display = 'none';
+                        negotiateNotice.style.display = 'none';
                         dateInput.setAttribute('disabled', 'disabled');
                         timeDropdown.setAttribute('disabled', 'disabled');
-                        negotiateNotice.style.display = 'none';
-                        submitButton.textContent = 'I’m Available';
-
-                        // Revert background to default
-                        dateInput.style.background = '#E9E9E9';
-                        timeDropdown.style.background = '#E9E9E9';
-                        dateInput.style.border = '1px solid transparent';
-                        timeDropdown.style.border = '1px solid transparent';
                     }
                 }
-
-                // Initially disable the fields
+                // By default, fields are disabled
                 toggleFieldsAndUI(false);
 
-                // Add event listeners to radio buttons
+                // Change form visibility and UI upon radio change
                 radioButtons.forEach((radio) => {
                     radio.addEventListener('change', function() {
                         if (this.value === 'no') {
@@ -284,15 +298,14 @@
                 });
             });
 
-            // Initialize jQuery Datepicker with custom format
+            // jQuery datepicker
             $(function() {
                 $('#appointment-date-new').datepicker({
-                    dateFormat: 'dd M yy', // Internal date format (for consistency)
+                    dateFormat: 'dd M yy',
                     changeMonth: true,
                     changeYear: true,
                     showButtonPanel: true,
                     onSelect: function(dateText) {
-                        // Format date as shown in the image: "09 | Oct | 2024"
                         const dateObj = $(this).datepicker('getDate');
                         const formattedDate = $.datepicker.formatDate('dd | M | yy', dateObj);
                         $('#appointment-date-new').val(formattedDate);

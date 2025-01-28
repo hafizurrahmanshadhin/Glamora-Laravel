@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\User;
 use App\Models\UserService;
 use App\Notifications\BookingNotification;
+use App\Notifications\BookingStatusNotification;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -100,5 +101,45 @@ class BookServiceController extends Controller {
         $service = $booking->userService->service;
 
         return view('frontend.layouts.negotiated_date_and_time.index', compact('booking', 'service'));
+    }
+
+    /**
+     * Respond to the availability request.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function respondAvailability(Request $request): RedirectResponse {
+        $booking = Booking::where('id', $request->booking_id)->firstOrFail();
+        $client  = $booking->user;
+
+        switch ($request->action_type) {
+        case 'cancel':
+            // Notify client that the request is declined
+            $client->notify(new BookingStatusNotification(
+                $booking,
+                "Decline your request!"
+            ));
+            return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Booking request declined.');
+
+        case 'yes':
+            // “I’m Available” - pass existing date/time/price
+            $client->notify(new BookingStatusNotification(
+                $booking,
+                "I’m Available with Date: {$booking->appointment_date}, Time: {$booking->appointment_time}, Price: {$booking->price}"
+            ));
+            return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Availability confirmed.');
+
+        case 'offer':
+            // “Send Offer” - pass new date/time from user
+            $client->notify(new BookingStatusNotification(
+                $booking,
+                "New Offer! Date: {$request->new_date}, Time: {$request->new_time}, Price: {$request->new_price}"
+            ));
+            return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Offer sent.');
+
+        default:
+            return redirect()->route('beauty-expert-dashboard')->with('t-error', 'Invalid action.');
+        }
     }
 }
