@@ -27,7 +27,7 @@
                     <defs>
                         <path id="textcircle"
                             d="M250,400
-                                                                                                                                                         a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
+                                                                                                                                                                 a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
                             transform="rotate(12,250,250)" />
                     </defs>
                     <g class="textcircle">
@@ -117,7 +117,7 @@
 
                 <div class="search-btn-container">
                     <div class="title"></div>
-                    <button id="searchBtn" class="search-btn mt-4">
+                    <a href="{{ route('service-category') }}" id="searchBtn" class="search-btn mt-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30"
                             fill="none">
                             <path
@@ -126,7 +126,7 @@
                             <path d="M21.0547 20.5547L26.7501 26.2501" stroke="white" stroke-width="3"
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
             {{-- search container end --}}
@@ -827,7 +827,7 @@
             if (selectedServiceId) {
                 window.location.href = "{{ url('available-services') }}/" + selectedServiceId;
             } else {
-                alert("Please select a service first!");
+                // alert("Please select a service first!");
             }
         });
     </script>
