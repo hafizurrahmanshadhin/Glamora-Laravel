@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Service;
 use App\Models\UserService;
 use Illuminate\View\View;
 
@@ -27,6 +28,9 @@ class HomeController extends Controller {
                 return $userService;
             });
 
-        return view('frontend.layouts.home.index', compact('approvedServices'));
+        // Fetch active services
+        $services = Service::where('status', 'active')->get();
+
+        return view('frontend.layouts.home.index', compact('approvedServices', 'services'));
     }
 }

@@ -3,12 +3,10 @@
 @section('title', 'Glamora')
 
 @section('content')
-    <!-- home banner start -->
+    {{-- home banner start --}}
     <div class="home-banner">
         <div class="text-content">
-            <div data-aos="fade-right" data-aos-delay="100" class="italic-text">
-                Find The
-            </div>
+            <div data-aos="fade-right" data-aos-delay="100" class="italic-text">Find The</div>
             <div data-aos="fade-right" data-aos-delay="200" class="section-title">
                 BEST Beauty <br />
                 Professionals
@@ -29,7 +27,7 @@
                     <defs>
                         <path id="textcircle"
                             d="M250,400
-                                                                                                                                 a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
+                                                                                                                                                         a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
                             transform="rotate(12,250,250)" />
                     </defs>
                     <g class="textcircle">
@@ -42,13 +40,13 @@
                 </svg>
             </div>
 
-            <!-- search container start -->
+            {{-- search container start --}}
             <div data-aos="fade-right" data-aos-delay="400" class="search-container ">
-
                 <div class="item location">
                     <div class="title">Location</div>
                     <input placeholder="Search" type="text" />
                 </div>
+
                 <div class="item date">
                     <div class="title">Date</div>
                     <div class="date-picker-container">
@@ -61,6 +59,7 @@
                         </svg>
                     </div>
                 </div>
+
                 <div class="item service">
                     <div class="title">Service</div>
                     <div class="select-service-container">
@@ -71,9 +70,9 @@
                                     d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
                             </svg>
                         </div>
+
                         <div class="selected-service-container">
                             <div class="selected-service-container-list">
-
                             </div>
                             <div class="selected-service-container-top mt-4">
                                 <div class="selected-service-container-count">
@@ -83,6 +82,7 @@
                             </div>
                             <div class="done-btn">Done</div>
                         </div>
+
                         <div class="select-service-dropdown">
                             <div class="select-service-dropdown-options d-flex flex-column gap-3 ">
                                 <div class="item d-flex flex-column gap-2">
@@ -94,30 +94,30 @@
                                         <option value="Flower Girl">Flower Girl</option>
                                     </select>
                                 </div>
+
                                 <div class="item d-flex flex-column gap-2">
                                     <div class="title">What service would you like?</div>
-                                    <select id="sub-service-selector" class="form-select"
-                                        aria-label="Default select example">
-                                        <option selected>Select</option>
-                                        <option value="Mackup Only">Mackup Only</option>
-                                        <option value="Hair Down">Hair Down</option>
-                                        <option value="Hair Up">Hair Up</option>
-                                        <option value="Makeup and Hair Down">Makeup and Hair Down</option>
-                                        <option value="Makeup and Hair Up">Makeup and Hair Up</option>
+                                    <select name="serviceId" class="form-select" id="sub-service-selector">
+                                        <option value="" selected disabled>Select</option>
+                                        @foreach ($services as $service)
+                                            <option value="{{ $service->id }}">{{ $service->services_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
+
                             </div>
+
                             <div class="d-flex gap-4 align-items-center ">
                                 <div style="display: none;" class="select-service-dropdown-add-btn mt-4">Add</div>
                                 <div class="select-service-dropdown-cancel-btn mt-4">Cancel</div>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
                 <div class="search-btn-container">
                     <div class="title"></div>
-                    <a href="./service-category.html" class="search-btn mt-4">
+                    <button id="searchBtn" class="search-btn mt-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30"
                             fill="none">
                             <path
@@ -126,11 +126,12 @@
                             <path d="M21.0547 20.5547L26.7501 26.2501" stroke="white" stroke-width="3"
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                    </a>
+                    </button>
                 </div>
             </div>
-            <!-- search container end -->
+            {{-- search container end --}}
         </div>
+
         <div data-aos="fade-left" class="img-slider">
             <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
@@ -141,6 +142,7 @@
                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
                         aria-label="Slide 3"></button>
                 </div>
+
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img src="{{ asset('frontend/images/home-banner.png') }}" alt="" />
@@ -161,11 +163,13 @@
                         </div>
                     </div>
                 </div>
+
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
                     data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
+
                 <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
                     data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -174,7 +178,9 @@
             </div>
         </div>
     </div>
-    <!-- home banner end -->
+    {{-- home banner end --}}
+
+
 
     <!-- home counter start -->
     <div class="home-counter m-top m-bottom">
@@ -813,3 +819,16 @@
 
     @include('frontend.partials.join-us')
 @endsection
+
+@push('scripts')
+    <script>
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            let selectedServiceId = document.getElementById('sub-service-selector').value;
+            if (selectedServiceId) {
+                window.location.href = "{{ url('available-services') }}/" + selectedServiceId;
+            } else {
+                alert("Please select a service first!");
+            }
+        });
+    </script>
+@endpush
