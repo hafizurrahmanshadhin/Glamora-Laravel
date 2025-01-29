@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Booking;
 use App\Models\BusinessInformation;
+use App\Models\Order;
+use App\Models\Payment;
 use App\Models\TravelRadius;
 use App\Models\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,5 +68,13 @@ class User extends Authenticatable implements JWTSubject {
 
     public function bookings(): HasMany {
         return $this->hasMany(Booking::class);
+    }
+
+    public function payments(): HasMany {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function orders(): HasMany {
+        return $this->hasMany(Order::class);
     }
 }

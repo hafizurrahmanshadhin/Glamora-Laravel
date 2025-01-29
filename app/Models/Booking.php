@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Order;
+use App\Models\Payment;
 use App\Models\User;
 use App\Models\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -43,5 +46,13 @@ class Booking extends Model {
 
     public function userService(): BelongsTo {
         return $this->belongsTo(UserService::class, 'user_service_id');
+    }
+
+    public function payments(): HasMany {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function orders(): HasMany {
+        return $this->hasMany(Order::class);
     }
 }

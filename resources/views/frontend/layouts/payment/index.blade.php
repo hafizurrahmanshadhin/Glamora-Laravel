@@ -11,8 +11,8 @@
 @section('content')
     <section class="multistepform-section section-padding-x">
         <div class="container">
-            <form class="tm-multi-step-form-container">
-                {{-- Booking Summary --}}
+            <form id="payment-form" class="tm-multi-step-form-container">
+                @csrf
                 <div class="tm-multi-step-form-step-booking-details">
                     <h2 class="tm-multistep-form-heading tm-multistep-form-heading-2">Booking Summary</h2>
                     <div class="tm-multi-step-summary">
@@ -45,8 +45,7 @@
 
                     <div class="tm-multistep-btn-wrapper">
                         <button type="button" class="tm-multi-step-prev-step">Back</button>
-                        <button class="tm-multi-step-submit-form" type="button" data-bs-toggle="modal"
-                            class="tm-dashboard-booking-landing-btn-1" data-bs-target="#exampleModalToggle">
+                        <button class="tm-multi-step-submit-form" type="button" id="makePaymentBtn">
                             Make Payment
                         </button>
                     </div>
@@ -54,43 +53,33 @@
             </form>
         </div>
     </section>
-
-
-
-    {{-- Modal 3: Booking Successful Start --}}
-    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggle" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body tm-modal-body">
-                    <div class="booking-success-img-area">
-                        <img src="{{ asset('frontend/images/booking_Succesfull.png') }}" alt>
-                    </div>
-
-                    <h2 class="text-center">Booking Successful!</h2>
-                    <p class="modal-para text-center">
-                        We have successfully received your payment of $90
-                        as a security deposit. Your appointment with [Name] is scheduled for [Date and Time].
-                    </p>
-
-                    <div class="tm-dashboard-booking-landing-btn-wrapper tm-dashboard-booking-landing-btn-wrapper-modal">
-                        <a href="./dashboard-service-profile-details.html"
-                            class="tm-dashboard-booking-landing-btn-1 tm-dashboard-booking-landing-btn-4">
-                            Go Back to Dashboard
-                        </a>
-
-                        <button class="tm-dashboard-booking-landing-btn-1">View Booking Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- Modal 3: Booking Successful End --}}
 @endsection
 
 @push('scripts')
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="{{ asset('frontend/js/joint-client.js') }}"></script>
+    <script>
+        const stripe = Stripe('{{ config('services.stripe.key') }}');
+
+        document.getElementById('makePaymentBtn').addEventListener('click', async () => {
+            const response = await fetch("{{ route('checkout', $booking->id) }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+            });
+
+            const session = await response.json();
+
+            if (session.id) {
+                stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+            } else {
+                alert('Payment failed');
+            }
+        });
+    </script>
 @endpush
