@@ -128,6 +128,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedService = serviceSelector.value;
         const selectedSubService = subServiceSelector.value;
 
+        var selectValue = document.getElementById("sub-service-selector").value;
+        let service_id = document.getElementById("service_id");
+        service_id.value = selectValue;
+
         // Validation for proper selection
         if (selectedService === "Select" || selectedSubService === "Select") {
             alert("Please select a valid service and sub-service.");
@@ -145,8 +149,8 @@ document.addEventListener("DOMContentLoaded", function () {
         renderSelectedServices();
 
         // Reset the selectors
-        serviceSelector.selectedIndex = 0;
-        subServiceSelector.selectedIndex = 0;
+        // serviceSelector.selectedIndex = 0;
+        // subServiceSelector.selectedIndex = 0;
 
         // Hide add button and dropdown container
         addButton.style.display = "none";

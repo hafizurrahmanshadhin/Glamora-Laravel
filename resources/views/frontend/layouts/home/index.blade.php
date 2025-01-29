@@ -27,7 +27,7 @@
                     <defs>
                         <path id="textcircle"
                             d="M250,400
-                                                                                                                                                                 a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
+                                                                                                                                                                     a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
                             transform="rotate(12,250,250)" />
                     </defs>
                     <g class="textcircle">
@@ -117,7 +117,8 @@
 
                 <div class="search-btn-container">
                     <div class="title"></div>
-                    <a href="{{ route('service-category') }}" id="searchBtn" class="search-btn mt-4">
+                    <input type="hidden" name="service_id" id="service_id">
+                    <button id="searchBtn" class="search-btn mt-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30"
                             fill="none">
                             <path
@@ -126,7 +127,7 @@
                             <path d="M21.0547 20.5547L26.7501 26.2501" stroke="white" stroke-width="3"
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                    </a>
+                    </button>
                 </div>
             </div>
             {{-- search container end --}}
@@ -824,6 +825,8 @@
     <script>
         document.getElementById('searchBtn').addEventListener('click', function() {
             let selectedServiceId = document.getElementById('sub-service-selector').value;
+            let service_id = document.getElementById("service_id").value;
+
             if (selectedServiceId) {
                 window.location.href = "{{ url('available-services') }}/" + selectedServiceId;
             } else {
