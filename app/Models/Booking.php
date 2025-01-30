@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Report;
+use App\Models\Review;
 use App\Models\User;
 use App\Models\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,5 +56,13 @@ class Booking extends Model {
 
     public function orders(): HasMany {
         return $this->hasMany(Order::class);
+    }
+
+    public function reviews(): HasMany {
+        return $this->hasMany(Review::class);
+    }
+
+    public function reports(): HasMany {
+        return $this->hasMany(Report::class);
     }
 }

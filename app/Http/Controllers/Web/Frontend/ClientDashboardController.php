@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Report;
+use App\Models\Review;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -33,5 +37,49 @@ class ClientDashboardController extends Controller {
             ->get();
 
         return view('frontend.layouts.client_dashboard.index', compact('upcomingBookings', 'pendingRequests'));
+    }
+
+    /**
+     * Store a newly created review in storage.
+     *
+     * @param  Request  $request
+     * @return RedirectResponse
+     */
+    public function storeReview(Request $request): RedirectResponse {
+        $request->validate([
+            'booking_id' => 'required|exists:bookings,id',
+            'review'     => 'required|string',
+            'rating'     => 'required|integer|min:1|max:5',
+        ]);
+
+        Review::create([
+            'user_id'    => Auth::id(),
+            'booking_id' => $request->booking_id,
+            'review'     => $request->review,
+            'rating'     => $request->rating,
+        ]);
+
+        return redirect()->back()->with('t-success', 'Review submitted successfully.');
+    }
+
+    /**
+     * Store a newly created report in storage.
+     *
+     * @param  Request  $request
+     * @return RedirectResponse
+     */
+    public function storeReport(Request $request): RedirectResponse {
+        $request->validate([
+            'booking_id' => 'required|exists:bookings,id',
+            'message'    => 'required|string',
+        ]);
+
+        Report::create([
+            'user_id'    => Auth::id(),
+            'booking_id' => $request->booking_id,
+            'message'    => $request->message,
+        ]);
+
+        return redirect()->back()->with('t-success', 'Report submitted successfully.');
     }
 }

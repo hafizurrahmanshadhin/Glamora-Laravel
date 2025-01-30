@@ -27,7 +27,7 @@
                     <defs>
                         <path id="textcircle"
                             d="M250,400
-                                                                                                                                                                     a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
+                                                                                                                                                                                                 a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
                             transform="rotate(12,250,250)" />
                     </defs>
                     <g class="textcircle">
@@ -180,8 +180,6 @@
         </div>
     </div>
     {{-- home banner end --}}
-
-
 
     <!-- home counter start -->
     <div class="home-counter m-top m-bottom">
@@ -379,7 +377,7 @@
     </div>
     {{-- home user type container end --}}
 
-    <!-- home testimonial section start -->
+    {{-- home testimonial section start --}}
     <div class="home-testimonial section-padding-x m-bottom ">
         <img class="home-testimonial-shape" src="{{ asset('frontend/images/home-testimonial-shape.png') }}"
             alt="" />
@@ -602,7 +600,7 @@
             </div>
         </div>
     </div>
-    <!-- home testimonial section end -->
+    {{-- home testimonial section end --}}
 
     <!-- home beauty experts start -->
     <div class="home-beauty-expert-container m-bottom">

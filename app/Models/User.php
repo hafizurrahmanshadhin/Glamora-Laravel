@@ -6,6 +6,8 @@ use App\Models\Booking;
 use App\Models\BusinessInformation;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Report;
+use App\Models\Review;
 use App\Models\TravelRadius;
 use App\Models\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -76,5 +78,13 @@ class User extends Authenticatable implements JWTSubject {
 
     public function orders(): HasMany {
         return $this->hasMany(Order::class);
+    }
+
+    public function reviews(): HasMany {
+        return $this->hasMany(Review::class);
+    }
+
+    public function reports(): HasMany {
+        return $this->hasMany(Report::class);
     }
 }
