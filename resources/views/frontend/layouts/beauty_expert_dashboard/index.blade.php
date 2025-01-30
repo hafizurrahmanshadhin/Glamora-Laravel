@@ -30,7 +30,20 @@
                         <div class="item">
                             <div class="title">Rating as buyer</div>
                             <div class="ratings">
-                                ★★★★☆ <span>(4.5)</span>
+                                @if ($averageRating)
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= floor($averageRating))
+                                            ★
+                                        @elseif($i - floor($averageRating) == 0.5)
+                                            ☆
+                                        @else
+                                            ☆
+                                        @endif
+                                    @endfor
+                                    <span>({{ number_format($averageRating, 1) }})</span>
+                                @else
+                                    ★★★★☆ <span>(0.0)</span>
+                                @endif
                             </div>
                         </div>
                         <div class="item">

@@ -87,4 +87,18 @@ class User extends Authenticatable implements JWTSubject {
     public function reports(): HasMany {
         return $this->hasMany(Report::class);
     }
+
+    /**
+     * Get all reviews received by the user as a beauty expert.
+     */
+    public function receivedReviews() {
+        return $this->hasManyThrough(
+            Review::class,
+            Booking::class,
+            'user_service_id', // Foreign key on Booking table...
+            'booking_id', // Foreign key on Review table...
+            'id', // Local key on User table...
+            'id' // Local key on Booking table...
+        );
+    }
 }
