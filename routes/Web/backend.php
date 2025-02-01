@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
 use App\Http\Controllers\Web\Backend\ServiceController;
+use App\Http\Controllers\Web\Backend\TestimonialController;
 use App\Http\Controllers\Web\Backend\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,4 +52,11 @@ Route::controller(ContactController::class)->group(function () {
     Route::get('/contacts', 'index')->name('contacts.index');
     Route::get('/contacts/status/{id}', 'status')->name('contacts.status');
     Route::delete('/contacts/destroy/{id}', 'destroy')->name('contacts.destroy');
+});
+
+//! Route for Testimonial Page
+Route::controller(TestimonialController::class)->group(function () {
+    Route::get('/testimonial', 'index')->name('testimonial.index');
+    Route::get('/testimonial/show/{id}', 'show')->name('testimonial.show');
+    Route::post('/testimonial/status/{id}', 'status')->name('testimonial.status');
 });

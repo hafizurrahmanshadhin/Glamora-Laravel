@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Review;
 use App\Models\Service;
 use App\Models\UserService;
 use Illuminate\View\View;
@@ -31,6 +32,22 @@ class HomeController extends Controller {
         // Fetch active services
         $services = Service::where('status', 'active')->get();
 
-        return view('frontend.layouts.home.index', compact('approvedServices', 'services'));
+        // Calculate average rating and total reviews
+        $averageRating = Review::where('status', 'active')->avg('rating') ?? 0;
+        $totalReviews  = Review::where('status', 'active')->count();
+
+        // Fetch all reviews
+        $reviews = Review::with('user')
+            ->where('status', 'active')
+            ->latest()
+            ->get();
+
+        return view('frontend.layouts.home.index', compact(
+            'approvedServices',
+            'services',
+            'reviews',
+            'averageRating',
+            'totalReviews'
+        ));
     }
 }

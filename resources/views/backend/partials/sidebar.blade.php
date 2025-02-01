@@ -102,6 +102,15 @@
                     </a>
                 </li>
 
+                {{-- Testimonial --}}
+                <li class="nav-item">
+                    <a href="{{ route('testimonial.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('testimonial.index') ? 'active' : '' }}">
+                        <i class="ri-chat-quote-line"></i>
+                        <span data-key="t-dashboard">Testimonial</span>
+                    </a>
+                </li>
+
                 <hr>
                 {{-- Settings --}}
                 <li class="nav-item">
