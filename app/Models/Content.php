@@ -9,19 +9,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Content extends Model {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'type',
+        'title',
+        'slug',
+        'content',
+        'status',
+    ];
 
-    protected function casts(): array {
-        return [
-            'id'         => 'integer',
-            'type'       => 'string',
-            'title'      => 'string',
-            'slug'       => 'string',
-            'content'    => 'string',
-            'status'     => 'string',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'id'         => 'integer',
+        'type'       => 'string',
+        'title'      => 'string',
+        'slug'       => 'string',
+        'content'    => 'string',
+        'status'     => 'string',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
 }

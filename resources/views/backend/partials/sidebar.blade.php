@@ -168,7 +168,7 @@
                                 <a href="{{ route('terms-and-conditions.index') }}"
                                     class="nav-link {{ request()->routeIs('terms-and-conditions.index') ? 'active' : '' }}"
                                     data-key="t-terms-and-conditions">
-                                    Terms $ Conditions
+                                    Terms & Conditions
                                 </a>
                             </li>
 
@@ -177,6 +177,14 @@
                                     class="nav-link {{ request()->routeIs('privacy-policy.index') ? 'active' : '' }}"
                                     data-key="t-terms-and-conditions">
                                     Privacy Policy
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('inclusions-cancellation.index') }}"
+                                    class="nav-link {{ request()->routeIs('inclusions-cancellation.index') ? 'active' : '' }}"
+                                    data-key="t-inclusions-cancellation">
+                                    Inclusions & Cancellation Policy
                                 </a>
                             </li>
                         </ul>

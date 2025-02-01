@@ -19,37 +19,6 @@ class IntegrationController extends Controller {
     }
 
     /**
-     * Update google credentials settings.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function updateGoogleCredentials(Request $request): RedirectResponse {
-        $request->validate([
-            'GOOGLE_CLIENT_ID'     => 'nullable|string',
-            'GOOGLE_CLIENT_SECRET' => 'nullable|string',
-        ]);
-        try {
-            $envContent = File::get(base_path('.env'));
-            $lineBreak  = "\n";
-            $envContent = preg_replace([
-                '/GOOGLE_CLIENT_ID=(.*)\s/',
-                '/GOOGLE_CLIENT_SECRET=(.*)\s/',
-            ], [
-                'GOOGLE_CLIENT_ID=' . $request->GOOGLE_CLIENT_ID . $lineBreak,
-                'GOOGLE_CLIENT_SECRET=' . $request->GOOGLE_CLIENT_SECRET . $lineBreak,
-            ], $envContent);
-
-            if ($envContent !== null) {
-                File::put(base_path('.env'), $envContent);
-            }
-            return redirect()->back()->with('t-success', 'Google Setting Update Successfully.');
-        } catch (Exception) {
-            return redirect()->back()->with('t-error', 'Google Setting Update Failed');
-        }
-    }
-
-    /**
      * Update stripe credentials settings.
      *
      * @param Request $request

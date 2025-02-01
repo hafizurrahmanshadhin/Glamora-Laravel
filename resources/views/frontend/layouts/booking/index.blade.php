@@ -188,8 +188,10 @@
                                 <h3>Pricing & Inclusions</h3>
                                 <div class="tm-new-summary-important-info-wrapper">
                                     <div class="tm-new-summary-important-info">
-                                        <p class="genarel-para-new">Book with a deposit of $0 $250 payable on the day</p>
-                                        <a href="#" class="location-p"> View inclusions & cancellation policy</a>
+                                        <a href="{{ route('inclusions-cancellation') }}" class="location-p"
+                                            target="_blank">
+                                            View inclusions & cancellation policy
+                                        </a>
                                         <p class="genarel-para-new tm-bonus-para">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none">

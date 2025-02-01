@@ -2,11 +2,17 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\BookingSeeder;
 use Database\Seeders\BusinessInformationSeeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\DynamicPageSeeder;
 use Database\Seeders\FAQSeeder;
+use Database\Seeders\NotificationsSeeder;
+use Database\Seeders\OrderSeeder;
+use Database\Seeders\PaymentSeeder;
+use Database\Seeders\ReportSeeder;
+use Database\Seeders\ReviewSeeder;
 use Database\Seeders\ServiceSeeder;
 use Database\Seeders\SocialMediaSeeder;
 use Database\Seeders\SystemSettingSeeder;
@@ -29,6 +35,12 @@ class DatabaseSeeder extends Seeder {
             BusinessInformationSeeder::class,
             TravelRadiusSeeder::class,
             UserServiceSeeder::class,
+            BookingSeeder::class,
+            ReviewSeeder::class,
+            ReportSeeder::class,
+            PaymentSeeder::class,
+            OrderSeeder::class,
+            NotificationsSeeder::class,
         ]);
     }
 }

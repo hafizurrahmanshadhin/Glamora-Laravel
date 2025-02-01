@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\Backend\Settings\DynamicPageController;
+use App\Http\Controllers\Web\Backend\Settings\InclusionsCancellationController;
 use App\Http\Controllers\Web\Backend\Settings\IntegrationController;
 use App\Http\Controllers\Web\Backend\Settings\MailSettingsController;
 use App\Http\Controllers\Web\Backend\Settings\PrivacyPolicyController;
@@ -34,7 +35,6 @@ Route::controller(MailSettingsController::class)->group(function () {
 //! Route for Integration Settings
 Route::controller(IntegrationController::class)->group(function () {
     Route::get('/integration-setting', 'index')->name('integration.setting');
-    Route::patch('/google-setting', 'updateGoogleCredentials')->name('google.update');
     Route::patch('/stripe-setting', 'updateStripeCredentials')->name('stripe.update');
 });
 
@@ -66,4 +66,10 @@ Route::controller(TermsAndConditionsController::class)->group(function () {
 Route::controller(PrivacyPolicyController::class)->group(function () {
     Route::get('/privacy-policy', 'index')->name('privacy-policy.index');
     Route::patch('/privacy-policy', 'update')->name('privacy-policy.update');
+});
+
+//! Route for Inclusions & Cancellation Policy
+Route::controller(InclusionsCancellationController::class)->group(function () {
+    Route::get('/inclusions-cancellation', 'index')->name('inclusions-cancellation.index');
+    Route::patch('/inclusions-cancellation', 'update')->name('inclusions-cancellation.update');
 });

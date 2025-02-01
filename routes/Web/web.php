@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\Frontend\ContactController;
 use App\Http\Controllers\Web\Frontend\DynamicPageController;
 use App\Http\Controllers\Web\Frontend\FAQController;
 use App\Http\Controllers\Web\Frontend\HomeController;
+use App\Http\Controllers\Web\Frontend\NotificationController;
 use App\Http\Controllers\Web\Frontend\PaymentController;
 use App\Http\Controllers\Web\Frontend\ServiceCategoryController;
 use App\Http\Controllers\Web\Frontend\ServiceProviderProfileController;
@@ -40,6 +41,9 @@ Route::controller(ContactController::class)->group(function () {
     Route::post('/contact', 'store')->name('contact.store');
 });
 
+//# Route for Notification
+Route::get('/notification/read/{id}', [NotificationController::class, 'markAsRead'])->name('notification.read');
+
 //^ Route for Terms and Conditions
 Route::get('/terms-and-conditions', function () {
     $terms_and_conditions = Content::where('type', 'termsAndConditions')->first();
@@ -51,6 +55,12 @@ Route::get('/privacy-policy', function () {
     $privacyPolicy = Content::where('type', 'privacyPolicy')->first();
     return view('frontend.layouts.privacy_policy.index', compact('privacyPolicy'));
 })->name('privacy-policy');
+
+//& Route for Inclusions $ Cancellation
+Route::get('/inclusions-cancellation', function () {
+    $inclusionsCancellation = Content::where('type', 'inclusionsCancellation')->first();
+    return view('frontend.layouts.inclusions_cancellation.index', compact('inclusionsCancellation'));
+})->name('inclusions-cancellation');
 
 //* This Route is for Dynamic Page in the frontend footer
 Route::get('/page/{page_slug}', [DynamicPageController::class, 'index'])->name('custom.page');

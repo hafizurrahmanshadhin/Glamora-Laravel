@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -20,8 +19,38 @@ class BusinessInformationSeeder extends Seeder {
                 'professional_title' => 'Software Engineer',
                 'license'            => 'frontend/service-image-2.jpg',
                 'status'             => 'active',
-                'created_at'         => Carbon::parse('2025-01-23 00:40:06'),
-                'updated_at'         => Carbon::parse('2025-01-23 00:40:06'),
+                'created_at'         => '2025-01-22 18:40:06',
+                'updated_at'         => '2025-01-23 18:45:06',
+                'deleted_at'         => null,
+            ],
+            [
+                'id'                 => 2,
+                'user_id'            => 5,
+                'avatar'             => 'frontend/dashboard-profile.png',
+                'name'               => 'test',
+                'bio'                => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).',
+                'business_name'      => 'test',
+                'business_address'   => 'Dhaka',
+                'professional_title' => 'Beauty Expert',
+                'license'            => 'frontend/dashboard-profile.png',
+                'status'             => 'active',
+                'created_at'         => '2025-02-14 23:33:33',
+                'updated_at'         => '2025-03-16 23:38:33',
+                'deleted_at'         => null,
+            ],
+            [
+                'id'                 => 3,
+                'user_id'            => 6,
+                'avatar'             => 'frontend/comment-author.jpg',
+                'name'               => 'Hafizur Rahman Shadhin',
+                'bio'                => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).',
+                'business_name'      => 'Shadhin',
+                'business_address'   => 'Mohammadpur, Dhaka',
+                'professional_title' => 'Software Engineer',
+                'license'            => 'frontend/comment-author.jpg',
+                'status'             => 'active',
+                'created_at'         => '2025-04-08 23:38:19',
+                'updated_at'         => '2025-04-19 23:38:19',
                 'deleted_at'         => null,
             ],
         ]);
