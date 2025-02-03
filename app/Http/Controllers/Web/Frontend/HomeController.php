@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
 use App\Models\Service;
+use App\Models\User;
 use App\Models\UserService;
 use Illuminate\View\View;
 
@@ -42,12 +43,23 @@ class HomeController extends Controller {
             ->latest()
             ->get();
 
+        $topBeautyExperts = User::where('role', 'beauty_expert')
+            ->where('status', 'active')
+            ->with('businessInformation')
+            ->get();
+
+        // $reviews = Review::whereHas('booking.userService')
+        //     ->with(['booking.userService'])
+        //     ->get();
+        // dd($reviews);
+
         return view('frontend.layouts.home.index', compact(
             'approvedServices',
             'services',
             'reviews',
             'averageRating',
-            'totalReviews'
+            'totalReviews',
+            'topBeautyExperts'
         ));
     }
 }

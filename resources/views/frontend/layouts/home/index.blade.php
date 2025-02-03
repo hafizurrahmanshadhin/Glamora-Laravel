@@ -27,7 +27,7 @@
                     <defs>
                         <path id="textcircle"
                             d="M250,400
-                                                                                                                                                                                                                                                                             a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
+                                                                                                                                                                                                                                                                                                     a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
                             transform="rotate(12,250,250)" />
                     </defs>
                     <g class="textcircle">
@@ -470,136 +470,37 @@
     </div>
     {{-- home testimonial section end --}}
 
-    <!-- home beauty experts start -->
+    {{-- Top Rated Beauty Experts Start --}}
     <div class="home-beauty-expert-container m-bottom">
         <div class="section-sub-title-italic text-center">Professionals</div>
         <div class="section-sub-title text-center">Top Rated Beauty Experts</div>
         <div class="home-beauty-experts">
             <div class="rk--hero--marquee">
                 <div class="slide">
-                    <!-- slider item  -->
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-1.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span>(4.9)</span>
+                    @foreach ($topBeautyExperts as $expert)
+                        <a href="#" class="slider--item">
+                            <div class="img--area">
+                                <img src="{{ asset($expert->businessInformation->avatar ?? 'backend/images/default_images/user_1.jpg') }}"
+                                    alt="maquee--img" />
                             </div>
-                        </div>
-                    </a>
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-2.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span>(4.9)</span>
+
+                            <div class="home-expert-text-content">
+                                <div class="title">{{ $expert->businessInformation->name ?? '' }}</div>
+                                <div class="text">
+                                    {{ $expert->businessInformation->professional_title ?? '' }}
+                                </div>
+                                <div class="home-expert-ratings-container">
+                                    <span class="home-expert-ratings">★★★★☆</span>
+                                    <span>(4.9)</span>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-3.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span>(4.9)</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-4.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span>(4.9)</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-5.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span>(4.9)</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-6.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span class="text-end">(4.9)</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-1.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span>(4.9)</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-2.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span>(4.9)</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="./Service-provider-profile.html" class="slider--item">
-                        <div class="img--area">
-                            <img src="{{ asset('frontend/images/home-expert-3.png') }}" alt="maquee--img" />
-                        </div>
-                        <div class="home-expert-text-content">
-                            <div class="title">Sofia Beauty Studio</div>
-                            <div class="text">Bridal Makeup, Hairstyling</div>
-                            <div class="home-expert-ratings-container">
-                                <span class="home-expert-ratings">★★★★☆</span>
-                                <span>(4.9)</span>
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
-    <!-- home beauty experts end -->
+    {{-- Top Rated Beauty Experts End --}}
 
     <!-- home find experts near you start -->
     <div class="section-padding-x m-bottom ">
