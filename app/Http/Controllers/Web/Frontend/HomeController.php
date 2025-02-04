@@ -48,11 +48,6 @@ class HomeController extends Controller {
             ->with('businessInformation')
             ->get();
 
-        // $reviews = Review::whereHas('booking.userService')
-        //     ->with(['booking.userService'])
-        //     ->get();
-        // dd($reviews);
-
         return view('frontend.layouts.home.index', compact(
             'approvedServices',
             'services',

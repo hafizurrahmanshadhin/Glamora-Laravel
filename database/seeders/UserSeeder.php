@@ -93,6 +93,20 @@ class UserSeeder extends Seeder {
                 'updated_at'        => '2025-01-31 23:40:33',
                 'deleted_at'        => null,
             ],
+            [
+                'id'                => 7,
+                'first_name'        => 'Ezekiel',
+                'last_name'         => 'Odonnell',
+                'email'             => 'ezekiel@gmail.com',
+                'email_verified_at' => '2025-02-04 04:42:36',
+                'password'          => Hash::make('12345678'),
+                'role'              => 'beauty_expert',
+                'status'            => 'active',
+                'remember_token'    => null,
+                'created_at'        => '2025-02-04 04:42:36',
+                'updated_at'        => '2025-02-04 04:44:35',
+                'deleted_at'        => null,
+            ],
         ]);
     }
 }

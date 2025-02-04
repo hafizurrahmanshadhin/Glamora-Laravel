@@ -50,6 +50,20 @@ class TravelRadiusSeeder extends Seeder {
                 'updated_at'        => '2025-01-09 23:38:39',
                 'deleted_at'        => null,
             ],
+            [
+                'id'                => 4,
+                'user_id'           => 7,
+                'free_radius'       => 89,
+                'travel_radius'     => 63,
+                'travel_charge'     => 53.00,
+                'max_radius'        => 91,
+                'max_charge'        => 16.00,
+                'min_booking_value' => 0.00,
+                'status'            => 'active',
+                'created_at'        => '2025-02-04 04:43:12',
+                'updated_at'        => '2025-02-04 04:43:12',
+                'deleted_at'        => null,
+            ],
         ]);
     }
 }

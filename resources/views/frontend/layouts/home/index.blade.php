@@ -27,7 +27,7 @@
                     <defs>
                         <path id="textcircle"
                             d="M250,400
-                                                                                                                                                                                                                                                                                                     a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
+                                                                                                                                                                                                                                                                                                                     a150,150 0 0,1 0,-300a150,150 0 0,1 0,300Z"
                             transform="rotate(12,250,250)" />
                     </defs>
                     <g class="textcircle">
@@ -485,13 +485,10 @@
                             </div>
 
                             <div class="home-expert-text-content">
-                                <div class="title">{{ $expert->businessInformation->name ?? '' }}</div>
+                                <div style="text-wrap: wrap !important;" class="title">
+                                    {{ $expert->businessInformation->name ?? '' }}</div>
                                 <div class="text">
                                     {{ $expert->businessInformation->professional_title ?? '' }}
-                                </div>
-                                <div class="home-expert-ratings-container">
-                                    <span class="home-expert-ratings">★★★★☆</span>
-                                    <span>(4.9)</span>
                                 </div>
                             </div>
                         </a>
