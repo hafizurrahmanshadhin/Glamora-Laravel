@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\Frontend\ContactController;
 use App\Http\Controllers\Web\Frontend\DynamicPageController;
 use App\Http\Controllers\Web\Frontend\FAQController;
 use App\Http\Controllers\Web\Frontend\HomeController;
+use App\Http\Controllers\Web\Frontend\MessageController;
 use App\Http\Controllers\Web\Frontend\NotificationController;
 use App\Http\Controllers\Web\Frontend\PaymentController;
 use App\Http\Controllers\Web\Frontend\ServiceCategoryController;
@@ -39,6 +40,13 @@ Route::controller(PaymentController::class)->middleware(['auth'])->group(functio
 Route::controller(ContactController::class)->group(function () {
     Route::get('/contact', 'index')->name('contact');
     Route::post('/contact', 'store')->name('contact.store');
+});
+
+//~ Route for Chatting Message
+Route::controller(MessageController::class)->group(function () {
+    // Route::get('/chat/{booking}', 'index')->name('chat');
+    Route::get('/chat', 'index')->name('chat');
+    Route::post('/chat/send', 'send')->name('chat.send');
 });
 
 //# Route for Notification
