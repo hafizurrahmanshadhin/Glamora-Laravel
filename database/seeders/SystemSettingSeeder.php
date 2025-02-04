@@ -16,7 +16,7 @@ class SystemSettingSeeder extends Seeder {
                 'phone_number'   => '0123456789',
                 'address'        => '123 Main St, Suite 101, City, State, ZIP',
                 'copyright_text' => '© 2024 Glamora. All rights reserved.',
-                'description'    => '<p>About System...</p>',
+                'description'    => '<p>At Glamora we make finding top beauty professionals easy and stress-free. Explore and book trusted experts for all your beauty needs in one place !</p>',
                 'logo'           => null,
                 'favicon'        => null,
                 'created_at'     => '2024-12-08 05:08:00',

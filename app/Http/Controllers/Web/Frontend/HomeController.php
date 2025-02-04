@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
 use App\Models\Service;
+use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\UserService;
 use Illuminate\View\View;
@@ -16,6 +17,8 @@ class HomeController extends Controller {
      * @return View
      */
     public function index(): View {
+        $systemSetting = SystemSetting::first();
+
         $approvedServices = UserService::where('status', 'active')
             ->with('service')
             ->get()
@@ -49,6 +52,7 @@ class HomeController extends Controller {
             ->get();
 
         return view('frontend.layouts.home.index', compact(
+            'systemSetting',
             'approvedServices',
             'services',
             'reviews',
