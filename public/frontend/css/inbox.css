@@ -194,7 +194,7 @@
     flex-direction: column;
     gap: 12px;
     margin-top: 16px;
-    height: calc(100dvh - 280px);
+    height: calc(100dvh - 260px);
     overflow-y: auto;
     /* Hide scrollbar for WebKit browsers */
     -webkit-overflow-scrolling: touch;
@@ -209,13 +209,11 @@
   .individual-messages .single-message {
     display: flex;
     gap: 10px;
-  }
-  
+  } 
   .individual-messages .user-text {
     border-radius: 0px 16px 16px 16px;
     padding: 6px 12px;
     background: var(--30-light-neutrals-02, #f0f0f0);
-  
     margin-top: 4px;
     display: flex;
     flex-direction: column;
@@ -566,6 +564,10 @@
     .user-messages .user-title {
       font-size: 20px;
     }
+    .individual-messages {
+      
+      height: calc(100dvh - 320px);
+    }
   }
   @media screen and (min-width: 1900px) {
     .user-profile-info-container-top {
@@ -633,7 +635,7 @@
       flex-direction: column;
       gap: 16px;
       margin-top: 40px;
-      height: calc(100dvh - 380px);
+      height: calc(100dvh - 424px);
     }
     .user-messages .user-title {
       font-size: 24px;

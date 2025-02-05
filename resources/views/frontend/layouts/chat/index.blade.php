@@ -9,13 +9,12 @@
 @endpush
 
 @section('content')
-    <div class="dashboard-layout section-padding-x">
+    <div style="margin-top: 24px" class="dashboard-layout section-padding-x">
         <div class="messages-container bg-white">
             <!-- inbox container start -->
             <div class="inbox">
                 <div class="inbox-top">
                     <div class="inbox-title">Inbox</div>
-
                 </div>
                 <div class="general-title-container">
                     <div class="general-title">General</div>
@@ -24,7 +23,7 @@
                 <div class="inbox-messages">
                     <div class="item">
                         <div class="profile-container">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                         <div class="message-container">
                             <div class="message-container-top">
@@ -34,7 +33,6 @@
                             <div class="text">If the super sale starts</div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <!-- inbox container end -->
@@ -50,14 +48,14 @@
                                 stroke-linejoin="round"></path>
                         </svg>
                         <!-- <svg id="three-dots" width="24px" height="22px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512">
-                                        <path d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/>
-                                      </svg> -->
+                                <path d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/>
+                              </svg> -->
                     </div>
                 </div>
                 <div class="individual-messages">
                     <div class="single-message opposite-message">
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                         <div class="right-content">
                             <div class="user-name">John Doe</div>
@@ -120,13 +118,13 @@
                             </div>
                         </div>
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                     </div>
 
                     <div class="single-message opposite-message">
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                         <div class="right-content">
                             <div class="user-name">John Doe</div>
@@ -183,12 +181,12 @@
                             </div>
                         </div>
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                     </div>
                     <div class="single-message opposite-message">
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                         <div class="right-content">
                             <div class="user-name">John Doe</div>
@@ -245,12 +243,12 @@
                             </div>
                         </div>
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                     </div>
                     <div class="single-message opposite-message">
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                         <div class="right-content">
                             <div class="user-name">John Doe</div>
@@ -313,12 +311,12 @@
                             </div>
                         </div>
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                     </div>
                     <div class="single-message opposite-message">
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                         <div class="right-content">
                             <div class="user-name">John Doe</div>
@@ -381,7 +379,7 @@
                             </div>
                         </div>
                         <div class="user-profile">
-                            <img src="{{ asset('assets/images/user.png') }}" alt="user" />
+                            <img src="./assets/images/user.png" alt="user" />
                         </div>
                     </div>
                 </div>
@@ -416,6 +414,10 @@
 @push('scripts')
     <script>
         // for inbox
+        window.onload = function() {
+            const messageContainer = document.querySelector(".individual-messages");
+            messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to bottom on load
+        };
         // for hide inbox
         document.querySelectorAll(".inbox-messages .item").forEach((item) => {
             item.addEventListener("click", () => {
