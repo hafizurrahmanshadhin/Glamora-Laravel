@@ -319,13 +319,15 @@
     {{-- Modal-3: Appointment not done End --}}
 @endsection
 
+
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Labels with class="star"
             const stars = document.querySelectorAll('.star');
-            const radios = document.querySelectorAll('.star input[type="radio"]');
+            // Radio buttons by name
+            const radios = document.querySelectorAll('input[name="rating"]');
 
-            // Function to update the star classes based on selected value
             function updateStars(selectedValue) {
                 stars.forEach((star, index) => {
                     if (index < selectedValue) {
@@ -336,46 +338,38 @@
                 });
             }
 
-            // Function to handle mouseover event
             function handleMouseOver(index) {
                 stars.forEach((star, i) => {
-                    if (i <= index) {
-                        star.classList.add('hover');
-                    } else {
-                        star.classList.remove('hover');
-                    }
+                    if (i <= index) star.classList.add('hover');
+                    else star.classList.remove('hover');
                 });
             }
 
-            // Function to handle mouseout event
             function handleMouseOut() {
-                stars.forEach((star) => {
-                    star.classList.remove('hover');
-                });
-                const selectedStar = document.querySelector('.star input[type="radio"]:checked');
-                const selectedValue = selectedStar ? parseInt(selectedStar.value) : 0;
-                updateStars(selectedValue);
+                stars.forEach((star) => star.classList.remove('hover'));
+                const checkedStar = document.querySelector('input[name="rating"]:checked');
+                const value = checkedStar ? parseInt(checkedStar.value) : 0;
+                updateStars(value);
             }
 
-            // Add event listeners to radio buttons for change event
+            // Update on radio change
             radios.forEach((radio) => {
                 radio.addEventListener('change', function() {
-                    const selectedValue = parseInt(this.value);
-                    updateStars(selectedValue);
+                    const value = parseInt(this.value);
+                    updateStars(value);
                 });
             });
 
-            // Add event listeners to stars for hover effects
+            // Hover effects on labels
             stars.forEach((star, index) => {
                 star.addEventListener('mouseover', function() {
                     handleMouseOver(index);
                 });
-
                 star.addEventListener('mouseout', function() {
                     handleMouseOut();
                 });
-
                 star.addEventListener('click', function() {
+                    // Find associated radio matching index
                     const radio = document.getElementById(`star${index + 1}`);
                     if (radio) {
                         radio.checked = true;

@@ -20,7 +20,8 @@
                 <div class="section-padding-x">
                     <h2>Browse “{{ $approvedServices[0]->service->services_name ?? '' }}”</h2>
                     <p class="categori-heading-para">
-                        Showing 12 Results for <a href="#">Personal Tax Preparation Preparation</a>
+                        Showing {{ $approvedServices->count() }} Results for <a href="#">Personal Tax Preparation
+                            Preparation</a>
                     </p>
                     <div class="explore-card-filter-wrapper">
                         <div class="rating-filter">
@@ -56,36 +57,48 @@
                                 <div class="explore-rating-area">
                                     <p class="explore-ratings-star-count">
                                         <span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="68" height="12"
-                                                viewBox="0 0 68 12" fill="none">
-                                                <path
-                                                    d="M6 3.11392e-08L7.34708 4.1459L11.7063 4.1459L8.17963 6.7082L9.52671 10.8541L6 8.2918L2.47329 10.8541L3.82037 6.7082L0.293661 4.1459L4.65292 4.1459L6 3.11392e-08Z"
-                                                    fill="#FBB040" />
-                                                <path
-                                                    d="M20 3.11392e-08L21.3471 4.1459L25.7063 4.1459L22.1796 6.7082L23.5267 10.8541L20 8.2918L16.4733 10.8541L17.8204 6.7082L14.2937 4.1459L18.6529 4.1459L20 3.11392e-08Z"
-                                                    fill="#FBB040" />
-                                                <path
-                                                    d="M34 3.11392e-08L35.3471 4.1459L39.7063 4.1459L36.1796 6.7082L37.5267 10.8541L34 8.2918L30.4733 10.8541L31.8204 6.7082L28.2937 4.1459L32.6529 4.1459L34 3.11392e-08Z"
-                                                    fill="#FBB040" />
-                                                <path
-                                                    d="M48 3.11392e-08L49.3471 4.1459L53.7063 4.1459L50.1796 6.7082L51.5267 10.8541L48 8.2918L44.4733 10.8541L45.8204 6.7082L42.2937 4.1459L46.6529 4.1459L48 3.11392e-08Z"
-                                                    fill="#FBB040" />
-                                                <path
-                                                    d="M62 3.11392e-08L63.3471 4.1459L67.7063 4.1459L64.1796 6.7082L65.5267 10.8541L62 8.2918L58.4733 10.8541L59.8204 6.7082L56.2937 4.1459L60.6529 4.1459L62 3.11392e-08Z"
-                                                    fill="#BABABA" />
-                                            </svg>
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= floor($userService->average_rating))
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                        viewBox="0 0 24 24" fill="#FBB040">
+                                                        <path
+                                                            d="M12 2l2.39 6.85h7.21l-5.69 4.14 2.39 6.85-5.69-4.14-5.69 4.14 2.39-6.85-5.69-4.14h7.21z" />
+                                                    </svg>
+                                                @elseif($i == ceil($userService->average_rating) && fmod($userService->average_rating, 1) != 0)
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                        viewBox="0 0 24 24">
+                                                        <defs>
+                                                            <linearGradient id="half-star">
+                                                                <stop offset="50%" stop-color="#FBB040" />
+                                                                <stop offset="50%" stop-color="#BABABA" />
+                                                            </linearGradient>
+                                                        </defs>
+                                                        <path fill="url(#half-star)"
+                                                            d="M12 2l2.39 6.85h7.21l-5.69 4.14 2.39 6.85-5.69-4.14-5.69 4.14 2.39-6.85-5.69-4.14h7.21z" />
+                                                    </svg>
+                                                @else
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                        viewBox="0 0 24 24" fill="#BABABA">
+                                                        <path
+                                                            d="M12 2l2.39 6.85h7.21l-5.69 4.14 2.39 6.85-5.69-4.14-5.69 4.14 2.39-6.85-5.69-4.14h7.21z" />
+                                                    </svg>
+                                                @endif
+                                            @endfor
                                         </span>
                                         <span class="explore-rating-count">
-                                            4.5 <span>(210)</span>
+                                            {{ $userService->average_rating ?? 0 }}
+                                            <span>({{ $userService->review_count ?? 0 }})</span>
                                         </span>
                                     </p>
+
                                     <h5 class="tm-price">
                                         {{ $userService->total_price ?? 0 }}$
                                     </h5>
                                 </div>
                                 <div class="explore-card-heading-para">
                                     <h4>
-                                        {{ $userService->user->first_name ?? '' }} {{ $userService->user->last_name ?? '' }}
+                                        {{ $userService->user->first_name ?? '' }}
+                                        {{ $userService->user->last_name ?? '' }}
                                     </h4>
                                     <div class="check-availability-bookmarks">
                                         <a
