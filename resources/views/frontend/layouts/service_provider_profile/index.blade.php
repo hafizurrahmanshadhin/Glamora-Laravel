@@ -60,7 +60,7 @@
                                                 fill="#FBB040" />
                                         </svg>
                                     </span>
-                                    4.5(210)
+                                    {{ $averageRating ?? '' }} ({{ $reviewCount ?? '' }})
                                 </div>
                             </div>
                             <p class="profile-details-para">

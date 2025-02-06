@@ -17,10 +17,31 @@ class ServiceProviderProfileController extends Controller {
     public function index(Request $request, $userId, $serviceId): View {
         $user = User::with(['userServices.service'])->findOrFail($userId);
 
+        // Calculate this user’s average rating
+        $avg = Review::where('status', 'active')
+            ->whereHas('booking.userService', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            })
+            ->avg('rating') ?? 0;
+        $averageRating = round($avg * 2) / 2;
+
+        // Count total reviews for this user
+        $reviewCount = Review::where('status', 'active')
+            ->whereHas('booking.userService', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            })
+            ->count();
+
         $reviews = Review::whereHas('booking.userService', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })->with(['booking.userService'])->get();
 
-        return view('frontend.layouts.service_provider_profile.index', compact('user', 'serviceId', 'reviews'));
+        return view('frontend.layouts.service_provider_profile.index', [
+            'user'          => $user,
+            'serviceId'     => $serviceId,
+            'reviews'       => $reviews,
+            'averageRating' => $averageRating,
+            'reviewCount'   => $reviewCount,
+        ]);
     }
 }
