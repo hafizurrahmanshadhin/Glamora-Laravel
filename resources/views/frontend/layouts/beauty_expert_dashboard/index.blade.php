@@ -6,25 +6,103 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/categories.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/tarek.css') }}">
+
+    <style>
+        .profile-availability {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+            border-bottom: 1px solid #BABABA;
+            padding-bottom: 16px;
+        }
+
+        .profile-availability-left {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .profile-availability-right {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .profile-availability-left h4 {
+            color: #6B6B6B;
+        }
+
+        .profile-availability-left h4,
+        .profile-availability-right h4 {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .profile-availability-right .point {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #6B6B6B;
+        }
+
+        .profile-availability-right .point.available {
+            background-color: #27AE60;
+        }
+
+        .profile-availability .form-check-input {
+            cursor: pointer;
+        }
+
+        .profile-availability .form-check-input:checked {
+            background-color: #27AE60;
+            border-color: #27AE60;
+            box-shadow: none;
+        }
+
+        .profile-availability .form-check-input:focus {
+            box-shadow: none;
+        }
+    </style>
 @endpush
 
 @section('content')
     <div class="dashboard-layout section-padding-x">
         <div class="dashboard-left">
             <div class="dashboard-profile-container">
-                <div class="top">
-                    <div class="img-content">
-                        <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
-                            alt="">
-                        <div class="active-status"></div>
-                    </div>
-                    <div class="text-content">
-                        <div class="profile-title">
-                            {{ ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) ?? '' }}
+                <div class="">
+                    <div style=" padding-bottom: 0 !important; border-bottom: 0 !important; " class="top">
+                        <div class="img-content">
+                            <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
+                                alt="">
+                            <div class="active-status"></div>
                         </div>
-                        <div class="profile-text">{{ Auth::user()->businessInformation?->business_address ?? '' }}</div>
+                        <div class="text-content">
+                            <div class="profile-title">
+                                {{ ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) ?? '' }}
+                            </div>
+                            <div class="profile-text">{{ Auth::user()->businessInformation?->business_address ?? '' }}</div>
+                        </div>
+                    </div>
+                    <div class="profile-availability">
+                        <div class="profile-availability-left">
+                            <h4>Availability</h4>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked">
+                                <label class="form-check-label" for="flexSwitchCheckChecked">
+                            </div>
+                        </div>
+                        <div class="profile-availability-right">
+                            <h4 class="availability-status">Unavailable</h4>
+                            <div class="point"></div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="bottom">
                     <div class="bottom-top">
                         <div class="item">
@@ -145,3 +223,26 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const checkbox = document.getElementById("flexSwitchCheckChecked");
+            const statusText = document.querySelector(".availability-status");
+            const point = document.querySelector(".point");
+
+            function updateAvailability() {
+                if (checkbox.checked) {
+                    statusText.textContent = "Available";
+                    point.classList.add("available");
+                } else {
+                    statusText.textContent = "Unavailable";
+                    point.classList.remove("available");
+                }
+            }
+
+            checkbox.addEventListener("change", updateAvailability);
+            updateAvailability(); // Ensure initial state is correct
+        });
+    </script>
+@endpush
