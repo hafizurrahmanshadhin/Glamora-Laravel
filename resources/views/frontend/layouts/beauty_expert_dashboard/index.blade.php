@@ -92,13 +92,15 @@
                         <div class="profile-availability-left">
                             <h4>Availability</h4>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked">
-                                <label class="form-check-label" for="flexSwitchCheckChecked">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                    {{ $availability === 'available' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="flexSwitchCheckChecked"></label>
                             </div>
                         </div>
                         <div class="profile-availability-right">
-                            <h4 class="availability-status">Unavailable</h4>
-                            <div class="point"></div>
+                            <h4 class="availability-status">
+                                {{ $availability === 'available' ? 'Available' : 'Unavailable' }}</h4>
+                            <div class="point {{ $availability === 'available' ? 'available' : '' }}"></div>
                         </div>
                     </div>
                 </div>
@@ -232,17 +234,26 @@
             const point = document.querySelector(".point");
 
             function updateAvailability() {
-                if (checkbox.checked) {
-                    statusText.textContent = "Available";
-                    point.classList.add("available");
-                } else {
-                    statusText.textContent = "Unavailable";
-                    point.classList.remove("available");
-                }
+                const status = checkbox.checked ? 'available' : 'unavailable';
+                statusText.textContent = checkbox.checked ? "Available" : "Unavailable";
+                point.classList.toggle("available", checkbox.checked);
+
+                // Send AJAX request to update status
+                axios.post("{{ route('toggle-availability') }}", {
+                        status: status
+                    })
+                    .then(response => {
+                        if (response.data.status !== 'success') {
+                            alert('Failed to update availability status.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert('An error occurred while updating availability status.');
+                    });
             }
 
             checkbox.addEventListener("change", updateAvailability);
-            updateAvailability(); // Ensure initial state is correct
         });
     </script>
 @endpush

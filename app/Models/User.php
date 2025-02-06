@@ -42,6 +42,7 @@ class User extends Authenticatable implements JWTSubject {
             'google_id'         => 'string',
             'role'              => 'string',
             'status'            => 'string',
+            'availability'      => 'string',
             'created_at'        => 'datetime',
             'updated_at'        => 'datetime',
             'deleted_at'        => 'datetime',

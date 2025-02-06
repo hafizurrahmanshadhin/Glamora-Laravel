@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('google_id')->nullable()->unique();
 
             $table->enum('role', ['admin', 'client', 'beauty_expert'])->nullable(false);
+            $table->enum('availability', ['available', 'unavailable'])->default('available');
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->rememberToken();

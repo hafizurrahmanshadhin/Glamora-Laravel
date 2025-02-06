@@ -4,7 +4,12 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\BusinessInformation;
 use App\Models\Review;
+use App\Models\TravelRadius;
+use App\Models\UserService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -53,6 +58,42 @@ class BeautyExpertDashboardController extends Controller {
             ->where('status', 'active')
             ->count();
 
-        return view('frontend.layouts.beauty_expert_dashboard.index', compact('upcomingBookings', 'pendingRequests', 'averageRating', 'reviewCount'));
+        // Pass availability status to the view
+        $availability = $user->availability;
+
+        return view('frontend.layouts.beauty_expert_dashboard.index', compact(
+            'upcomingBookings',
+            'pendingRequests',
+            'averageRating',
+            'reviewCount',
+            'availability'
+        ));
+    }
+
+    /**
+     * Toggle the availability status of the beauty expert.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     *
+     */
+    public function toggleAvailability(Request $request): JsonResponse {
+        $user   = Auth::user();
+        $status = $request->input('status') === 'available' ? 'available' : 'unavailable';
+
+        // Update user's availability status
+        $user->availability = $status;
+        $user->save();
+
+        // Update BusinessInformation
+        BusinessInformation::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
+
+        // Update TravelRadius
+        TravelRadius::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
+
+        // Update UserService
+        UserService::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
+
+        return response()->json(['status' => 'success']);
     }
 }
