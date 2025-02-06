@@ -53,7 +53,7 @@
 
     {{-- Modal for viewing user details --}}
     <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="userModalLabel" class="modal-title">User Details</h5>
@@ -64,6 +64,29 @@
                     <p><strong>Email:</strong> <span id="userEmail"></span></p>
                     <p><strong>Role:</strong> <span id="userRole"></span></p>
                     <p><strong>Status:</strong> <span id="userStatus"></span></p>
+
+                    <hr>
+                    <h5>Business Information</h5>
+                    <p><strong>Business Name:</strong> <span id="businessName"></span></p>
+                    <p><strong>Address:</strong> <span id="businessAddress"></span></p>
+                    <p><strong>Bio:</strong> <span id="businessBio"></span></p>
+                    <p><strong>Avatar:</strong> <img id="businessAvatar" src="" class="img-thumbnail"
+                            width="100"></p>
+                    <p><strong>License:</strong>
+                        <a id="businessLicense" href="#" target="_blank" rel="noopener noreferrer">View License</a>
+                    </p>
+
+                    <hr>
+                    <h5>Services</h5>
+                    <ul id="serviceList"></ul>
+
+                    <hr>
+                    <h5>Travel Radius</h5>
+                    <p><strong>Free Radius:</strong> <span id="freeRadius"></span> km</p>
+                    <p><strong>Max Radius:</strong> <span id="maxRadius"></span> km</p>
+                    <p><strong>Travel Charge:</strong> $<span id="travelCharge"></span></p>
+                    <p><strong>Max Charge:</strong> $<span id="maxCharge"></span></p>
+                    <p><strong>Min Booking Value:</strong> $<span id="minBookingValue"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -168,25 +191,6 @@
             }
         });
 
-        // Fetch and display user details
-        function showUserDetails(id) {
-            let url = '{{ route('user.show', ':id') }}';
-            url = url.replace(':id', id);
-
-            axios.get(url)
-                .then(function(response) {
-                    let data = response.data;
-                    $('#userName').text(data.name);
-                    $('#userEmail').text(data.email);
-                    $('#userRole').text(data.role);
-                    $('#userStatus').text(data.status);
-                })
-                .catch(function(error) {
-                    console.error(error);
-                    toastr.error('Could not fetch user details.');
-                });
-        }
-
         // Status Change
         function changeStatus(id, status) {
             let url = '{{ route('user.status', ':id') }}';
@@ -211,6 +215,75 @@
                 .catch(function(error) {
                     console.error(error);
                     toastr.error('An error occurred. Please try again.');
+                });
+        }
+
+        // Fetch and display user details
+        function showUserDetails(id) {
+            let url = '{{ route('user.show', ':id') }}';
+            url = url.replace(':id', id);
+
+            axios.get(url)
+                .then(function(response) {
+                    let data = response.data;
+
+                    $('#userName').text(data.name);
+                    $('#userEmail').text(data.email);
+                    $('#userRole').text(data.role);
+                    $('#userStatus').text(data.status);
+
+                    if (data.business_info) {
+                        $('#businessName').text(data.business_info.business_name);
+                        $('#businessAddress').text(data.business_info.business_address);
+                        $('#businessBio').text(data.business_info.bio);
+                        $('#businessAvatar').attr('src', data.business_info.avatar);
+                        if (data.business_info.license) {
+                            $('#businessLicense')
+                                .attr('href', data.business_info.license)
+                                .attr('target', '_blank')
+                                .attr('download', '')
+                                .text('View License');
+                        } else {
+                            $('#businessLicense').attr('href', '#').text('No License Available');
+                        }
+                    } else {
+                        $('#businessName, #businessAddress, #businessBio').text('N/A');
+                        $('#businessAvatar').attr('src', '');
+                        $('#businessLicense').attr('href', '#').text('No License');
+                    }
+
+                    let serviceList = $('#serviceList');
+                    serviceList.empty();
+                    if (data.services.length > 0) {
+                        data.services.forEach(service => {
+                            let serviceItem = `
+                        <li>
+                            <strong>${service.service_name}</strong><br>
+                            Offered Price: $${service.offered_price}, Total Price: $${service.total_price}<br>
+                            ${service.image ? `<img src="${service.image}" class="img-thumbnail" width="80">` : ''}
+                        </li>
+                    `;
+                            serviceList.append(serviceItem);
+                        });
+                    } else {
+                        serviceList.append('<li>No services available</li>');
+                    }
+
+                    if (data.travel_radius) {
+                        $('#freeRadius').text(data.travel_radius.free_radius);
+                        $('#maxRadius').text(data.travel_radius.max_radius);
+                        $('#travelCharge').text(data.travel_radius.travel_charge);
+                        $('#maxCharge').text(data.travel_radius.max_charge);
+                        $('#minBookingValue').text(data.travel_radius.min_booking_value);
+                    } else {
+                        $('#freeRadius, #maxRadius, #travelCharge, #maxCharge, #minBookingValue').text('N/A');
+                    }
+
+                    $('#viewUserModal').modal('show');
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    toastr.error('Could not fetch user details.');
                 });
         }
     </script>

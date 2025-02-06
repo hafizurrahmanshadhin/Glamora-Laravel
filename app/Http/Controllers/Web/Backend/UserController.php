@@ -56,12 +56,36 @@ class UserController extends Controller {
      * @return JsonResponse
      */
     public function show(int $id): JsonResponse {
-        $user = User::findOrFail($id);
+        $user = User::with(['businessInformation', 'userServices.service', 'travelRadius'])->findOrFail($id);
+
         return response()->json([
-            'name'   => $user->first_name . ' ' . $user->last_name,
-            'email'  => $user->email,
-            'role'   => $user->role,
-            'status' => $user->status,
+            'name'          => $user->first_name . ' ' . $user->last_name,
+            'email'         => $user->email,
+            'role'          => $user->role,
+            'status'        => $user->status,
+            'business_info' => $user->businessInformation ? [
+                'business_name'    => $user->businessInformation->business_name,
+                'business_address' => $user->businessInformation->business_address,
+                'bio'              => $user->businessInformation->bio,
+                'avatar'           => asset($user->businessInformation->avatar),
+                'license'          => $user->businessInformation->license ? asset($user->businessInformation->license) : null,
+            ] : null,
+            'services'      => $user->userServices->map(function ($userService) {
+                return [
+                    'service_name'  => $userService->service->services_name ?? 'N/A',
+                    'offered_price' => $userService->offered_price,
+                    'total_price'   => $userService->total_price,
+                    'image'         => $userService->image ? asset($userService->image) : null,
+                ];
+            }),
+            'travel_radius' => $user->travelRadius ? [
+                'free_radius'       => $user->travelRadius->free_radius,
+                'travel_radius'     => $user->travelRadius->travel_radius,
+                'travel_charge'     => $user->travelRadius->travel_charge,
+                'max_radius'        => $user->travelRadius->max_radius,
+                'max_charge'        => $user->travelRadius->max_charge,
+                'min_booking_value' => $user->travelRadius->min_booking_value,
+            ] : null,
         ]);
     }
 
