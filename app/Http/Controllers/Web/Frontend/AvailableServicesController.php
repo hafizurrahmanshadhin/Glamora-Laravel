@@ -46,10 +46,22 @@ class AvailableServicesController extends Controller {
 
         // Filter by rating if selected (greater than or equal to the selected rating)
         if ($rating) {
-            $minRating        = 6 - $rating; // Convert dropdown value to corresponding rating
-            $approvedServices = $approvedServices->filter(function ($service) use ($minRating) {
-                return $service->average_rating >= $minRating;
-            });
+            $ratingMap = [
+                1 => [5.0, 5.9], // If selected "5 Star", show ratings 5.0 - 5.9
+                2 => [4.0, 4.9], // If selected "4 Star", show ratings 4.0 - 4.9
+                3 => [3.0, 3.9], // If selected "3 Star", show ratings 3.0 - 3.9
+                4 => [2.0, 2.9], // If selected "2 Star", show ratings 2.0 - 2.9
+                5 => [1.0, 1.9], // If selected "1 Star", show ratings 1.0 - 1.9
+                6 => [0.0, 0.9], // If selected "0 Star", show ratings 0.0 - 0.9
+            ];
+
+            if (isset($ratingMap[$rating])) {
+                [$minRating, $maxRating] = $ratingMap[$rating];
+
+                $approvedServices = $approvedServices->filter(function ($service) use ($minRating, $maxRating) {
+                    return $service->average_rating >= $minRating && $service->average_rating <= $maxRating;
+                });
+            }
         }
 
         // Filter by price range if selected

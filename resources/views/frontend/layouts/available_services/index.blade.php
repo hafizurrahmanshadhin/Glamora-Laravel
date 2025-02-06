@@ -33,6 +33,7 @@
                                     <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>3 Star</option>
                                     <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>2 Star</option>
                                     <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>1 Star</option>
+                                    <option value="6" {{ request('rating') == '6' ? 'selected' : '' }}>0 Star</option>
                                 </select>
                             </div>
                             <div class="price-filter">
