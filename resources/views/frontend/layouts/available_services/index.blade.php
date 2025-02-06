@@ -23,29 +23,34 @@
                         Showing {{ $approvedServices->count() }} Results for <a href="#">Personal Tax Preparation
                             Preparation</a>
                     </p>
-                    <div class="explore-card-filter-wrapper">
-                        <div class="rating-filter">
-                            <select>
-                                <option data-display="Select">Select
-                                    Rating</option>
-                                <option value="1">5 Star</option>
-                                <option value="2">4 Star</option>
-                                <option value="3">3 Star</option>
-                                <option value="4">2 Star</option>
-                                <option value="5">1 Star</option>
-                            </select>
+                    <form method="GET" action="{{ route('available-services', ['serviceId' => $serviceId]) }}">
+                        <div class="explore-card-filter-wrapper">
+                            <div class="rating-filter">
+                                <select name="rating" onchange="this.form.submit()">
+                                    <option value="">Select Rating</option>
+                                    <option value="1" {{ request('rating') == '1' ? 'selected' : '' }}>5 Star</option>
+                                    <option value="2" {{ request('rating') == '2' ? 'selected' : '' }}>4 Star</option>
+                                    <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>3 Star</option>
+                                    <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>2 Star</option>
+                                    <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>1 Star</option>
+                                </select>
+                            </div>
+                            <div class="price-filter">
+                                <select name="price_range" onchange="this.form.submit()">
+                                    <option value="">Select Price</option>
+                                    <option value="10-100" {{ request('price_range') == '10-100' ? 'selected' : '' }}>
+                                        10$-100$</option>
+                                    <option value="101-200" {{ request('price_range') == '101-200' ? 'selected' : '' }}>
+                                        101$-200$</option>
+                                    <option value="500-1000" {{ request('price_range') == '500-1000' ? 'selected' : '' }}>
+                                        500$-1000$</option>
+                                    <option value="1000+" {{ request('price_range') == '1000+' ? 'selected' : '' }}>1000$+
+                                    </option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="price-filter">
-                            <select>
-                                <option data-display="Select">Select
-                                    Price</option>
-                                <option value>10$-100$</option>
-                                <option value>101$-200$</option>
-                                <option value>500$-100$</option>
-                                <option value>1000$+</option>
-                            </select>
-                        </div>
-                    </div>
+                    </form>
+
 
                     {{-- Loop through active services --}}
                     <div class="categories-tax-card-wrapper">
