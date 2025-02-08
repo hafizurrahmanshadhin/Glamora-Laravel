@@ -14,12 +14,12 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
-                ->onDelete('restrict')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             $table->unsignedBigInteger('user_service_id');
             $table->foreign('user_service_id')->references('id')->on('user_services')
-                ->onDelete('restrict')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             $table->enum('service_type', ['mobile_services', 'salon_services'])->nullable(false);

@@ -51,37 +51,40 @@
         </div>
     </div>
 
-    {{-- Modal for viewing user details --}}
-    <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    {{-- Modal for Viewing User Details --}}
+    <div class="modal fade" id="viewUserModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 id="userModalLabel" class="modal-title">User Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">User Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>Name:</strong> <span id="userName"></span></p>
-                    <p><strong>Email:</strong> <span id="userEmail"></span></p>
-                    <p><strong>Role:</strong> <span id="userRole"></span></p>
-                    <p><strong>Status:</strong> <span id="userStatus"></span></p>
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <a id="businessAvatarLink" href="#" target="_blank">
+                                <img id="businessAvatar" src="" class="img-thumbnail rounded-circle" width="120">
+                            </a>
+                        </div>
 
+                        <div class="col-md-8">
+                            <h5 id="userName" class="fw-bold"></h5>
+                            <p><i class="fas fa-envelope"></i> <span id="userEmail"></span></p>
+                            <p><i class="fas fa-user-tag"></i> <span id="userRole" class="badge bg-info"></span></p>
+                            <p><i class="fas fa-toggle-on"></i> <span id="userStatus" class="badge bg-success"></span></p>
+                        </div>
+                    </div>
                     <hr>
-                    <h5>Business Information</h5>
+                    <h6>Business Information</h6>
                     <p><strong>Business Name:</strong> <span id="businessName"></span></p>
                     <p><strong>Address:</strong> <span id="businessAddress"></span></p>
                     <p><strong>Bio:</strong> <span id="businessBio"></span></p>
-                    <p><strong>Avatar:</strong> <img id="businessAvatar" src="" class="img-thumbnail"
-                            width="100"></p>
-                    <p><strong>License:</strong>
-                        <a id="businessLicense" href="#" target="_blank" rel="noopener noreferrer">View License</a>
-                    </p>
-
+                    <p><strong>License:</strong> <a id="businessLicense" href="#" target="_blank">View License</a></p>
                     <hr>
-                    <h5>Services</h5>
+                    <h6>Services</h6>
                     <ul id="serviceList"></ul>
-
                     <hr>
-                    <h5>Travel Radius</h5>
+                    <h6>Travel Radius</h6>
                     <p><strong>Free Radius:</strong> <span id="freeRadius"></span> km</p>
                     <p><strong>Max Radius:</strong> <span id="maxRadius"></span> km</p>
                     <p><strong>Travel Charge:</strong> $<span id="travelCharge"></span></p>
@@ -218,6 +221,48 @@
                 });
         }
 
+        // delete Confirm
+        function showDeleteConfirm(id) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Are you sure you want to delete this record?',
+                text: 'If you delete this, it will be gone forever.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteItem(id);
+                }
+            });
+        }
+
+        // Delete Button
+        function deleteItem(id) {
+            let url = '{{ route('user.destroy', ':id') }}';
+            let csrfToken = '{{ csrf_token() }}';
+            $.ajax({
+                type: "DELETE",
+                url: url.replace(':id', id),
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                success: function(resp) {
+                    $('#datatable').DataTable().ajax.reload();
+                    if (resp['t-success']) {
+                        toastr.success(resp.message);
+                    } else {
+                        toastr.error(resp.message);
+                    }
+                },
+                error: function(error) {
+                    toastr.error('An error occurred. Please try again.');
+                }
+            });
+        }
+
         // Fetch and display user details
         function showUserDetails(id) {
             let url = '{{ route('user.show', ':id') }}';
@@ -227,16 +272,28 @@
                 .then(function(response) {
                     let data = response.data;
 
+                    // Basic user info
                     $('#userName').text(data.name);
                     $('#userEmail').text(data.email);
                     $('#userRole').text(data.role);
                     $('#userStatus').text(data.status);
 
+                    // Business information
                     if (data.business_info) {
                         $('#businessName').text(data.business_info.business_name);
                         $('#businessAddress').text(data.business_info.business_address);
                         $('#businessBio').text(data.business_info.bio);
-                        $('#businessAvatar').attr('src', data.business_info.avatar);
+
+                        // Avatar link and image
+                        if (data.business_info.avatar) {
+                            $('#businessAvatarLink').attr('href', data.business_info.avatar).attr('target', '_blank');
+                            $('#businessAvatar').attr('src', data.business_info.avatar);
+                        } else {
+                            $('#businessAvatarLink').attr('href', '#');
+                            $('#businessAvatar').attr('src', '');
+                        }
+
+                        // License link
                         if (data.business_info.license) {
                             $('#businessLicense')
                                 .attr('href', data.business_info.license)
@@ -244,31 +301,42 @@
                                 .attr('download', '')
                                 .text('View License');
                         } else {
-                            $('#businessLicense').attr('href', '#').text('No License Available');
+                            $('#businessLicense')
+                                .attr('href', '#')
+                                .text('No License Available');
                         }
                     } else {
                         $('#businessName, #businessAddress, #businessBio').text('N/A');
+                        $('#businessAvatarLink').attr('href', '#');
                         $('#businessAvatar').attr('src', '');
                         $('#businessLicense').attr('href', '#').text('No License');
                     }
 
+                    // Services
                     let serviceList = $('#serviceList');
                     serviceList.empty();
                     if (data.services.length > 0) {
                         data.services.forEach(service => {
                             let serviceItem = `
-                        <li>
-                            <strong>${service.service_name}</strong><br>
-                            Offered Price: $${service.offered_price}, Total Price: $${service.total_price}<br>
-                            ${service.image ? `<img src="${service.image}" class="img-thumbnail" width="80">` : ''}
-                        </li>
-                    `;
+                            <li>
+                                <strong>${service.service_name}</strong><br>
+                                Offered Price: $${service.offered_price}, Total Price: $${service.total_price}<br>
+                                ${
+                                    service.image
+                                        ? `<a href="${service.image}" target="_blank">
+                                                                                       <img src="${service.image}" class="img-thumbnail mt-1" width="80">
+                                                                                   </a>`
+                                        : ''
+                                }
+                            </li>
+                        `;
                             serviceList.append(serviceItem);
                         });
                     } else {
                         serviceList.append('<li>No services available</li>');
                     }
 
+                    // Travel radius
                     if (data.travel_radius) {
                         $('#freeRadius').text(data.travel_radius.free_radius);
                         $('#maxRadius').text(data.travel_radius.max_radius);
@@ -279,6 +347,7 @@
                         $('#freeRadius, #maxRadius, #travelCharge, #maxCharge, #minBookingValue').text('N/A');
                     }
 
+                    // Finally, show the modal
                     $('#viewUserModal').modal('show');
                 })
                 .catch(function(error) {

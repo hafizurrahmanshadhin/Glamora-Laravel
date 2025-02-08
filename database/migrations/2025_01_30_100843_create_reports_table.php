@@ -14,12 +14,12 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
-                ->onDelete('restrict')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             $table->unsignedBigInteger('booking_id');
             $table->foreign('booking_id')->references('id')->on('bookings')
-                ->onDelete('restrict')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             $table->text('message');

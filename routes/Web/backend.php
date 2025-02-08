@@ -17,6 +17,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user', 'index')->name('user.index');
     Route::get('/user/show/{id}', 'show')->name('user.show');
     Route::post('/user/status/{id}', 'status')->name('user.status');
+    Route::delete('/user/destroy/{id}', 'destroy')->name('user.destroy');
 });
 
 //! Route for Service Backend

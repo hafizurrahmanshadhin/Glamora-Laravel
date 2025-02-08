@@ -41,6 +41,10 @@ class UserController extends Controller {
                                 <a href="javascript:void(0);" onclick="showUserDetails(' . $user->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewUserModal">
                                     <i class="ri-eye-line" style="font-size: 24px;"></i>
                                 </a>
+
+                                <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $user->id . ')" class="link-danger text-decoration-none" title="Delete">
+                                    <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
+                                </a>
                             </div>';
                 })
                 ->rawColumns(['name', 'status', 'action'])
@@ -118,5 +122,51 @@ class UserController extends Controller {
             'success' => false,
             'message' => 'Invalid status value.',
         ]);
+    }
+
+    /**
+     * Remove the specified users from storage.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse {
+        try {
+            $user = User::findOrFail($id);
+
+            if ($user->role === 'beauty_expert') {
+                // Delete related business information
+                $user->businessInformation()->delete();
+
+                // Delete related user services
+                $user->userServices()->delete();
+
+                // Delete related travel radius
+                $user->travelRadius()->delete();
+            }
+
+            // Delete related bookings and reviews
+            $user->bookings()->delete();
+            $user->reviews()->delete();
+            $user->reports()->delete();
+            $user->orders()->delete();
+            $user->payments()->delete();
+
+            // Delete the user
+            $user->forceDelete();
+
+            return response()->json([
+                't-success' => true,
+                'message'   => 'User and related information deleted successfully.',
+            ]);
+        } catch (Exception $e) {
+            // Log the error
+            \Log::error('Error deleting user: ' . $e->getMessage());
+
+            return response()->json([
+                't-success' => false,
+                'message'   => 'An error occurred. Please try again.',
+            ]);
+        }
     }
 }
