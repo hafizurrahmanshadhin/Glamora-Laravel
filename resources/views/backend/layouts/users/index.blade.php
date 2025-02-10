@@ -70,6 +70,7 @@
                         <div class="col-md-8">
                             <h5 id="userName" class="fw-bold"></h5>
                             <p><i class="fas fa-envelope"></i> <span id="userEmail"></span></p>
+                            <p><i class="fas fa-phone"></i> <span id="userPhoneNumber"></span></p>
                             <p><i class="fas fa-user-tag"></i> <span id="userRole" class="badge bg-info"></span></p>
                             <p><i class="fas fa-toggle-on"></i> <span id="userStatus" class="badge bg-success"></span></p>
                         </div>
@@ -275,6 +276,7 @@
                     // Basic user info
                     $('#userName').text(data.name);
                     $('#userEmail').text(data.email);
+                    $('#userPhoneNumber').text(data.phone_number ? data.phone_number : 'N/A');
                     $('#userRole').text(data.role);
                     $('#userStatus').text(data.status);
 
@@ -324,8 +326,8 @@
                                 ${
                                     service.image
                                         ? `<a href="${service.image}" target="_blank">
-                                                                                       <img src="${service.image}" class="img-thumbnail mt-1" width="80">
-                                                                                   </a>`
+                                                                                           <img src="${service.image}" class="img-thumbnail mt-1" width="80">
+                                                                                       </a>`
                                         : ''
                                 }
                             </li>

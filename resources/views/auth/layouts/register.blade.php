@@ -50,6 +50,16 @@
                         </div>
 
                         <div class="form-floating">
+                            <input type="text" class="form-control" id="phone_number" name="phone_number"
+                                placeholder="Please Enter Your Phone Number" value="{{ old('phone_number') }}">
+                            <label for="phone_number">Phone Number</label>
+
+                            @error('phone_number')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-floating">
                             <input type="password" class="form-control" id="password-input" name="password"
                                 placeholder="Please Enter Your Password">
                             <label for="password-input">Create Password</label>
