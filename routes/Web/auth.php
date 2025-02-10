@@ -3,12 +3,15 @@
 use App\Http\Controllers\Web\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Web\Auth\BusinessInformationController;
 use App\Http\Controllers\Web\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Web\Auth\EmailVerificationController;
 use App\Http\Controllers\Web\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Web\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Web\Auth\JoinController;
 use App\Http\Controllers\Web\Auth\NewPasswordController;
+use App\Http\Controllers\Web\Auth\OTPVerificationController;
 use App\Http\Controllers\Web\Auth\PasswordController;
 use App\Http\Controllers\Web\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Web\Auth\PhoneNumberVerificationController;
 use App\Http\Controllers\Web\Auth\QuestionnairesController;
 use App\Http\Controllers\Web\Auth\RegisteredUserController;
 use App\Http\Controllers\Web\Auth\SocialiteController;
@@ -23,6 +26,18 @@ Route::middleware('guest')->group(function () {
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::get('phone-number-verification', [PhoneNumberVerificationController::class, 'index'])->name('phone-number-verification');
+
+    Route::controller(EmailVerificationController::class)
+        ->group(function () {
+            Route::get('/email-verification', 'index')->name('email-verification');
+            Route::post('/send-otp', 'sendOtpToEmail');
+            Route::post('/verify-otp', 'verifyOTP');
+        });
+
+    Route::get('otp-verification', [OTPVerificationController::class, 'index'])->name('otp-verification');
+    
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');

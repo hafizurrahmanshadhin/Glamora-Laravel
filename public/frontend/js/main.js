@@ -67,7 +67,7 @@ cardNames.forEach(card => {
 
 
 // Show and hide the dropdown when clicking the profile container
-document.querySelector('.header-profile-container').addEventListener('click', function (event) {
+document.querySelector('.header-profile-container')?.addEventListener('click', function (event) {
     event.stopPropagation();
     const dropdown = document.querySelector('.tm-profiledropdown');
     dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
@@ -85,7 +85,7 @@ document.addEventListener('click', function (event) {
 });
 
 // Prevent the dropdown from closing when clicking inside the dropdown
-document.querySelector('.tm-profiledropdown').addEventListener('click', function (event) {
+document.querySelector('.tm-profiledropdown')?.addEventListener('click', function (event) {
     event.stopPropagation();
 });
 
@@ -108,3 +108,49 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+
+// Function for PIN box validation
+function initializePinBoxes() {
+    const pinBoxes = document.querySelectorAll(".pin-box");
+
+    // Move to the next box when inputting values
+    pinBoxes.forEach((box, index) => {
+        box.addEventListener("input", () => {
+            if (box.value.length === 1 && index < 3) {
+                pinBoxes[index + 1].focus();
+            }
+        });
+
+        // Move to the previous box on backspace
+        box.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && index > 0 && box.value === "") {
+                pinBoxes[index - 1].focus();
+            }
+        });
+    });
+
+    // Handle pasting of PIN
+    pinBoxes[0].addEventListener("paste", (e) => {
+        const pastedData = e.clipboardData.getData("text");
+        const pinArray = pastedData.split("");
+
+        pinBoxes.forEach((box, idx) => {
+            if (pinArray[idx]) {
+                box.value = pinArray[idx];
+            }
+        });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.querySelector(".pin-box")) {
+        initializePinBoxes(); // For the page that has PIN boxes
+    }
+
+    if (document.querySelector("#date") || document.querySelector("#time")) {
+        initializeFlatpickr(); // For the page that has date/time pickers
+    }
+});
+
+// new js added 2025 by tarek

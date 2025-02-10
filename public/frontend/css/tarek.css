@@ -3181,3 +3181,61 @@
 .dashboard-main-content {
     width: 100%;
 }
+
+
+
+/* for verify */
+.pin-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.pin-box {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 24px;
+    border: 1px solid #ccc !important;
+    border-radius: 4px;
+    background: #D9D9D9;
+    outline: none;
+}
+
+.pin-box:focus {
+    border-color: #000 !important;
+}
+
+.success-content-area {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.success-content-wrapper {
+    gap: 35px;
+    text-align: center;
+}
+
+.success-text-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.verified-message-header {
+    color: #333 !important;
+    font-family: "Helvetica Neue" !important;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 500 !important;
+}
+
+.success-text-wrapper p {
+    color: #333 !important;
+    font-family: Poppins !important;
+    font-weight: 400 !important;
+}

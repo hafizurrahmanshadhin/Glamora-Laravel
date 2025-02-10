@@ -39,8 +39,15 @@
                         </div>
 
                         <button type="submit">Sign In</button>
-                        <p class="tm-create-btn-link">Forgot Password? <a href="{{ route('password.request') }}">Click
-                                Here</a></p>
+                        <p class="tm-create-btn-link">Forgot Password?
+                            <a href="{{ route('password.request') }}">
+                                Click Here
+                            </a>
+                        </p>
+
+                        <p class="tm-create-btn-link">Verify account?
+                            <a href="{{ route('phone-number-verification') }}">Click here</a>
+                        </p>
                     </form>
                 </div>
             </div>

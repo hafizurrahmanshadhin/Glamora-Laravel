@@ -45,6 +45,15 @@ class LoginRequest extends FormRequest {
             ]);
         }
 
+        // NEW: Check if user has email or phone verified
+        $user = Auth::user();
+        if (!$user->email_verified_at && !$user->phone_number_verified_at) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => 'Your email or phone number is not verified.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 
