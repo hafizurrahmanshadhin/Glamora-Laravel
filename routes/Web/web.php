@@ -42,13 +42,6 @@ Route::controller(ContactController::class)->group(function () {
     Route::post('/contact', 'store')->name('contact.store');
 });
 
-//~ Route for Chatting Message
-Route::controller(MessageController::class)->group(function () {
-    // Route::get('/chat/{booking}', 'index')->name('chat');
-    Route::get('/chat', 'index')->name('chat');
-    Route::post('/chat/send', 'send')->name('chat.send');
-});
-
 //# Route for Notification
 Route::get('/notification/read/{id}', [NotificationController::class, 'markAsRead'])->name('notification.read');
 
@@ -72,3 +65,11 @@ Route::get('/inclusions-cancellation', function () {
 
 //* This Route is for Dynamic Page in the frontend footer
 Route::get('/page/{page_slug}', [DynamicPageController::class, 'index'])->name('custom.page');
+
+//~ Route for Chatting Message
+Route::controller(MessageController::class)->middleware('auth')->group(function () {
+    Route::get('/chat', 'index')->name('chat');
+    Route::get('/messages/{user}', 'GetMessages')->name('get-messages');
+    Route::post('/messages/{user}', 'SendMessage')->name('send-message');
+    Route::get('/users-with-last-message', 'GetUsersWithLastMessage')->name('users-with-last-message');
+});
