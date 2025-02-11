@@ -11,9 +11,10 @@
                 </div>
                 <div class="submit-review-text-area">
                     <h1>Profile Submitted for Review!</h1>
-                    <p class="submit-review-text-one">Thank you for providing your information! Our team is
-                        reviewing your details to ensure everything is in order. You will receive an
-                        <span>email</span> notification once your profile has been approved.
+                    <p class="submit-review-text-one">
+                        Thank you for providing your information! Our team is reviewing your details to ensure everything is
+                        in order.
+                        You will receive an <span>email</span> notification once your profile has been approved.
                     </p>
                     <div class="submit-review-text-two-wrapper">
                         <p class="submit-review-text-two">
@@ -33,3 +34,37 @@
         </div>
     </section>
 @endsection
+
+
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Select all anchor links on this page
+            document.querySelectorAll("a").forEach(function(anchor) {
+                anchor.addEventListener("click", function(e) {
+                    e.preventDefault(); // Prevent the default navigation
+                    var destination = this.href; // Get the intended destination
+
+                    // Use the Fetch API to send a POST request to the logout route.
+                    // Make sure you have the CSRF token available.
+                    fetch("{{ route('logout') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            }
+                        })
+                        .then(function(response) {
+                            // Once logout is complete, navigate to the destination.
+                            window.location.href = destination;
+                        })
+                        .catch(function(error) {
+                            console.error("Logout failed:", error);
+                            // In case of error, still navigate to the destination.
+                            window.location.href = destination;
+                        });
+                });
+            });
+        });
+    </script>
+@endpush

@@ -37,29 +37,26 @@ class RegisteredUserController extends Controller {
         ]);
 
         $user = User::create([
-            'first_name'        => $request->first_name,
-            'last_name'         => $request->last_name,
-            'email'             => $request->email,
-            'phone_number'      => $request->phone_number,
-            'email_verified_at' => now(),
-            'password'          => Hash::make($request->password),
-            'role'              => $request->role,
-            'status'            => $request->role === 'beauty_expert' ? 'inactive' : 'active',
+            'first_name'   => $request->first_name,
+            'last_name'    => $request->last_name,
+            'email'        => $request->email,
+            'phone_number' => $request->phone_number,
+            'password'     => Hash::make($request->password),
+            'role'         => $request->role,
+            'status'       => $request->role === 'beauty_expert' ? 'inactive' : 'active',
         ]);
 
         event(new Registered($user));
 
         if ($user->role === 'beauty_expert' && $user->status === 'inactive') {
             Auth::login($user);
-            return redirect()->route('business-information')->with('status', 'Please complete your business information.');
+            return redirect()->route('questionnaires')->with('status', 'Please complete your business information.');
         }
-
-        Auth::login($user);
 
         if ($user->role === 'admin') {
             return redirect()->route('dashboard');
         } elseif ($user->role === 'client') {
-            return redirect()->route('client-dashboard');
+            return redirect()->route('phone-number-verification');
         } else {
             return redirect()->route('questionnaires');
         }
