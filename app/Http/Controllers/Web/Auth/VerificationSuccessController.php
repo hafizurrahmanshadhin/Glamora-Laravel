@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
-class OTPVerificationController extends Controller {
+class VerificationSuccessController extends Controller {
     /**
      * Display the email verification view.
      *
@@ -13,6 +13,6 @@ class OTPVerificationController extends Controller {
      *
      */
     public function index(): View {
-        return view('auth.layouts.otp-verification');
+        return view('auth.layouts.success');
     }
 }

@@ -3,6 +3,16 @@
 @section('title', 'Phone Number Verification')
 
 @section('content')
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <section class="sign-in-up-common-section">
         <div class="container">
             <div class="sign-in-up-content-wrapper">
@@ -11,13 +21,18 @@
                 </div>
                 <div class="sign-in-up-form-area">
                     <div class="form-header-para">
-                        <h1>Enter Your phone number</h1>
-                        <p>Enter your number for the verification process, we will send code to your number</p>
+                        <h1>Enter Your Phone Number</h1>
+                        <p>Enter your number for the verification process. We will send a code to your number.</p>
                     </div>
-                    <form class="tm-sign-in-up-form" action="../dashboard/index.html">
-                        <div class="form-floating">
-                            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                            <label for="floatingInput">Phone number</label>
+                    <form class="tm-sign-in-up-form" method="POST" action="{{ route('send-sms-otp') }}">
+                        @csrf
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="phone_number" placeholder="+1234567890"
+                                required>
+                            <label for="phone_number">Phone Number</label>
+                            @error('phone_number')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <button type="submit">Continue</button>
                         <div class="or-wrapper">
@@ -25,8 +40,8 @@
                             <p class="or-text">or</p>
                             <div class="or-line"></div>
                         </div>
-                        <p class="tm-create-btn-link">Verify via email?
-                            <a href="{{ route('email-verification') }}">Click here</a>
+                        <p class="tm-create-btn-link">
+                            Verify via email? <a href="{{ route('email-verification') }}">Click here</a>
                         </p>
                     </form>
                 </div>

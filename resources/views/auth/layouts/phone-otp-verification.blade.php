@@ -22,12 +22,11 @@
                 <div class="sign-in-up-form-area">
                     <div class="form-header-para">
                         <h1>Enter 4 Digit Code</h1>
-                        <p>A four-digit code should have been sent to your email address.</p>
+                        <p>An OTP has been sent to your phone number.</p>
                     </div>
-                    <form class="tm-sign-in-up-form" method="POST" action="{{ route('verify-otp') }}">
+                    <form class="tm-sign-in-up-form" method="POST" action="{{ route('verify-sms-otp') }}">
                         @csrf
-                        <!-- Use the email from session as a hidden input -->
-                        <input type="hidden" name="email" value="{{ session('email') }}">
+                        <input type="hidden" name="phone_number" value="{{ session('phone_number') }}">
 
                         <div class="pin-container mb-3">
                             <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required />
