@@ -8,7 +8,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title')</title>
+    @vite('resources/css/app.css')
+    @vite(['resources/js/app.js'])
     @include('frontend.partials.styles')
+    @livewireStyles
 </head>
 
 <body>
@@ -27,6 +30,7 @@
     @endif
 
     @include('frontend.partials.scripts')
+    @livewireScripts
 </body>
 
 </html>

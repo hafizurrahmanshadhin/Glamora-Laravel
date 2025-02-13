@@ -7,7 +7,6 @@ use App\Http\Controllers\Web\Frontend\ContactController;
 use App\Http\Controllers\Web\Frontend\DynamicPageController;
 use App\Http\Controllers\Web\Frontend\FAQController;
 use App\Http\Controllers\Web\Frontend\HomeController;
-use App\Http\Controllers\Web\Frontend\MessageController;
 use App\Http\Controllers\Web\Frontend\NotificationController;
 use App\Http\Controllers\Web\Frontend\PaymentController;
 use App\Http\Controllers\Web\Frontend\ServiceCategoryController;
@@ -67,9 +66,15 @@ Route::get('/inclusions-cancellation', function () {
 Route::get('/page/{page_slug}', [DynamicPageController::class, 'index'])->name('custom.page');
 
 //~ Route for Chatting Message
-Route::controller(MessageController::class)->middleware('auth')->group(function () {
-    Route::get('/chat', 'index')->name('chat');
-    Route::get('/messages/{user}', 'GetMessages')->name('get-messages');
-    Route::post('/messages/{user}', 'SendMessage')->name('send-message');
-    Route::get('/users-with-last-message', 'GetUsersWithLastMessage')->name('users-with-last-message');
-});
+// Route::get('/dashboard', function () {
+//     $users = User::where('id', '!=', auth()->user()->id)->get();
+//     return view('dashboard', [
+//         'users' => $users,
+//     ]);
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/chat/{id}', function ($id) {
+    return view('chat', [
+        'id' => $id,
+    ]);
+})->middleware(['auth', 'verified'])->name('chat');

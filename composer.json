@@ -16,6 +16,8 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
+        "livewire/livewire": "^3.5",
+        "livewire/volt": "*",
         "stripe/stripe-php": "^16.4",
         "twilio/sdk": "^8.3",
         "tymon/jwt-auth": "^2.1",
