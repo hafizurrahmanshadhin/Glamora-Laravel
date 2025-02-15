@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\Frontend\ContactController;
 use App\Http\Controllers\Web\Frontend\DynamicPageController;
 use App\Http\Controllers\Web\Frontend\FAQController;
 use App\Http\Controllers\Web\Frontend\HomeController;
+use App\Http\Controllers\Web\Frontend\MessageController;
 use App\Http\Controllers\Web\Frontend\NotificationController;
 use App\Http\Controllers\Web\Frontend\PaymentController;
 use App\Http\Controllers\Web\Frontend\ServiceCategoryController;
@@ -78,3 +79,8 @@ Route::get('/chat/{id}', function ($id) {
         'id' => $id,
     ]);
 })->middleware(['auth', 'verified'])->name('chat');
+
+
+
+
+Route::get('/abc', [MessageController::class, 'index']);

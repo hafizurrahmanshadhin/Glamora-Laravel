@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/inbox.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/categories.css') }}" />
+
+    <style>
+        .individual-messages {
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column-reverse;
+            scroll-behavior: smooth;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -49,6 +58,7 @@
                         </svg>
                     </div>
                 </div>
+
                 <div class="individual-messages">
                     <div class="single-message opposite-message">
                         <div class="user-profile">
@@ -119,6 +129,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="reply-input-container mb-2">
                     <div>
                         <textarea placeholder="Type a message" name="" id=""></textarea>
@@ -149,12 +160,6 @@
 
 @push('scripts')
     <script>
-        // for inbox
-        window.onload = function() {
-            const messageContainer = document.querySelector(".individual-messages");
-            messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to bottom on load
-        };
-        // for hide inbox
         document.querySelectorAll(".inbox-messages .item").forEach((item) => {
             item.addEventListener("click", () => {
                 const writeMessageContainer =
