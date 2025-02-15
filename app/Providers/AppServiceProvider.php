@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
@@ -16,6 +17,9 @@ class AppServiceProvider extends ServiceProvider {
      * Bootstrap any application services.
      */
     public function boot(): void {
-        //
+        // Register broadcasting routes for private channels
+        Broadcast::routes();
+        // Load the channels definition file
+        require base_path('routes/channels.php');
     }
 }

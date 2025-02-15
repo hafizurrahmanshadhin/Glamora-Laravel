@@ -74,13 +74,10 @@ Route::get('/page/{page_slug}', [DynamicPageController::class, 'index'])->name('
 //     ]);
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/chat/{id}', function ($id) {
-    return view('chat', [
-        'id' => $id,
-    ]);
-})->middleware(['auth', 'verified'])->name('chat');
+Route::get('/chat/{id}', [MessageController::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('chat');
 
-
-
-
-Route::get('/abc', [MessageController::class, 'index']);
+Route::post('/chat/send', [MessageController::class, 'sendMessage'])
+    ->middleware(['auth', 'verified'])
+    ->name('chat.send');

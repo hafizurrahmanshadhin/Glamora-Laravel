@@ -24,11 +24,30 @@ class MessageSendEvent implements ShouldBroadcastNow {
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * Here we broadcast on the receiver’s private channel.
      */
     public function broadcastOn(): array {
         return [
             new PrivateChannel('chat-channel.' . $this->message->receiver_id),
+        ];
+    }
+
+    /**
+     * Customize the data that is broadcast.
+     */
+    public function broadcastWith() {
+        return [
+            'id'         => $this->message->id,
+            'message'    => $this->message->message,
+            'sender'     => [
+                'id'         => $this->message->sender->id,
+                'first_name' => $this->message->sender->first_name,
+            ],
+            'receiver'   => [
+                'id'         => $this->message->receiver->id,
+                'first_name' => $this->message->receiver->first_name,
+            ],
+            'created_at' => $this->message->created_at->format('H:i'),
         ];
     }
 }
