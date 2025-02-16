@@ -67,17 +67,7 @@ Route::get('/inclusions-cancellation', function () {
 Route::get('/page/{page_slug}', [DynamicPageController::class, 'index'])->name('custom.page');
 
 //~ Route for Chatting Message
-// Route::get('/dashboard', function () {
-//     $users = User::where('id', '!=', auth()->user()->id)->get();
-//     return view('dashboard', [
-//         'users' => $users,
-//     ]);
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/chat/{id}', [MessageController::class, 'show'])
-    ->middleware(['auth', 'verified'])
-    ->name('chat');
-
-Route::post('/chat/send', [MessageController::class, 'sendMessage'])
-    ->middleware(['auth', 'verified'])
-    ->name('chat.send');
+Route::controller(MessageController::class)->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/chat/{id}', 'show')->name('chat');
+    Route::post('/chat/send', 'sendMessage')->name('chat.send');
+});

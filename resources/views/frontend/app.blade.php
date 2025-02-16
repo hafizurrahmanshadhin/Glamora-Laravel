@@ -8,7 +8,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     @include('frontend.partials.styles')
-    @vite('resources/css/app.css')
     @stack('styles')
 </head>
 
@@ -27,8 +26,8 @@
         @include('frontend.partials.footer')
     @endif
 
-    @include('frontend.partials.scripts')
     @vite(['resources/js/app.js'])
+    @include('frontend.partials.scripts')
     @stack('scripts')
 </body>
 

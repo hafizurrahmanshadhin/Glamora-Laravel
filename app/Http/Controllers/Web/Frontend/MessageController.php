@@ -25,14 +25,10 @@ class MessageController extends Controller {
             $query->where('sender_id', $receiverId)
                 ->where('receiver_id', $senderId);
         })
-            ->with('sender:id,first_name', 'receiver:id,first_name')
+            ->with('sender:id,first_name,last_name,avatar', 'receiver:id,first_name,last_name,avatar')
             ->get();
 
-
-        // dd
-
-
-        return view('chat', [
+        return view('frontend.layouts.chat.index', [
             'receiver' => $receiver,
             'messages' => $messages,
         ]);
