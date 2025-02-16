@@ -165,8 +165,8 @@
                 "{{ auth()->user()->avatar ? asset(Auth::user()->avatar) : asset('backend/images/default_images/user_1.jpg') }}" :
                 msg.sender.avatar;
             const senderName = isMine ?
-                '{{ auth()->user()->first_name }}' :
-                msg.sender.first_name;
+                "{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}" :
+                `${msg.sender.first_name} ${msg.sender.last_name}`;
 
             const messageText = msg.message;
 
@@ -175,10 +175,10 @@
 
             wrapper.innerHTML = `
             ${!isMine ? `
-                                        <div class="user-profile">
-                                            <img src="${senderAvatar}" alt="user" />
-                                        </div>
-                                    ` : ''}
+                                                <div class="user-profile">
+                                                    <img src="${senderAvatar}" alt="user" />
+                                                </div>
+                                            ` : ''}
             <div class="right-content">
                 <div class="user-name">${senderName}</div>
                 <div class="user-text">
@@ -187,10 +187,10 @@
                 </div>
             </div>
             ${isMine ? `
-                                        <div class="user-profile">
-                                            <img src="${senderAvatar}" alt="user" />
-                                        </div>
-                                    ` : ''}
+                                                <div class="user-profile">
+                                                    <img src="${senderAvatar}" alt="user" />
+                                                </div>
+                                            ` : ''}
         `;
             chatContainer.appendChild(wrapper);
             // Auto-scroll to the bottom

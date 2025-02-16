@@ -34,6 +34,7 @@ class MessageSendEvent implements ShouldBroadcastNow {
             'sender'     => [
                 'id'         => $this->message->sender->id,
                 'first_name' => $this->message->sender->first_name,
+                'last_name'  => $this->message->sender->last_name,
                 'avatar'     => $avatar,
             ],
             'created_at' => $this->message->created_at->format('H:i'),
