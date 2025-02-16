@@ -4,6 +4,7 @@ use App\Http\Controllers\Web\Backend\AvailableServicesController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
+use App\Http\Controllers\Web\Backend\ReportController;
 use App\Http\Controllers\Web\Backend\ServiceController;
 use App\Http\Controllers\Web\Backend\TestimonialController;
 use App\Http\Controllers\Web\Backend\UserController;
@@ -60,4 +61,10 @@ Route::controller(TestimonialController::class)->group(function () {
     Route::get('/testimonial', 'index')->name('testimonial.index');
     Route::get('/testimonial/show/{id}', 'show')->name('testimonial.show');
     Route::post('/testimonial/status/{id}', 'status')->name('testimonial.status');
+});
+
+//! Route for Report Page
+Route::controller(ReportController::class)->group(function () {
+    Route::get('/report', 'index')->name('report.index');
+    Route::get('/report/show/{id}', 'show')->name('report.show');
 });

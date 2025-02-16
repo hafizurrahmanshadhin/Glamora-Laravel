@@ -111,6 +111,15 @@
                     </a>
                 </li>
 
+                {{-- Report --}}
+                <li class="nav-item">
+                    <a href="{{ route('report.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('report.index') ? 'active' : '' }}">
+                        <i class="ri-alert-line"></i>
+                        <span data-key="t-dashboard">Report</span>
+                    </a>
+                </li>
+
                 <hr>
                 {{-- Settings --}}
                 <li class="nav-item">
