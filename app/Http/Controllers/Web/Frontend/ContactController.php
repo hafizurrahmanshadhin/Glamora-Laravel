@@ -17,7 +17,6 @@ class ContactController extends Controller {
      */
     public function index(): View {
         $systemSettings = SystemSetting::first();
-        // dd($systemSettings);
 
         return view('frontend.layouts.contact.index', compact('systemSettings'));
     }

@@ -8,7 +8,7 @@
         <section class="padding-top-from-header">
             <div class="categories-tax-service-section">
                 <div class="section-padding-x">
-                    <h1 style="padding-top: 25px">{{ $pageData ? $pageData->page_title : '' }}</h1>
+                    <h1 style="padding-top: 125px">{{ $pageData ? $pageData->page_title : '' }}</h1>
                     <div class="content" style="padding-bottom: 50px;">
                         {!! $pageData ? $pageData->page_content : '' !!}
                     </div>

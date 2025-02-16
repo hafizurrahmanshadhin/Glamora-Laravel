@@ -8,6 +8,7 @@ use Database\Seeders\ContactSeeder;
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\DynamicPageSeeder;
 use Database\Seeders\FAQSeeder;
+use Database\Seeders\NewsletterSubscriptionSeeder;
 use Database\Seeders\NotificationsSeeder;
 use Database\Seeders\OrderSeeder;
 use Database\Seeders\PaymentSeeder;
@@ -41,6 +42,7 @@ class DatabaseSeeder extends Seeder {
             PaymentSeeder::class,
             OrderSeeder::class,
             NotificationsSeeder::class,
+            NewsletterSubscriptionSeeder::class,
         ]);
     }
 }

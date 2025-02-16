@@ -14,8 +14,8 @@
             <h3>Join our newsletter</h3>
             <p>Stay updated with the latest tax tips and platform updates</p>
             <div class="footer-search-box">
-                <input type="text" placeholder="Email address" />
-                <button class="footer-btn">
+                <input type="email" id="newsletter-email" placeholder="Email address" />
+                <button class="footer-btn" id="newsletter-submit">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="10" viewBox="0 0 20 10"
                         fill="none">
                         <path d="M15 1L19 5M19 5L15 9M19 5H1" stroke="#3F3F46" stroke-width="2" stroke-linecap="round"
@@ -23,6 +23,7 @@
                     </svg>
                 </button>
             </div>
+            <div id="newsletter-message"></div>
         </div>
 
         <div class="footer-col">
@@ -125,3 +126,33 @@
         <p>{{ $systemSetting->copyright_text ?? '' }}</p>
     </div>
 </footer>
+
+
+<script>
+    document.getElementById('newsletter-submit').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        let emailInput = document.getElementById('newsletter-email');
+        let email = emailInput.value;
+
+        // Post the email using Axios
+        axios.post("{{ route('newsletter-subscription.store') }}", {
+                email: email
+            })
+            .then(function(response) {
+                // Display success toaster message
+                toastr.success(response.data.message);
+                emailInput.value = '';
+            })
+            .catch(function(error) {
+                if (error.response && error.response.data.errors) {
+                    let errors = error.response.data.errors;
+                    let errorMessage = errors.email ? errors.email[0] : 'An error occurred.';
+                    // Display error toaster message
+                    toastr.error(errorMessage);
+                } else {
+                    toastr.error('An error occurred.');
+                }
+            });
+    });
+</script>

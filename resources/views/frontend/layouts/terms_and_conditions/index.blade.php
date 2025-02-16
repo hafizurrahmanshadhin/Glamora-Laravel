@@ -8,9 +8,9 @@
         <section class="padding-top-from-header">
             <div class="categories-tax-service-section">
                 <div class="section-padding-x">
-                    <h1 style="padding-top: 25px">{{ $terms_and_conditions->title ?? 'Terms and Conditions' }}</h1>
+                    <h1 style="padding-top: 125px">{{ $termsAndConditions->title ?? 'Terms and Conditions' }}</h1>
                     <div class="content" style="padding-bottom: 50px;">
-                        {!! $terms_and_conditions->content ?? '<p>No terms and conditions available.</p>' !!}
+                        {!! $termsAndConditions->content ?? '<p>No terms and conditions available.</p>' !!}
                     </div>
                 </div>
             </div>
