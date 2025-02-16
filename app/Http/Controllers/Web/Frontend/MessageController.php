@@ -49,15 +49,23 @@ class MessageController extends Controller {
         $message->message     = $validated['message'];
         $message->save();
 
-        // Broadcast the message to the receiver’s channel.
+        // Broadcast to the receiver’s channel
         broadcast(new MessageSendEvent($message))->toOthers();
+
+        // Construct a public URL for the sender’s avatar
+        $avatar = $message->sender->avatar
+        ? asset($message->sender->avatar)
+        : asset('backend/images/default_images/user_1.jpg');
 
         return response()->json([
             'id'         => $message->id,
             'message'    => $message->message,
-            'sender'     => $message->sender->first_name,
-            'receiver'   => $message->receiver->first_name,
             'created_at' => $message->created_at->format('H:i'),
+            'sender'     => [
+                'id'         => $message->sender->id,
+                'first_name' => $message->sender->first_name,
+                'avatar'     => $avatar,
+            ],
         ]);
     }
 }

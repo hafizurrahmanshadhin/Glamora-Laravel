@@ -66,7 +66,8 @@
                                         alt="user" />
                                 </div>
                                 <div class="right-content">
-                                    <div class="user-name">{{ $msg->sender->first_name }}</div>
+                                    <div class="user-name">{{ $msg->sender->first_name }} {{ $msg->sender->last_name }}
+                                    </div>
                                     <div class="user-text">
                                         <div class="text">{{ $msg->message }}</div>
                                         <div class="time">
@@ -78,7 +79,8 @@
                         @else
                             <div class="single-message my-message">
                                 <div class="right-content">
-                                    <div class="user-name">{{ $msg->sender->first_name }}</div>
+                                    <div class="user-name">{{ $msg->sender->first_name }} {{ $msg->sender->last_name }}
+                                    </div>
                                     <div class="user-text">
                                         <div class="text">{{ $msg->message }}</div>
                                         <div class="time">
@@ -95,7 +97,7 @@
                     @endforeach
                 </div>
 
-                <!-- Chat form -->
+
                 <form id="chatForm" class="reply-input-container mb-2">
                     @csrf
                     <input type="hidden" name="receiver_id" value="{{ $receiver->id }}">
@@ -155,33 +157,41 @@
                 .catch(err => console.error(err));
         });
 
-        // Helper function to append a new chat message to the container
+
         function addChatMessage(msg, isMine) {
             const chatContainer = document.getElementById('chatContainer');
-            const senderName = isMine ? '{{ auth()->user()->first_name }}' : msg.sender.first_name;
+            // If it's me, show my local user avatar, else use msg.sender.avatar
+            const senderAvatar = isMine ?
+                "{{ auth()->user()->avatar ? asset(Auth::user()->avatar) : asset('backend/images/default_images/user_1.jpg') }}" :
+                msg.sender.avatar;
+            const senderName = isMine ?
+                '{{ auth()->user()->first_name }}' :
+                msg.sender.first_name;
+
             const messageText = msg.message;
 
             const wrapper = document.createElement('div');
             wrapper.classList.add('single-message', isMine ? 'my-message' : 'opposite-message');
+
             wrapper.innerHTML = `
-                ${!isMine ? `
-                        <div class="user-profile">
-                            <img src="{{ asset('frontend/images/user.png') }}" alt="user" />
-                        </div>
-                    ` : ''}
-                <div class="right-content">
-                    <div class="user-name">${senderName}</div>
-                    <div class="user-text">
-                        <div class="text">${messageText}</div>
-                        <div class="time"><span>${msg.created_at}</span></div>
-                    </div>
+            ${!isMine ? `
+                                        <div class="user-profile">
+                                            <img src="${senderAvatar}" alt="user" />
+                                        </div>
+                                    ` : ''}
+            <div class="right-content">
+                <div class="user-name">${senderName}</div>
+                <div class="user-text">
+                    <div class="text">${messageText}</div>
+                    <div class="time"><span>${msg.created_at}</span></div>
                 </div>
-                ${isMine ? `
-                    <div class="user-profile">
-                        <img src="{{ asset('frontend/images/user.png') }}" alt="user" />
-                    </div>
-                    ` : ''}
-            `;
+            </div>
+            ${isMine ? `
+                                        <div class="user-profile">
+                                            <img src="${senderAvatar}" alt="user" />
+                                        </div>
+                                    ` : ''}
+        `;
             chatContainer.appendChild(wrapper);
             // Auto-scroll to the bottom
             chatContainer.scrollTop = chatContainer.scrollHeight;

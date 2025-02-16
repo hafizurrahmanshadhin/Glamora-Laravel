@@ -98,7 +98,7 @@
 
         <div class="header-profile-container">
             <div class="header-profile-btn">
-                <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
+                <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
                     alt="Profile Image">
             </div>
             <div class="tm-profiledropdown">
