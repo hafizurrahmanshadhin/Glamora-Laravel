@@ -18,6 +18,8 @@
 
                     <form class="tm-sign-in-up-form" action="{{ route('login') }}" method="POST">
                         @csrf
+                        <input type="hidden" name="redirect_to" value="{{ request()->input('redirect_to') }}">
+
                         <div class="form-floating">
                             <input type="email" class="form-control" id="email" name="email"
                                 placeholder="Please Enter Your Email" value="{{ old('email') }}">

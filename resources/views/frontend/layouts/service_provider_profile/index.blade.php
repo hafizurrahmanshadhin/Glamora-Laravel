@@ -215,7 +215,8 @@
                         denyButtonText: `Sign In Later`
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "{{ route('login') }}";
+                            window.location.href = "{{ route('login') }}?redirect_to=" +
+                                encodeURIComponent(window.location.href);
                         } else if (result.isDenied) {
                             Swal.fire("You can sign in later", "", "info");
                         }

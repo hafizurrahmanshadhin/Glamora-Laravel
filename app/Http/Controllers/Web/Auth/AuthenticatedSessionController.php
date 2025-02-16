@@ -36,6 +36,11 @@ class AuthenticatedSessionController extends Controller {
             return redirect()->route('profile-submitted')->with('status', 'Your profile is under review. Please wait for approval.');
         }
 
+        // If a redirect_to parameter exists and user is a client, redirect back to the intended page
+        if ($user->role === 'client' && $request->filled('redirect_to')) {
+            return redirect($request->input('redirect_to'));
+        }
+
         if ($user->role === 'admin') {
             return redirect()->route('dashboard');
         } elseif ($user->role === 'client') {
