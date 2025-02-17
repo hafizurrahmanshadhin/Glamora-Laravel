@@ -212,8 +212,8 @@
 
                     <div class="tm-multistep-btn-wrapper">
                         <button type="button" class="tm-multi-step-prev-step">Back</button>
-                        <button class="tm-multi-step-submit-form" type="button" data-bs-toggle="modal"
-                            class="tm-dashboard-booking-landing-btn-1" data-bs-target="#exampleModal" id="submitBooking">
+
+                        <button class="tm-multi-step-submit-form" type="button" id="submitBooking">
                             Confirm and Check Availability
                         </button>
                     </div>
@@ -330,6 +330,10 @@
 
             // Submit with Axios
             $("#submitBooking").click(function() {
+                const $btn = $(this);
+                if ($btn.data('submitted')) return;
+                $btn.data('submitted', true); // Mark as submitted
+
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 const loader = document.getElementById('loader');
                 loader.style.display = 'block'; // Show loader
@@ -348,12 +352,13 @@
                     .then(response => {
                         console.log('Success:', response.data);
                         loader.style.display = 'none'; // Hide loader
-                        // Show success modal or message, or redirect, etc.
+                        // Manually trigger modal
+                        $('#exampleModal').modal('show');
                     })
                     .catch(error => {
                         console.error('Error:', error.response ? error.response.data : error);
-                        // Handle validation errors or other issues
                         loader.style.display = 'none'; // Hide loader
+                        $btn.data('submitted', false); // Reset if needed
                     });
             });
         });
