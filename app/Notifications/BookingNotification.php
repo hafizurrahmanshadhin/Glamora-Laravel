@@ -11,6 +11,7 @@ class BookingNotification extends Notification {
     public $booking;
 
     public function __construct(Booking $booking) {
+        $booking->load('userService.service', 'user');
         $this->booking = $booking;
     }
 
@@ -19,13 +20,20 @@ class BookingNotification extends Notification {
     }
 
     public function toArray($notifiable) {
+        $serviceName = $this->booking->userService->service->services_name ?? 'Service';
+        $clientName  = trim($this->booking->user->first_name . ' ' . $this->booking->user->last_name) ?: 'Client';
+        $date        = date('l, F jS, Y', strtotime($this->booking->appointment_date));
+        $time        = date('h:i A', strtotime($this->booking->appointment_time));
+        $price       = number_format($this->booking->price, 2);
+
         return [
-            'message'          => 'New booking created by a client',
+            'message'          => "New booking for {$serviceName} by {$clientName} on {$date} at {$time} for \${$price}.",
             'booking_id'       => $this->booking->id,
-            'user_service_id'  => $this->booking->user_service_id,
-            'service_type'     => $this->booking->service_type,
+            'service_name'     => $serviceName,
+            'client_name'      => $clientName,
             'appointment_date' => $this->booking->appointment_date,
             'appointment_time' => $this->booking->appointment_time,
+            'price'            => $this->booking->price,
         ];
     }
 }
