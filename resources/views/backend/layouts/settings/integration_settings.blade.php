@@ -165,13 +165,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var activeTab = "{{ session('activeTab', 'twilio') }}";
-            // If the tab is "stripe", trigger the Stripe tab button
             if (activeTab === 'stripe') {
                 let stripeTab = document.querySelector('#stripe-tab');
                 let tab = new bootstrap.Tab(stripeTab);
                 tab.show();
             }
-            // Otherwise, Twilio remains the default
         });
     </script>
 @endpush

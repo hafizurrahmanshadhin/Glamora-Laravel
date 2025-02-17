@@ -43,9 +43,8 @@ class IntegrationController extends Controller {
 
             if ($envContent !== null) {
                 File::put(base_path('.env'), $envContent);
+                Artisan::call('optimize:clear');
             }
-
-            Artisan::call('optimize:clear');
 
             return redirect()->route('integration.setting')
                 ->with('t-success', 'Stripe Setting Update successfully.')
