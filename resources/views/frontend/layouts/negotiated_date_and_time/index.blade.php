@@ -115,6 +115,7 @@
                 </div>
             </div>
 
+
             <div class="confirm-time-div">
                 <div class="confirm-time-upper-area">
                     <div class="confirm-time-left">
@@ -178,7 +179,6 @@
                                 '06:00 AM',
                                 '07:00 AM',
                             ];
-
                             $formattedTime = \Carbon\Carbon::parse($booking->appointment_time)->format('h:i A');
                         @endphp
                         <div class="tm-available-label-input-wrapper">
@@ -220,8 +220,8 @@
                         @csrf
                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                         <input type="hidden" name="action_type" value="offer">
-                        <input type="text" name="new_date" placeholder="New Date">
-                        <input type="text" name="new_time" placeholder="New Time">
+                        <input type="hidden" name="new_date" id="hiddenNewDate">
+                        <input type="hidden" name="new_time" id="hiddenNewTime">
                         <input type="hidden" name="new_price" value="{{ $booking->price }}">
                         <button type="submit" class="submit-btn">Send Offer</button>
                     </form>
@@ -253,29 +253,23 @@
                 const dateInput = document.getElementById('appointment-date-new');
                 const timeDropdown = document.getElementById('appointment-time');
                 const negotiateNotice = document.querySelector('.negotiate-time-notice');
-                const submitButton = document.querySelector('.submit-btn');
+                const submitButton = document.querySelector('.submit-btn'); // in lower area
 
-                // Show/hide forms for yes/no
+                // Forms in lower area
                 const yesForm = document.getElementById('yesForm');
                 const noForm = document.getElementById('noForm');
-                yesForm.style.display = 'none';
-                noForm.style.display = 'none';
 
-                // Hide negotiate notice initially
-                negotiateNotice.style.display = 'none';
-                submitButton.textContent = 'I’m Available';
-
-                // Enable or disable fields
+                // By default, fields are disabled (as per HTML)
                 function toggleFieldsAndUI(enable) {
                     if (enable) {
-                        // For "No" => show new offer form
+                        // For "No" => show noForm and enable date/time fields
                         yesForm.style.display = 'none';
                         noForm.style.display = 'inline-block';
                         negotiateNotice.style.display = 'block';
                         dateInput.removeAttribute('disabled');
                         timeDropdown.removeAttribute('disabled');
                     } else {
-                        // For "Yes" => show available form
+                        // For "Yes" => show yesForm and disable date/time fields
                         yesForm.style.display = 'inline-block';
                         noForm.style.display = 'none';
                         negotiateNotice.style.display = 'none';
@@ -283,7 +277,8 @@
                         timeDropdown.setAttribute('disabled', 'disabled');
                     }
                 }
-                // By default, fields are disabled
+
+                // Initialize based on selection
                 toggleFieldsAndUI(false);
 
                 // Change form visibility and UI upon radio change
@@ -296,9 +291,16 @@
                         }
                     });
                 });
+
+                // Before Submit, update hidden fields inside noForm with current values
+                noForm.addEventListener('submit', function(e) {
+                    // Optionally, you can perform validation here
+                    document.getElementById('hiddenNewDate').value = dateInput.value;
+                    document.getElementById('hiddenNewTime').value = timeDropdown.value;
+                });
             });
 
-            // jQuery datepicker
+            // jQuery datepicker initialization
             $(function() {
                 $('#appointment-date-new').datepicker({
                     dateFormat: 'dd M yy',
@@ -306,9 +308,8 @@
                     changeYear: true,
                     showButtonPanel: true,
                     onSelect: function(dateText) {
-                        const dateObj = $(this).datepicker('getDate');
-                        const formattedDate = $.datepicker.formatDate('dd | M | yy', dateObj);
-                        $('#appointment-date-new').val(formattedDate);
+                        // dateText will be used as the new date
+                        $(this).val(dateText);
                     },
                 });
             });
