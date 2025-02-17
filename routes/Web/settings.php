@@ -36,6 +36,7 @@ Route::controller(MailSettingsController::class)->group(function () {
 Route::controller(IntegrationController::class)->group(function () {
     Route::get('/integration-setting', 'index')->name('integration.setting');
     Route::patch('/stripe-setting', 'updateStripeCredentials')->name('stripe.update');
+    Route::patch('/twilio-setting', 'updateTwilioCredentials')->name('twilio.update');
 });
 
 //! Route for SocialMedia Settings
