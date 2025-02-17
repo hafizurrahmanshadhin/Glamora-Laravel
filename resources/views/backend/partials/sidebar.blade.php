@@ -120,6 +120,15 @@
                     </a>
                 </li>
 
+                {{-- Newsletter Subscriptions --}}
+                <li class="nav-item">
+                    <a href="{{ route('newsletter-subscription.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('newsletter-subscription.index') ? 'active' : '' }}">
+                        <i class="ri-mail-line"></i>
+                        <span data-key="t-dashboard" style="white-space: nowrap">Newsletter Subscriptions</span>
+                    </a>
+                </li>
+
                 <hr>
                 {{-- Settings --}}
                 <li class="nav-item">

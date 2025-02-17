@@ -4,6 +4,7 @@ use App\Http\Controllers\Web\Backend\AvailableServicesController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
+use App\Http\Controllers\Web\Backend\NewsletterSubscriptionController;
 use App\Http\Controllers\Web\Backend\ReportController;
 use App\Http\Controllers\Web\Backend\ServiceController;
 use App\Http\Controllers\Web\Backend\TestimonialController;
@@ -67,4 +68,11 @@ Route::controller(TestimonialController::class)->group(function () {
 Route::controller(ReportController::class)->group(function () {
     Route::get('/report', 'index')->name('report.index');
     Route::get('/report/show/{id}', 'show')->name('report.show');
+});
+
+//! Route for Newsletter Subscriptions Page
+Route::controller(NewsletterSubscriptionController::class)->group(function () {
+    Route::get('/newsletter-subscription', 'index')->name('newsletter-subscription.index');
+    Route::get('/newsletter-subscription/status/{id}', 'status')->name('newsletter-subscription.status');
+    Route::delete('/newsletter-subscription/destroy/{id}', 'destroy')->name('newsletter-subscription.destroy');
 });
