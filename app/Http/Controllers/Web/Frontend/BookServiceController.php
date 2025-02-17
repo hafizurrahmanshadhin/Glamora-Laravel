@@ -118,7 +118,7 @@ class BookServiceController extends Controller {
             // Notify client that the request is declined
             $client->notify(new BookingStatusNotification(
                 $booking,
-                "Decline your request!"
+                "Declined your request!"
             ));
             return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Booking request declined.');
 
@@ -131,10 +131,17 @@ class BookServiceController extends Controller {
             return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Availability confirmed.');
 
         case 'offer':
-            // “Send Offer” - pass new date/time from user
+            // Update booking record with new offer details
+            $booking->update([
+                'appointment_date' => $request->new_date,
+                'appointment_time' => $request->new_time,
+                'price'            => $request->new_price,
+            ]);
+
+            // Now send a notification using the updated booking details
             $client->notify(new BookingStatusNotification(
                 $booking,
-                "New Offer! Date: {$request->new_date}, Time: {$request->new_time}, Price: {$request->new_price}"
+                "New Offer! Date: {$booking->appointment_date}, Time: {$booking->appointment_time}, Price: {$booking->price}"
             ));
             return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Offer sent.');
 
