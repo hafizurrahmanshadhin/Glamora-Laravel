@@ -10,6 +10,7 @@ use App\Models\Report;
 use App\Models\Review;
 use App\Models\TravelRadius;
 use App\Models\UserService;
+use App\Models\UserTool;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -61,6 +62,10 @@ class User extends Authenticatable implements JWTSubject {
 
     public function businessInformation(): HasOne {
         return $this->hasOne(BusinessInformation::class);
+    }
+
+    public function userTools(): HasMany {
+        return $this->hasMany(UserTool::class);
     }
 
     public function userServices(): HasMany {

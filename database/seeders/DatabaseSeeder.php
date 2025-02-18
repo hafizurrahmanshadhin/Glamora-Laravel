@@ -20,6 +20,7 @@ use Database\Seeders\SystemSettingSeeder;
 use Database\Seeders\TravelRadiusSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\UserServiceSeeder;
+use Database\Seeders\UserToolSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder {
@@ -43,6 +44,7 @@ class DatabaseSeeder extends Seeder {
             OrderSeeder::class,
             NotificationsSeeder::class,
             NewsletterSubscriptionSeeder::class,
+            UserToolSeeder::class,
         ]);
     }
 }

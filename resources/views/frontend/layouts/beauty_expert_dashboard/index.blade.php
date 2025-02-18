@@ -131,8 +131,8 @@
                         </div>
                     </div>
                     <div class="bottom-bottom">
-                        <a href="" class="common-btn">
-                            View Bookings
+                        <a href="{{ route('edit-profile') }}" class="common-btn">
+                            View Profile
                         </a>
                     </div>
                 </div>

@@ -51,7 +51,7 @@
                                             : 'No address provided' }}
                                     </p>
                                 </div>
-                                <div class="service-provider-rating">
+                                <div class="service-provider-rating" style="white-space: nowrap">
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none">
@@ -107,11 +107,11 @@
                     <div class="tools-used">
                         <h3>Tools & Brands Used</h3>
                         <div class="tool-list">
-                            <span class="tool-item">MAC</span>
-                            <span class="tool-item">MCharlotte Tilbury</span>
-                            <span class="tool-item">Estée Lauder</span>
-                            <span class="tool-item">Bobbi Brown</span>
-                            <span class="tool-item">Huda Beauty</span>
+                            @forelse($user->userTools as $tool)
+                                <span class="tool-item">{{ $tool->tool_name }}</span>
+                            @empty
+                                <p>No tools added yet.</p>
+                            @endforelse
                         </div>
                     </div>
 

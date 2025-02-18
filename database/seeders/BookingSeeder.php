@@ -63,7 +63,7 @@ class BookingSeeder extends Seeder {
             [
                 'id'               => 5,
                 'user_id'          => 4,
-                'user_service_id'  => 12,
+                'user_service_id'  => 6,
                 'service_type'     => 'salon_services',
                 'appointment_date' => '2025-02-28',
                 'appointment_time' => '11:00 PM',

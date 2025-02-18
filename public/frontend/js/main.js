@@ -152,5 +152,3 @@ document.addEventListener("DOMContentLoaded", () => {
         initializeFlatpickr(); // For the page that has date/time pickers
     }
 });
-
-// new js added 2025 by tarek

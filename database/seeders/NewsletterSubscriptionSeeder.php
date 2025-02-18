@@ -6,9 +6,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class NewsletterSubscriptionSeeder extends Seeder {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void {
         DB::table('newsletter_subscriptions')->insert([
             [

@@ -3239,3 +3239,163 @@
     font-family: Poppins !important;
     font-weight: 400 !important;
 }
+
+/* new css added in 2025 */
+.tm-category-upload-form-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    width: 100%;
+}
+
+.tm-category-upload-form-img-area {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.tm-category-upload-form-img-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    display: none;
+}
+
+.tm-category-upload-form-img-area p {
+    color: #555;
+    font-size: 14px;
+    transition: opacity 0.3s ease;
+}
+
+.edit-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(235, 189, 189, 0.6);
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+.tm-service-gallery,
+.tools-used {
+    position: relative;
+}
+
+.add-new-btn {
+    border: 1px dashed #bb7676;
+    /* Initial dashed border */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #222;
+    font-family: "Helvetica Neue";
+    font-size: 15px !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    border-radius: 8px;
+    background: #f7dbe0;
+    padding: 4px 6px !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.add-new-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border: 1px solid transparent;
+    /* Initially transparent */
+    border-radius: 8px;
+    transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+}
+
+.add-new-btn:hover {
+    border: 1px solid transparent;
+}
+
+.add-new-btn:hover::before {
+    width: 100%;
+    height: 100%;
+    border-color: #bb7676;
+}
+
+.tools-upload-heading {
+    color: #222;
+    font-family: "Helvetica Neue";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+}
+
+.tools-update-area {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.tools-update-name-input {
+    padding: 12px 13px;
+    border-radius: 9px;
+    border: 1px solid #BABABA;
+    background: #FFF;
+    font-family: "Helvetica Neue";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    flex-grow: 1;
+
+}
+
+.add-tools {
+    border: 1px solid transparent;
+    padding: 9px 13px;
+    border-radius: 9px;
+    background: #FFB6C1;
+    transition: .3s ease-in-out;
+    color: #222;
+    text-align: center;
+    font-family: "Helvetica Neue";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.add-tools:hover {
+    border: 1px solid transparent;
+    color: #fff;
+    background: #222;
+}
+
+.tm-category-upload-form-dropdown-area-select .list {
+    width: 100%;
+}
+
+/* new css added in 2025 */
