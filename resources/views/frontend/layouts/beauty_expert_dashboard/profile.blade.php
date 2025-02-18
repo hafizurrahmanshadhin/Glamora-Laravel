@@ -129,24 +129,29 @@
                     <div class="tm-service-gallery">
                         <h3>Gallery of Previous Work</h3>
                         <div class="gallery-grid">
-                            @forelse($user->userServices as $userService)
-                                <a href="#" class="gallery-item">
-                                    <div class="gallery-item-img-area">
-                                        <img src="{{ $userService->image ? asset($userService->image) : asset('frontend/images/service-image-2.jpg') }}"
-                                            alt="{{ $userService->service->services_name ?? 'Bridal Makeup' }}">
+                            @foreach ($user->userGalleries as $gallery)
+                                <a href="#" class="gallery-item" data-gallery-id="{{ $gallery->id }}">
+                                    <div class="gallery-item-img-area" style="position: relative;">
+                                        <img src="{{ asset($gallery->image) }}" alt="Gallery Image">
+                                        <span class="remove-gallery" data-gallery-id="{{ $gallery->id }}"
+                                            style="position: absolute; top:5px; right:5px; cursor:pointer; z-index: 10;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22"
+                                                viewBox="0 0 21 22" fill="none">
+                                                <rect y="0.5" width="21" height="21" rx="10.5"
+                                                    fill="#BABABA" />
+                                                <path
+                                                    d="M15.7667 6.5L11.5139 11.3455L16 16.5H13.9543L10.509 12.3848L6.93801 16.5H5L9.50408 11.3455L5.28711 6.5H7.31485L10.5269 10.3483L13.8467 6.5H15.7667Z"
+                                                    fill="#6B6B6B" />
+                                            </svg>
+                                        </span>
                                     </div>
                                     <div class="tm-overlay"></div>
-                                    <div class="tm-text-overlay">
-                                        <p>{{ $userService->service->services_name ?? 'Bridal Makeup' }}</p>
-                                    </div>
                                 </a>
-                            @empty
-                                <p>No gallery items found.</p>
-                            @endforelse
+                            @endforeach
                         </div>
-
                         <button type="button" class="add-new-btn" data-bs-toggle="modal"
-                            data-bs-target="#categorySelect">Add New
+                            data-bs-target="#categorySelect">
+                            Add New
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                 fill="none">
                                 <path
@@ -241,15 +246,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action class="tm-category-upload-form">
+                        <form class="tm-category-upload-form" onsubmit="return false;">
                             <div class="tm-category-upload-form-content-wrapper">
                                 <div class="tm-category-upload-form-img-area"
                                     onclick="document.getElementById('imageUpload').click();">
                                     <input type="file" id="imageUpload" accept="image/*" style="display: none;"
                                         onchange="previewImage(event)">
-                                    <img id="preview" src alt="Upload Image">
-                                    <p id="uploadText">Click to upload an
-                                        image</p>
+                                    <img id="preview" src alt="Upload Image" style="display: none;">
+                                    <p id="uploadText">Click to upload an image</p>
                                     <div class="edit-icon" id="editIcon" style="display: none;">
                                         <svg class="upload-profile-img-close-btn" width="30px"
                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -259,20 +263,8 @@
                                         </svg>
                                     </div>
                                 </div>
-
-                                <div class="tm-category-upload-form-dropdown-area w-100">
-                                    <select class="tm-category-upload-form-dropdown-area-select w-100">
-                                        <option selected>Select work
-                                            Category</option>
-                                        <option value="1">Hair
-                                            Styling</option>
-                                        <option value="2">Makeup</option>
-                                        <option value="3">Nail Art</option>
-                                    </select>
-                                </div>
-
                                 <div class="tm-category-upload-form-button w-100 d-flex justify-content-end">
-                                    <button type="submit" class="common-btn">Add</button>
+                                    <button type="button" id="btnAddGallery" class="common-btn">Add</button>
                                 </div>
                             </div>
                         </form>
@@ -353,11 +345,78 @@
                 const editIcon = document.getElementById('editIcon');
 
                 preview.src = reader.result;
-                preview.style.display = "block"; // Show image
-                uploadText.style.display = "none"; // Hide text
-                editIcon.style.display = "flex"; // Show edit icon
+                preview.style.display = "block";
+                uploadText.style.display = "none";
+                editIcon.style.display = "flex";
             };
             reader.readAsDataURL(event.target.files[0]);
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $("#btnAddGallery").off("click").on("click", function(e) {
+                e.preventDefault();
+                const imageInput = document.getElementById('imageUpload');
+                if (imageInput.files.length === 0) return;
+
+                const formData = new FormData();
+                formData.append('image', imageInput.files[0]);
+
+                axios.post('{{ route('gallery.store') }}', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(function(response) {
+                        if (response.data.status) {
+                            const gallery = response.data.data;
+                            const newGallery = `
+                        <a href="#" class="gallery-item" data-gallery-id="${gallery.id}">
+                            <div class="gallery-item-img-area" style="position: relative;">
+                                <img src="/${gallery.image}" alt="Gallery Image">
+                                <span class="remove-gallery" data-gallery-id="${gallery.id}"
+                                    style="position: absolute; top:5px; right:5px; cursor:pointer;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 21 22" fill="none">
+                                        <rect y="0.5" width="21" height="21" rx="10.5" fill="#BABABA" />
+                                        <path d="M15.7667 6.5L11.5139 11.3455L16 16.5H13.9543L10.509 12.3848L6.93801 16.5H5L9.50408 11.3455L5.28711 6.5H7.31485L10.5269 10.3483L13.8467 6.5H15.7667Z" fill="#6B6B6B" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="tm-overlay"></div>
+                        </a>
+                    `;
+                            $(".gallery-grid").append(newGallery);
+                            imageInput.value = '';
+                            $("#preview").attr("src", "").hide();
+                            $("#uploadText").show();
+                            $("#editIcon").hide();
+                            $('#categorySelect').modal('hide');
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error(error);
+                    });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).on("click", ".remove-gallery", function(e) {
+            e.preventDefault();
+            const galleryId = $(this).data("gallery-id");
+            console.log(galleryId);
+            // Generate a URL with a placeholder and replace it with galleryId
+            axios.delete("{{ route('gallery.destroy', ['gallery' => 'GALLERY_ID']) }}".replace("GALLERY_ID",
+                    galleryId))
+                .then(function(response) {
+                    if (response.data.status) {
+                        $(`a.gallery-item[data-gallery-id="${galleryId}"]`).remove();
+                    }
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
+        });
     </script>
 @endpush

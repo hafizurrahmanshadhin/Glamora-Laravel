@@ -14,4 +14,6 @@ Route::controller(ServiceProviderProfileController::class)->group(function () {
     Route::get('/edit-profile', 'editProfile')->name('edit-profile');
     Route::post('/tools', 'store')->name('tools.store');
     Route::delete('/tools/{tool}', 'destroy')->name('tools.destroy');
+    Route::post('/gallery', 'storeGallery')->name('gallery.store');
+    Route::delete('/gallery/{gallery}', 'destroyGallery')->name('gallery.destroy');
 });

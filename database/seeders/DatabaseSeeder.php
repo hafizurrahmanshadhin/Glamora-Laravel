@@ -18,6 +18,7 @@ use Database\Seeders\ServiceSeeder;
 use Database\Seeders\SocialMediaSeeder;
 use Database\Seeders\SystemSettingSeeder;
 use Database\Seeders\TravelRadiusSeeder;
+use Database\Seeders\UserGallerySeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\UserServiceSeeder;
 use Database\Seeders\UserToolSeeder;
@@ -45,6 +46,7 @@ class DatabaseSeeder extends Seeder {
             NotificationsSeeder::class,
             NewsletterSubscriptionSeeder::class,
             UserToolSeeder::class,
+            UserGallerySeeder::class,
         ]);
     }
 }

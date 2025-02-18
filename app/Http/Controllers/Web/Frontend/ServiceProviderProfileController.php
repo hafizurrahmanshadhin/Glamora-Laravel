@@ -6,7 +6,9 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
 use App\Models\User;
+use App\Models\UserGallery;
 use App\Models\UserTool;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -84,7 +86,13 @@ class ServiceProviderProfileController extends Controller {
         ]);
     }
 
-    public function store(Request $request) {
+    /**
+     * Store a newly created tool in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse {
         $request->validate(['tool_name' => 'required|string']);
 
         $tool = UserTool::create([
@@ -92,11 +100,16 @@ class ServiceProviderProfileController extends Controller {
             'tool_name' => $request->tool_name,
         ]);
 
-        // Use your Helper method for JSON responses
         return Helper::jsonResponse(true, 'Tool added successfully.', 201, $tool);
     }
 
-    public function destroy(UserTool $tool) {
+    /**
+     * Remove the specified tool from storage.
+     *
+     * @param UserTool $tool
+     * @return JsonResponse
+     */
+    public function destroy(UserTool $tool): JsonResponse {
         if ($tool->user_id !== Auth::id()) {
             return Helper::jsonResponse(false, 'Unauthorized', 403);
         }
@@ -104,5 +117,50 @@ class ServiceProviderProfileController extends Controller {
         $tool->delete();
 
         return Helper::jsonResponse(true, 'Tool deleted successfully.', 200);
+    }
+
+    /**
+     * Store a newly created gallery image in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function storeGallery(Request $request): JsonResponse {
+        $request->validate([
+            'image' => 'required|image|max:10240',
+        ]);
+
+        $user         = auth()->user();
+        $file         = $request->file('image');
+        $uploadedPath = Helper::fileUpload($file, 'galleries', $user->name ?: 'gallery');
+
+        if (!$uploadedPath) {
+            return Helper::jsonResponse(false, 'File upload failed.', 500);
+        }
+
+        $gallery = UserGallery::create([
+            'user_id' => $user->id,
+            'image'   => $uploadedPath,
+        ]);
+
+        return Helper::jsonResponse(true, 'Gallery image added successfully.', 201, $gallery);
+    }
+
+    /**
+     * Remove the specified gallery image from storage.
+     *
+     * @param UserGallery $gallery
+     * @return JsonResponse
+     */
+    public function destroyGallery(UserGallery $gallery): JsonResponse {
+        if ($gallery->user_id !== auth()->id()) {
+            return Helper::jsonResponse(false, 'Unauthorized', 403);
+        }
+
+        Helper::fileDelete(public_path($gallery->image));
+
+        $gallery->delete();
+
+        return Helper::jsonResponse(true, 'Gallery image deleted successfully.', 200);
     }
 }

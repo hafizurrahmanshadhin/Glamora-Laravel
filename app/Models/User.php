@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\Report;
 use App\Models\Review;
 use App\Models\TravelRadius;
+use App\Models\UserGallery;
 use App\Models\UserService;
 use App\Models\UserTool;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,6 +67,10 @@ class User extends Authenticatable implements JWTSubject {
 
     public function userTools(): HasMany {
         return $this->hasMany(UserTool::class);
+    }
+
+    public function userGalleries(): HasMany {
+        return $this->hasMany(UserGallery::class);
     }
 
     public function userServices(): HasMany {

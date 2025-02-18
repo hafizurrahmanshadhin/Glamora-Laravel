@@ -76,7 +76,7 @@
                             {{ $user->businessInformation ? $user->businessInformation->name : $user->first_name . ' ' . $user->last_name }}
                         </h3>
                         <div class="service-grid">
-                            @forelse($user->userServices as $userService)
+                            @foreach ($user->userServices as $userService)
                                 <a href="#" class="service-item">
                                     <div class="service-area-image-area">
                                         <img src="{{ $userService->image ? asset($userService->image) : asset('frontend/images/service-image.jpg') }}"
@@ -87,9 +87,7 @@
                                         <h5 class="tm-price">{{ $userService->offered_price }}$</h5>
                                     </div>
                                 </a>
-                            @empty
-                                <p>No services found.</p>
-                            @endforelse
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -118,20 +116,14 @@
                     <div class="tm-service-gallery">
                         <h3>Gallery of Previous Work</h3>
                         <div class="gallery-grid">
-                            @forelse($user->userServices as $userService)
+                            @foreach ($user->userGalleries as $gallery)
                                 <a href="#" class="gallery-item">
                                     <div class="gallery-item-img-area">
-                                        <img src="{{ $userService->image ? asset($userService->image) : asset('frontend/images/service-image-2.jpg') }}"
-                                            alt="{{ $userService->service->services_name ?? 'Bridal Makeup' }}">
+                                        <img src="{{ asset($gallery->image) }}" alt="Gallery Image">
                                     </div>
                                     <div class="tm-overlay"></div>
-                                    <div class="tm-text-overlay">
-                                        <p>{{ $userService->service->services_name ?? 'Bridal Makeup' }}</p>
-                                    </div>
                                 </a>
-                            @empty
-                                <p>No gallery items found.</p>
-                            @endforelse
+                            @endforeach
                         </div>
                     </div>
                 </div>
