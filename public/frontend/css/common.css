@@ -394,7 +394,7 @@ main {
     bottom: 0;
     left: 0;
     height: 100vh;
-    background-color: #fff8f9;
+    background-color: #ffe8ec !important;
     width: 300px;
     z-index: 1000;
     padding: 30px 20px;
@@ -408,6 +408,7 @@ main {
 
 .mobile-sidebar.show {
     left: 0 !important;
+    background-color: #ffe8ec;
 }
 
 .mobile-header-navs {
@@ -482,7 +483,7 @@ main {
     position: absolute;
     width: 300px;
     height: 100vh;
-    background-color: var(--primary);
+    background-color: #ffe8ec !important;
     z-index: 2000;
     top: 0;
     padding: 80px 16px 20px 16px;
@@ -495,6 +496,7 @@ main {
 
 .header-navs.show {
     left: 0 !important;
+    background-color: #ffe8ec !important;
 }
 
 .header-navs .item {
@@ -928,7 +930,7 @@ main {
         position: static;
         width: auto;
         height: auto;
-        background-color: transparent;
+        background-color: transparent !important;
         padding: 0 0 0 0;
         box-shadow: none;
     }

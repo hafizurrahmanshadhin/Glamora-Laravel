@@ -98,8 +98,13 @@
 
         <div class="header-profile-container">
             <div class="header-profile-btn">
-                <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
-                    alt="Profile Image">
+                @if (Auth::check() && Auth::user()->role == 'beauty_expert')
+                    <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
+                        alt="Profile Image">
+                @else
+                    <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
+                        alt="Profile Image">
+                @endif
             </div>
             <div class="tm-profiledropdown">
                 <div class="tm-profile-dropdown-menu-wrapper">

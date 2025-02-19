@@ -16,7 +16,6 @@ Route::controller(ServiceProviderProfileController::class)->group(function () {
     Route::delete('/tools/{tool}', 'destroy')->name('tools.destroy');
     Route::post('/gallery', 'storeGallery')->name('gallery.store');
     Route::delete('/gallery/{gallery}', 'destroyGallery')->name('gallery.destroy');
-
     Route::get('/edit-service-information/{user}', 'editServiceInformation')->name('edit-service-information');
-    Route::put('/update-service-information/{user}', 'updateServiceInformation')->name('update-service-information');
+    Route::patch('/edit-service-information/{user}', 'updateServiceInformation')->name('update-service-information');
 });

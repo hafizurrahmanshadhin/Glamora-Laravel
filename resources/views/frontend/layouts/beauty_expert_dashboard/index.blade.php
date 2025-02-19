@@ -83,7 +83,7 @@
                         </div>
                         <div class="text-content">
                             <div class="profile-title">
-                                {{ ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) ?? '' }}
+                                {{ ucfirst(Auth::user()->first_name ?? '') . ' ' . ucfirst(Auth::user()->last_name ?? '') ?? '' }}
                             </div>
                             <div class="profile-text">{{ Auth::user()->businessInformation?->business_address ?? '' }}</div>
                         </div>

@@ -9,8 +9,11 @@ use App\Models\Service;
 use App\Models\TravelRadius;
 use App\Models\User;
 use App\Models\UserGallery;
+use App\Models\UserService;
 use App\Models\UserTool;
+use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -172,19 +175,6 @@ class ServiceProviderProfileController extends Controller {
      * @param int $userId
      * @return View
      */
-    // public function editServiceInformation(int $userId): View {
-    //     $user             = User::findOrFail($userId);
-    //     $businessInfo     = $user->businessInformation;
-    //     $services         = Service::all();
-    //     $selectedServices = $user->userServices->pluck('service_id')->toArray();
-    //     $travelRadius     = TravelRadius::where('user_id', $userId)->first();
-
-    //     return view('frontend.layouts.beauty_expert_dashboard.edit-service-information',
-    //         compact('businessInfo', 'user', 'services', 'selectedServices', 'travelRadius')
-    //     );
-    // }
-
-
     public function editServiceInformation(int $userId): View {
         $user             = User::findOrFail($userId);
         $businessInfo     = $user->businessInformation;
@@ -194,20 +184,125 @@ class ServiceProviderProfileController extends Controller {
 
         // Build an array of service data in which each element holds the service plus the user's saved info.
         $servicesData = $services->map(function ($service) use ($user) {
-             $userService = $user->userServices->where('service_id', $service->id)->first();
-             return [
+            $userService = $user->userServices->where('service_id', $service->id)->first();
+            return [
                 'service'       => $service,
                 'selected'      => $userService ? $userService->selected : false,
                 'offered_price' => $userService ? $userService->offered_price : '',
                 'total_price'   => $userService ? $userService->total_price : '',
                 'image'         => $userService ? $userService->image : '',
-             ];
+            ];
         });
-
-        // dd($servicesData);
 
         return view('frontend.layouts.beauty_expert_dashboard.edit-service-information',
             compact('businessInfo', 'user', 'servicesData', 'selectedServices', 'travelRadius')
         );
+    }
+
+    /**
+     * Update the service information for the specified user.
+     *
+     * @param Request $request
+     * @param int $userId
+     * @return RedirectResponse
+     */
+    public function updateServiceInformation(Request $request, int $userId): RedirectResponse {
+        try {
+            $user = User::findOrFail($userId);
+
+            // Validate business & document fields.
+            $businessRules = [
+                'name'               => 'required|string|max:255',
+                'bio'                => 'required|string',
+                'business_name'      => 'required|string|max:255',
+                'business_address'   => 'required|string',
+                'professional_title' => 'required|string|max:255',
+            ];
+            // Optionally validate file if new ones uploaded.
+            if ($request->hasFile('avatar')) {
+                $businessRules['avatar'] = 'image|mimes:jpeg,png,jpg,gif,svg|max:20480';
+            }
+            if ($request->hasFile('license')) {
+                $businessRules['license'] = 'file|mimes:pdf,jpg,png|max:20480';
+            }
+            $validatedBusiness = $request->validate($businessRules);
+
+            // Update Business Information:
+            $businessData = [
+                'name'               => $validatedBusiness['name'],
+                'bio'                => $validatedBusiness['bio'],
+                'business_name'      => $validatedBusiness['business_name'],
+                'business_address'   => $validatedBusiness['business_address'],
+                'professional_title' => $validatedBusiness['professional_title'],
+            ];
+            if ($request->hasFile('avatar')) {
+                $businessData['avatar'] = Helper::fileUpload($request->file('avatar'), 'avatars', $validatedBusiness['name']);
+            }
+            if ($request->hasFile('license')) {
+                $businessData['license'] = Helper::fileUpload($request->file('license'), 'licenses', $validatedBusiness['name']);
+            }
+            $user->businessInformation->update($businessData);
+
+            // Validate and update travel radius info.
+            $radiusData = $request->validate([
+                'free_radius'       => 'required|integer|min:0',
+                'travel_radius'     => 'required|integer|min:0',
+                'travel_charge'     => 'required|numeric|min:0',
+                'max_radius'        => 'required|integer|min:0',
+                'max_charge'        => 'required|numeric|min:0',
+                'min_booking_value' => 'nullable|numeric|min:0',
+            ]);
+            TravelRadius::updateOrCreate(
+                ['user_id' => $userId],
+                $radiusData
+            );
+
+            if ($request->has('services')) {
+                $services = $request->input('services');
+                foreach ($services as $index => $data) {
+                    // Look for an existing record including soft-deleted ones.
+                    $existingService = UserService::withTrashed()->where([
+                        'user_id'    => $userId,
+                        'service_id' => $data['service_id'],
+                    ])->first();
+
+                    if (empty($data['selected']) || !$data['selected']) {
+                        // If unselected and the record exists, soft-delete it.
+                        if ($existingService) {
+                            $existingService->delete();
+                        }
+                    } else {
+                        $serviceData = [
+                            'selected'      => $data['selected'],
+                            'offered_price' => $data['offered_price'] ?? 0,
+                            'total_price'   => $data['total_price'] ?? 0,
+                        ];
+                        if ($request->hasFile("services.$index.image")) {
+                            $serviceData['image'] = Helper::fileUpload(
+                                $request->file("services.$index.image"),
+                                'user_services_images',
+                                'service_' . $data['service_id']
+                            );
+                        }
+                        if ($existingService) {
+                            // If the record was soft-deleted, restore it.
+                            if ($existingService->trashed()) {
+                                $existingService->restore();
+                            }
+                            $existingService->update($serviceData);
+                        } else {
+                            // Create new record if none exists.
+                            $serviceData['user_id']    = $userId;
+                            $serviceData['service_id'] = $data['service_id'];
+                            UserService::create($serviceData);
+                        }
+                    }
+                }
+            }
+
+            return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Service information updated successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('t-error', 'An error occurred while updating service information.');
+        }
     }
 }
