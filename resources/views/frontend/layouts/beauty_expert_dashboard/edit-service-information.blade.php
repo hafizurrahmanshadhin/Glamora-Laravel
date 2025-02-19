@@ -31,33 +31,22 @@
                     <div class="step-sub-title mt-5">Upload your profile photo</div>
 
                     <div class="step-upload-profile-container mt-3">
-                        <div class="upload-profile-circle">
+                        <label for="upload-profile-input" class="upload-profile-circle">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
                                 fill="none">
                                 <path
-                                    d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582 25.7403C33.1044
-                                                                                                27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601 33.1044 25.7403
-                                                                                                33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796 34.612 14.2597
-                                                                                                33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052 29.2137 6.89563
-                                                                                                27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218 6.58035 12.2064
-                                                                                                9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936 6.58035 30.6066
-                                                                                                9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                    d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582 25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601 33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796 34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052 29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218 6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936 6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
                                     stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                             <span>Upload Photo</span>
-                        </div>
-
+                        </label>
                         <input class="d-none" id="upload-profile-input" type="file" name="avatar">
                         <div class="upload-profile-img" style="display: {{ $businessInfo->avatar ? 'block' : 'none' }};">
                             <img src="{{ $businessInfo->avatar ? asset($businessInfo->avatar) : '' }}" alt="Profile Image">
                             <svg class="upload-profile-img-close-btn" width="30px" xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 512 512">
                                 <path
-                                    d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64
-                                                                                        64l384 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM175 175c9.4-9.4 24.6-9.4
-                                                                                        33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4
-                                                                                        9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
-                                                                                        0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                    d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                             </svg>
                         </div>
                     </div>
@@ -106,12 +95,12 @@
                                     fill="none">
                                     <path
                                         d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582
-                                                                                        25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
-                                                                                        33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
-                                                                                        34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
-                                                                                        29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
-                                                                                        6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
-                                                                                        6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                                                                                                    25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
+                                                                                                                    33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
+                                                                                                                    34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
+                                                                                                                    29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
+                                                                                                                    6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
+                                                                                                                    6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
                                         stroke="#222222" stroke-width="1.5" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
@@ -360,14 +349,14 @@
                                     </td>
                                     <td>
                                         <div class="service-value-input upload-service-img-container">
-                                            <div class="service-upload-img-btn"
-                                                style="cursor: pointer; display: {{ $data['image'] ? 'none' : 'flex' }};"
-                                                onclick="this.querySelector('input').click();">
+                                            <label class="service-upload-img-btn"
+                                                for="service_image{{ $data['service']->id }}"
+                                                style="cursor: pointer; display: {{ $data['image'] ? 'none' : 'flex' }};">
                                                 <span>Upload</span>
-                                                <input class="service-file-input d-none" type="file"
-                                                    name="service_image[{{ $data['service']->id }}]"
-                                                    id="service_image{{ $data['service']->id }}">
-                                            </div>
+                                            </label>
+                                            <input class="service-file-input d-none" type="file"
+                                                name="services[{{ $loop->index }}][image]"
+                                                id="service_image{{ $data['service']->id }}">
                                             <img class="service-uploaded-img"
                                                 style="max-width: 80px; max-height: 60px; border-radius: 4px; margin: 0 auto; object-fit: cover; display: {{ $data['image'] ? 'block' : 'none' }};"
                                                 src="{{ $data['image'] ? asset($data['image']) : '' }}" alt="">
@@ -376,9 +365,9 @@
                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                 <path
                                                     d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4
-                                                                            24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
-                                                                            47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
-                                                                            0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                                                     24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
+                                                                     47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
+                                                                     0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                             </svg>
                                         </div>
                                     </td>
@@ -554,21 +543,22 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const imgElement = document.querySelector(".upload-profile-img img");
+            const uploadProfileImgContainer = document.querySelector(".upload-profile-img");
+            const fileInput = document.getElementById('upload-profile-input');
+
+            // Show container if an image already exists.
             if (imgElement.src && imgElement.src !== window.location.href) {
-                document.querySelector(".upload-profile-img").style.display = "block";
+                uploadProfileImgContainer.style.display = "block";
             }
 
-            document.querySelector('.upload-profile-circle').addEventListener('click', function() {
-                document.getElementById('upload-profile-input').click();
-            });
-
+            // Remove the manual click event (the label now triggers the file input via its "for" attribute).
             document.querySelector('.upload-profile-img-close-btn').addEventListener('click', () => {
                 imgElement.src = '';
-                document.querySelector('.upload-profile-img').style.display = 'none';
-                document.getElementById('upload-profile-input').value = '';
+                uploadProfileImgContainer.style.display = 'none';
+                fileInput.value = '';
             });
 
-            document.getElementById('upload-profile-input').addEventListener('change', function(event) {
+            fileInput.addEventListener('change', function(event) {
                 const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
@@ -576,7 +566,7 @@
                         imgElement.src = e.target.result;
                     };
                     reader.readAsDataURL(file);
-                    document.querySelector('.upload-profile-img').style.display = 'block';
+                    uploadProfileImgContainer.style.display = 'block';
                 }
             });
         });
@@ -660,44 +650,41 @@
 
     {{-- for upload table img --}}
     <script>
-        // Get all upload containers
+        // Get all upload containers for table images
         const uploadContainers = document.querySelectorAll('.upload-service-img-container');
 
-        // Loop through each container
         uploadContainers.forEach(container => {
-            const uploadFileBtn = container.querySelector('.service-upload-img-btn');
             const uploadFileInput = container.querySelector('.service-file-input');
             const uploadedImg = container.querySelector('.service-uploaded-img');
             const serviceImgDeleteBtn = container.querySelector('.service-delete-btn');
+            const uploadBtnLabel = container.querySelector('.service-upload-img-btn');
 
-            // Add click event to the upload button
-            uploadFileBtn.addEventListener('click', () => {
-                uploadFileInput.click(); // Simulate click on the file input
-            });
-
-            // Add change event to the file input
+            // When file selection changes, update the image and toggle button visibility.
             uploadFileInput.addEventListener('change', (event) => {
                 const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
 
-                    // Load the selected file
                     reader.onload = function(e) {
-                        uploadedImg.src = e.target.result; // Update the image source
-                        uploadFileBtn.style.display = 'none';
+                        uploadedImg.src = e.target.result;
+                        // Explicitly force the image to display
+                        uploadedImg.style.display = 'block';
+                        uploadBtnLabel.style.display = 'none';
                         serviceImgDeleteBtn.style.display = 'block';
                     };
 
-                    reader.readAsDataURL(file); // Read the file as a Data URL
+                    reader.readAsDataURL(file);
                 }
             });
 
-            // Add click event to delete the image
+            // When the delete button is clicked, clear the image and reset the input.
             serviceImgDeleteBtn.addEventListener('click', () => {
-                uploadedImg.src = ''; // Clear the image source
-                uploadFileBtn.style.display = 'flex';
+                uploadedImg.src = '';
+                uploadBtnLabel.style.display = 'flex';
                 serviceImgDeleteBtn.style.display = 'none';
-                uploadFileInput.value = ''; // Clear the file input
+                uploadFileInput.value = '';
+                // Optionally hide the image element
+                uploadedImg.style.display = 'none';
             });
         });
     </script>
