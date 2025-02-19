@@ -91,7 +91,8 @@
                 <div class="service-profile-provider-content-right">
                     <div>
                         <div style="display:inline-flex" class="booking-box">
-                            <a class="armie-check-availability" href="#">Edit Service Information</a>
+                            <a class="armie-check-availability"
+                                href="{{ route('edit-service-information', $user->id) }}">Edit Service Information</a>
                         </div>
                     </div>
 

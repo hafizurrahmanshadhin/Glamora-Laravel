@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Web\Frontend;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
+use App\Models\Service;
+use App\Models\TravelRadius;
 use App\Models\User;
 use App\Models\UserGallery;
 use App\Models\UserTool;
@@ -162,5 +164,50 @@ class ServiceProviderProfileController extends Controller {
         $gallery->delete();
 
         return Helper::jsonResponse(true, 'Gallery image deleted successfully.', 200);
+    }
+
+    /**
+     * Display the service provider edit service information page.
+     *
+     * @param int $userId
+     * @return View
+     */
+    // public function editServiceInformation(int $userId): View {
+    //     $user             = User::findOrFail($userId);
+    //     $businessInfo     = $user->businessInformation;
+    //     $services         = Service::all();
+    //     $selectedServices = $user->userServices->pluck('service_id')->toArray();
+    //     $travelRadius     = TravelRadius::where('user_id', $userId)->first();
+
+    //     return view('frontend.layouts.beauty_expert_dashboard.edit-service-information',
+    //         compact('businessInfo', 'user', 'services', 'selectedServices', 'travelRadius')
+    //     );
+    // }
+
+
+    public function editServiceInformation(int $userId): View {
+        $user             = User::findOrFail($userId);
+        $businessInfo     = $user->businessInformation;
+        $services         = Service::all();
+        $selectedServices = $user->userServices->pluck('service_id')->toArray();
+        $travelRadius     = TravelRadius::where('user_id', $userId)->first();
+
+        // Build an array of service data in which each element holds the service plus the user's saved info.
+        $servicesData = $services->map(function ($service) use ($user) {
+             $userService = $user->userServices->where('service_id', $service->id)->first();
+             return [
+                'service'       => $service,
+                'selected'      => $userService ? $userService->selected : false,
+                'offered_price' => $userService ? $userService->offered_price : '',
+                'total_price'   => $userService ? $userService->total_price : '',
+                'image'         => $userService ? $userService->image : '',
+             ];
+        });
+
+        // dd($servicesData);
+
+        return view('frontend.layouts.beauty_expert_dashboard.edit-service-information',
+            compact('businessInfo', 'user', 'servicesData', 'selectedServices', 'travelRadius')
+        );
     }
 }
