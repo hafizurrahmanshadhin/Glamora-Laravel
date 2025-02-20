@@ -36,7 +36,7 @@
         <div data-aos="fade-right" data-aos-delay="400" class="search-container ">
             <div class="item location">
                 <div class="title">Location</div>
-                <input placeholder="Search" type="text" />
+                <input id="location-input" placeholder="Search" type="text" value="{{ request('location') }}">
             </div>
 
             <div class="item date">
@@ -175,13 +175,31 @@
 
 <script>
     document.getElementById('searchBtn').addEventListener('click', function() {
-        let selectedServiceId = document.getElementById('sub-service-selector').value;
-        let service_id = document.getElementById("service_id").value;
+        // Get the service id from the hidden input and trim whitespace
+        let selectedServiceId = document.getElementById('service_id').value.trim();
 
-        if (selectedServiceId) {
-            window.location.href = "{{ url('available-services') }}/" + selectedServiceId;
-        } else {
+        // If no service is selected, do nothing (or alert the user)
+        if (!selectedServiceId) {
+            // Optionally, you can uncomment the line below to alert the user:
             // alert("Please select a service first!");
+            return;
         }
+
+        // Get the location from the location input (using id "location-input")
+        let locationInput = document.getElementById('location-input').value.trim();
+
+        // Build query parameters (only location is used here; date is ignored)
+        let queryParams = new URLSearchParams();
+        if (locationInput) {
+            queryParams.append('location', locationInput);
+        }
+
+        // Construct the URL with query parameters
+        let url = "{{ url('available-services') }}/" + selectedServiceId;
+        if (queryParams.toString()) {
+            url += '?' + queryParams.toString();
+        }
+
+        window.location.href = url;
     });
 </script>

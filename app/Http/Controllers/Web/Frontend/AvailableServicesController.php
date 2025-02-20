@@ -16,6 +16,7 @@ class AvailableServicesController extends Controller {
     public function index($serviceId): View {
         $rating     = request('rating');
         $priceRange = request('price_range');
+        $location   = request('location');
 
         $query = UserService::where('status', 'active')->with(['service', 'user']);
 
@@ -83,11 +84,25 @@ class AvailableServicesController extends Controller {
             });
         }
 
+        // Filter by location if provided
+        if ($location) {
+            $approvedServices = $approvedServices->filter(function ($service) use ($location) {
+                if ($service->user && $service->user->businessInformation) {
+                    $businessInfo = $service->user->businessInformation;
+                    // Check if either business_address or address contains the search string
+                    return stripos($businessInfo->business_address, $location) !== false ||
+                    stripos($businessInfo->address, $location) !== false;
+                }
+                return false;
+            });
+        }
+
         return view('frontend.layouts.available_services.index', [
             'serviceId'        => $serviceId,
             'approvedServices' => $approvedServices,
             'selectedRating'   => $rating,
             'selectedPrice'    => $priceRange,
+            'location'         => $location,
         ]);
     }
 }

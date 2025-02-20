@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/faq.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/faq.css') }}" />
 @endpush
 
 @section('content')
@@ -46,40 +46,48 @@
         </section>
         {{-- faq section end --}}
 
+        {{-- Dummy elements to satisfy main.js (if needed) --}}
+        <div class="header-profile-container" style="display:none;"></div>
+        <div class="tm-profiledropdown" style="display:none;"></div>
+
         @include('frontend.partials.join-us')
     </main>
 @endsection
 
 @push('scripts')
     <script>
+        // Override FAQ accordion click handling by using a capturing listener
         document.addEventListener('DOMContentLoaded', () => {
             const togglers = document.querySelectorAll('[data-toggle]');
-
             togglers.forEach((btn) => {
                 btn.addEventListener('click', (e) => {
-                    // Close all other accordions first
+                    // Stop other click handlers (like those in main.js) from executing
+                    e.stopImmediatePropagation();
+
+                    // Close all other accordions first (optional behavior)
                     togglers.forEach((otherBtn) => {
                         if (otherBtn !== e.currentTarget && otherBtn.classList.contains(
                                 'active')) {
-                            const block = document.querySelector(
-                                `${otherBtn.dataset.toggle}`);
-                            block.style.maxHeight = '';
+                            const block = document.querySelector(otherBtn.dataset.toggle);
+                            if (block) {
+                                block.style.maxHeight = '0px';
+                            }
                             otherBtn.classList.remove('active');
                         }
                     });
 
-                    // Now, toggle the current clicked accordion
+                    // Toggle the clicked accordion item
                     const selector = e.currentTarget.dataset.toggle;
-                    const block = document.querySelector(`${selector}`);
-
-                    if (e.currentTarget.classList.contains('active')) {
-                        block.style.maxHeight = '';
-                    } else {
-                        block.style.maxHeight = block.scrollHeight + 'px';
+                    const block = document.querySelector(selector);
+                    if (block) {
+                        if (block.style.maxHeight && block.style.maxHeight !== '0px') {
+                            block.style.maxHeight = '0px';
+                        } else {
+                            block.style.maxHeight = block.scrollHeight + 'px';
+                        }
                     }
-
                     e.currentTarget.classList.toggle('active');
-                });
+                }, true); // Use capture phase to override main.js
             });
         });
     </script>
