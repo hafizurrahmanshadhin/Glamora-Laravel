@@ -95,12 +95,12 @@
                                     fill="none">
                                     <path
                                         d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582
-                                                                                                                    25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
-                                                                                                                    33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
-                                                                                                                    34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
-                                                                                                                    29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
-                                                                                                                    6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
-                                                                                                                    6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                                                                                                                                        25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
+                                                                                                                                                        33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
+                                                                                                                                                        34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
+                                                                                                                                                        29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
+                                                                                                                                                        6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
+                                                                                                                                                        6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
                                         stroke="#222222" stroke-width="1.5" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
@@ -140,6 +140,13 @@
                 <div class="map-container">
                     <div id="map"></div>
                 </div>
+                <input type="hidden" id="latitude" name="latitude"
+                    value="{{ old('latitude', $businessInfo->latitude ?? '') }}">
+                <input type="hidden" id="longitude" name="longitude"
+                    value="{{ old('longitude', $businessInfo->longitude ?? '') }}">
+                <input type="hidden" id="address" name="address"
+                    value="{{ old('address', $businessInfo->address ?? '') }}">
+
                 <div class="price-range-container">
                     <div class="step-count-title"><span>2</span>/3 Update Profile</div>
                     <div class="step-title">How Far Are You Willing to Travel</div>
@@ -365,9 +372,9 @@
                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                 <path
                                                     d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4
-                                                                     24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
-                                                                     47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
-                                                                     0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                                                                                         24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
+                                                                                                         47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
+                                                                                                         0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                             </svg>
                                         </div>
                                     </td>
@@ -398,72 +405,147 @@
 
 @push('scripts')
     {{-- for map --}}
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="{{ asset('frontend/js/leaflet.js') }}"></script>
     <script>
-        const openMapBtn = document.getElementById('step-1-next-btn');
-        openMapBtn.addEventListener('click', function() {
-            const map = L.map('map').setView([0, 0], 13);
-            // Add tile layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors',
-            }).addTo(map);
-            // Add a circle
-            const circle = L.circle([0, 0], {
-                color: 'rgba(88, 88, 88, 0.30)',
-                weight: 2,
-                fillColor: '#add8e6',
-                fillOpacity: 0.5,
-                radius: 20000, // Default radius: 20 km
-            }).addTo(map);
-            // Function to update the circle
-            const updateCircle = (lat, lng, radius) => {
-                circle.setLatLng([lat, lng]);
-                circle.setRadius(radius * 1000); // Convert km to meters
-                map.fitBounds(circle.getBounds(), {
-                    padding: [20, 20]
+        let map;
+        let currentMarker;
+        // Default set to Canberra, Australia:
+        // Latitude: 35°18' S  => approximately -35.3
+        // Longitude: 149°07' E => approximately 149.1167
+        const defaultLat = -35.3;
+        const defaultLng = 149.1167;
+
+        // Debounce timer to limit auto-save frequency
+        let autoSaveTimer;
+
+        function debounceAutoSave(delay) {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(autoSaveLocation, delay);
+        }
+
+        // Auto-save location using Axios
+        function autoSaveLocation() {
+            const formData = new FormData();
+            formData.append('latitude', document.getElementById('latitude').value);
+            formData.append('longitude', document.getElementById('longitude').value);
+            formData.append('address', document.getElementById('address').value);
+
+            axios.post('{{ route('update-service-location') }}', formData, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => {
+                    console.log('Location autosaved:', response.data);
+                })
+                .catch(error => {
+                    console.error('Auto-save error:', error);
                 });
-            };
-            // Fetch user's precise location
+        }
+
+        // Function to initialize the map on the given container
+        function initializeMap() {
+            // Set a fixed height for the map container
+            const mapElement = document.getElementById('map');
+            mapElement.style.height = "400px";
+
+            map = L.map('map', {
+                center: [defaultLat, defaultLng],
+                zoom: 13,
+                scrollWheelZoom: true
+            });
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            L.control.zoom().addTo(map);
+
+            const customIcon = L.icon({
+                iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            // Function to set/update marker and retrieve the address
+            function updateMarker(lat, lng) {
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+
+                if (currentMarker) {
+                    currentMarker.setLatLng([lat, lng]);
+                } else {
+                    currentMarker = L.marker([lat, lng], {
+                        draggable: true,
+                        icon: customIcon
+                    }).addTo(map);
+                    currentMarker.bindPopup('Selected Location').openPopup();
+                    currentMarker.on('dragend', function(e) {
+                        const {
+                            lat,
+                            lng
+                        } = e.target.getLatLng();
+                        updateMarker(lat, lng);
+                    });
+                }
+                map.setView([lat, lng], 13, {
+                    animate: true
+                });
+
+                // Fetch address using Nominatim reverse geocoding
+                fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('address').value = data.display_name || 'Unknown';
+                        // Debounce auto-save to prevent too many requests
+                        debounceAutoSave(1000); // 1 second delay
+                    })
+                    .catch(() => {
+                        document.getElementById('address').value = 'Location not found';
+                        debounceAutoSave(1000);
+                    });
+            }
+
+            // Try geolocation; if not available, use default (Canberra)
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        const {
-                            latitude,
-                            longitude
-                        } = position.coords;
-                        map.setView([latitude, longitude], 13);
-                        circle.setLatLng([latitude, longitude]);
+                        updateMarker(position.coords.latitude, position.coords.longitude);
                     },
-                    (error) => {
-                        console.error('Geolocation error:', error);
-                        alert('Unable to fetch your location. Please allow location access.');
+                    () => {
+                        updateMarker(defaultLat, defaultLng);
+                    }, {
+                        enableHighAccuracy: true,
+                        timeout: 5000
                     }
                 );
             } else {
-                alert('Geolocation is not supported by your browser.');
+                updateMarker(defaultLat, defaultLng);
             }
-            // Sliders for radius adjustment
-            const freeRadiusInput = document.getElementById('free-radius');
-            const travelRadiusInput = document.getElementById('travel-radius');
-            const maxRadiusInput = document.getElementById('max-radius');
-            const freeRadiusValue = document.getElementById('indicator-free-radius');
-            const travelRadiusValue = document.getElementById('indicator-travel-radius');
-            const maxRadiusValue = document.getElementById('indicator-max-radius');
-            // Event listeners for sliders
-            freeRadiusInput.addEventListener('input', (e) => {
-                const value = e.target.value;
-                freeRadiusValue.textContent = `${value} km`;
-                updateCircle(circle.getLatLng().lat, circle.getLatLng().lng, value);
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const step2 = document.getElementById('service-provider-step-form-2');
+            // Use MutationObserver to detect when step2 becomes visible
+            const observer = new MutationObserver((mutations, obs) => {
+                if (window.getComputedStyle(step2).display !== "none") {
+                    // Initialize the map if not already done
+                    if (typeof map === 'undefined' || !map) {
+                        initializeMap();
+                    } else if (map.invalidateSize) {
+                        setTimeout(() => {
+                            map.invalidateSize();
+                        }, 300); // delay to ensure container renders fully
+                    }
+                    obs.disconnect();
+                }
             });
-            travelRadiusInput.addEventListener('input', (e) => {
-                const value = e.target.value;
-                travelRadiusValue.textContent = `${value} km`;
-                updateCircle(circle.getLatLng().lat, circle.getLatLng().lng, value);
-            });
-            maxRadiusInput.addEventListener('input', (e) => {
-                const value = e.target.value;
-                maxRadiusValue.textContent = `${value} km`;
-                updateCircle(circle.getLatLng().lat, circle.getLatLng().lng, value);
+            observer.observe(step2, {
+                attributes: true,
+                attributeFilter: ["style"]
             });
         });
     </script>

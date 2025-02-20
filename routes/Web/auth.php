@@ -56,6 +56,8 @@ Route::middleware(['auth', 'allow_beauty_expert'])->group(function () {
     Route::get('/questionnaires', [QuestionnairesController::class, 'index'])->name('questionnaires');
     Route::get('/business-information', [BusinessInformationController::class, 'index'])->name('business-information');
     Route::post('/business-information/store', [BusinessInformationController::class, 'store'])->name('business-information.store');
+    Route::post('/business-information/save-location', [BusinessInformationController::class, 'storeLocation'])
+        ->name('businessInformation.storeLocation');
 });
 
 Route::middleware('auth')->group(function () {

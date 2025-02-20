@@ -21,6 +21,9 @@ class BusinessInformationController extends Controller {
         return view('auth.layouts.business-information', compact('services'));
     }
 
+    /**
+     * Store the business information.
+     */
     public function store(Request $request) {
         // store step 1 data
         if ($request->hasFile('avatar')) {
@@ -120,5 +123,27 @@ class BusinessInformationController extends Controller {
 
             return redirect()->route('profile-submitted')->with('status', 'Your profile information has been submitted. Please wait for approval.');
         }
+    }
+
+    /**
+     * Store the location of the business.
+     */
+    public function storeLocation(Request $request) {
+        $request->validate([
+            'latitude'  => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'address'   => 'required|string',
+        ]);
+
+        $info = auth()->user()->businessInformation;
+
+        if ($info) {
+            $info->update([
+                'latitude'  => $request->latitude,
+                'longitude' => $request->longitude,
+                'address'   => $request->address,
+            ]);
+        }
+        return response()->json(['status' => 'success']);
     }
 }

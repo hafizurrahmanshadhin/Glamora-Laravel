@@ -305,4 +305,32 @@ class ServiceProviderProfileController extends Controller {
             return redirect()->back()->with('t-error', 'An error occurred while updating service information.');
         }
     }
+
+    /**
+     * Update the service provider's location.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateLocation(Request $request) {
+        $data = $request->validate([
+            'latitude'  => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'address'   => 'required|string',
+        ]);
+
+        $info = auth()->user()->businessInformation;
+
+        if ($info) {
+            $info->update([
+                'latitude'  => $data['latitude'],
+                'longitude' => $data['longitude'],
+                'address'   => $data['address'],
+            ]);
+        } else {
+            auth()->user()->businessInformation()->create($data);
+        }
+
+        return response()->json(['status' => 'success']);
+    }
 }

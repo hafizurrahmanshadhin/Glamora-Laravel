@@ -18,4 +18,5 @@ Route::controller(ServiceProviderProfileController::class)->group(function () {
     Route::delete('/gallery/{gallery}', 'destroyGallery')->name('gallery.destroy');
     Route::get('/edit-service-information/{user}', 'editServiceInformation')->name('edit-service-information');
     Route::patch('/edit-service-information/{user}', 'updateServiceInformation')->name('update-service-information');
+    Route::post('/edit-service-location', 'updateLocation')->name('update-service-location');
 });
