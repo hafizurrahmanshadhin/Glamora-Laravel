@@ -20,7 +20,8 @@
                 <input type="hidden" name="appointment_time" id="appointmentTime">
                 <input type="hidden" name="service_provider_id" id="serviceProviderId" value="{{ $serviceProviderId }}">
                 <input type="hidden" name="service_id" id="serviceId" value="{{ $serviceId }}">
-                <input type="hidden" name="price" id="price" value="{{ $price }}">
+                {{-- <input type="hidden" name="price" id="price" value="{{ $price }}"> --}}
+                <input type="hidden" name="total_price" id="totalPrice" value="{{ $totalPrice }}">
 
                 {{-- Step - 1: How you want to take this service? START --}}
                 <div class="tm-multi-step-form-step active">
@@ -178,7 +179,11 @@
                                         </div>
                                         <div class="tm-multi-step-summary-item-component-right">
                                             <p class="genarel-para-new">Service:</p>
-                                            <p class="genarel-para-new-bold">{{ $serviceName ?? '' }}</p>
+                                            <p class="genarel-para-new-bold">
+                                                @foreach ($selectedServices as $service)
+                                                    {{ $service->service->services_name }}<br>
+                                                @endforeach
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -314,18 +319,19 @@
                 const date = $('#appointmentDate').val();
                 const time = $('#appointmentTime').val();
                 const serviceType = $('#serviceType').val();
-                let price = {{ $price }};
+                let totalPrice = {{ $totalPrice }};
 
                 // Apply discount if service type is salon_services
                 if (serviceType === 'salon_services') {
-                    price = price - (price * 0.10);
+                    totalPrice = totalPrice - (totalPrice * 0.10);
                 }
 
                 const formattedDate = moment(date).format('dddd, MMMM Do, YYYY');
 
                 $('#summary-date').text(formattedDate);
                 $('#summary-time').text(time);
-                $('.tm-multistep-total-value').text(`$${price.toFixed(2)}`);
+                $('.tm-multistep-total-value').text(`$${totalPrice.toFixed(2)}`);
+                $('#totalPrice').val(totalPrice.toFixed(2)); // Set the total price in the hidden input field
             }
 
             // Submit with Axios
@@ -343,7 +349,8 @@
                         appointment_date: $('#appointmentDate').val(),
                         appointment_time: $('#appointmentTime').val(),
                         service_provider_id: $('#serviceProviderId').val(),
-                        service_id: $('#serviceId').val()
+                        service_id: $('#serviceId').val(),
+                        total_price: $('#totalPrice').val() // Include the total price
                     }, {
                         headers: {
                             'X-CSRF-TOKEN': token

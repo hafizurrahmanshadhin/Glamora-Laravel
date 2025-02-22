@@ -96,8 +96,10 @@
                     <div class="booking-box">
                         <h3>Want to book {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}?</h3>
                         <p>Select the services you need and check availability</p>
+
                         <a class="armie-check-availability" href="javascript:void(0);"
-                            data-service-provider-id="{{ $user->id }}" data-service-id="{{ $serviceId }}">
+                            data-service-provider-id="{{ $user->id }}" data-service-id="{{ $serviceId }}"
+                            data-service-ids="{{ request('service_ids') }}">
                             Check Availability
                         </a>
                     </div>
@@ -186,13 +188,14 @@
         document.querySelectorAll('.armie-check-availability').forEach(function(element) {
             element.addEventListener('click', function() {
                 const serviceProviderId = this.getAttribute('data-service-provider-id');
-                const serviceId = this.getAttribute('data-service-id'); // Get the service_id
+                const serviceId = this.getAttribute('data-service-id');
+                const serviceIds = this.getAttribute('data-service-ids'); // Get the service_ids
 
                 @if (Auth::check())
                     @if (Auth::user()->role === 'client')
                         // User is logged in and role is 'client', directly open the route
                         window.location.href = "{{ route('booking-service') }}" + "?service_provider_id=" +
-                            serviceProviderId + "&service_id=" + serviceId;
+                            serviceProviderId + "&service_id=" + serviceId + "&service_ids=" + serviceIds;
                     @else
                         // User is logged in but not a 'client', show an alert
                         Swal.fire("Only clients can book services.", "", "info");
@@ -208,7 +211,8 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = "{{ route('login') }}?redirect_to=" +
-                                encodeURIComponent(window.location.href);
+                                encodeURIComponent(window.location.href + "&service_ids=" +
+                                    serviceIds);
                         } else if (result.isDenied) {
                             Swal.fire("You can sign in later", "", "info");
                         }

@@ -52,6 +52,7 @@ class ServiceProviderProfileController extends Controller {
             'reviews'       => $reviews,
             'averageRating' => $averageRating,
             'reviewCount'   => $reviewCount,
+            'serviceIds'    => $request->query('service_ids'), // Pass the service_ids to the view
         ]);
     }
 

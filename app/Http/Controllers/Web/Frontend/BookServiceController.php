@@ -25,6 +25,7 @@ class BookServiceController extends Controller {
     public function index(Request $request): View {
         $serviceProviderId = $request->query('service_provider_id');
         $serviceId         = $request->query('service_id');
+        $serviceIds        = explode(',', $request->query('service_ids'));
 
         // Fetch the UserService with the related Service
         $userService = UserService::with('service')
@@ -35,7 +36,16 @@ class BookServiceController extends Controller {
         $price       = $userService->total_price;
         $serviceName = $userService->service->services_name;
 
-        return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId', 'price', 'serviceName'));
+        // Fetch all selected services with their prices from UserService
+        $selectedServices = UserService::with('service')
+            ->whereIn('service_id', $serviceIds)
+            ->where('user_id', $serviceProviderId)
+            ->get();
+
+        // Calculate the total price of all selected services
+        $totalPrice = $selectedServices->sum('total_price');
+
+        return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId', 'price', 'serviceName', 'selectedServices', 'totalPrice'));
     }
 
     /**
@@ -52,6 +62,7 @@ class BookServiceController extends Controller {
                 'appointment_time'    => 'required|string',
                 'service_provider_id' => 'required|integer',
                 'service_id'          => 'required|integer',
+                'total_price'         => 'required|numeric', // Validate the total price
             ]);
 
             if ($validator->fails()) {
@@ -64,7 +75,7 @@ class BookServiceController extends Controller {
                 ->firstOrFail();
 
             // Calculate the price with discount if service_type is salon_services
-            $price = $userService->total_price;
+            $price = $request->total_price;
             if ($request->service_type === 'salon_services') {
                 $price = $price - ($price * 0.10);
             }

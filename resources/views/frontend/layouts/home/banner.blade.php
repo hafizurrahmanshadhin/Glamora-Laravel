@@ -174,32 +174,146 @@
 
 
 <script>
-    document.getElementById('searchBtn').addEventListener('click', function() {
-        // Get the service id from the hidden input and trim whitespace
-        let selectedServiceId = document.getElementById('service_id').value.trim();
+    document.addEventListener("DOMContentLoaded", function() {
+        // Array to hold the selected services.
+        let selectedServices = [];
 
-        // If no service is selected, do nothing (or alert the user)
-        if (!selectedServiceId) {
-            // Optionally, you can uncomment the line below to alert the user:
-            // alert("Please select a service first!");
-            return;
+        // Get references to all necessary elements.
+        const serviceSelector = document.getElementById("service-selector");
+        const subServiceSelector = document.getElementById("sub-service-selector");
+        const addButton = document.querySelector(".select-service-dropdown-add-btn");
+        const openServiceBtn = document.querySelector(".select-service-btn");
+        const doneBtn = document.querySelector(".done-btn");
+        const cancelBtn = document.querySelector(".select-service-dropdown-cancel-btn");
+        const selectedServiceContainer = document.querySelector(".selected-service-container");
+        const selectServiceDropdown = document.querySelector(".select-service-dropdown");
+        const selectedContainer = document.querySelector(".selected-service-container-list");
+        const serviceCount = document.getElementById("service-count");
+        const personCount = document.querySelector(".selected-person-count");
+
+        // Function to update hidden input based on selected services array.
+        function updateHiddenInput() {
+            let serviceIds = selectedServices.map(item => item.subService).join(',');
+            document.getElementById("service_id").value = serviceIds;
         }
 
-        // Get the location from the location input (using id "location-input")
-        let locationInput = document.getElementById('location-input').value.trim();
+        // Function to render the list of selected services.
+        const renderSelectedServices = () => {
+            selectedContainer.innerHTML = ""; // Clear current list
 
-        // Build query parameters (only location is used here; date is ignored)
-        let queryParams = new URLSearchParams();
-        if (locationInput) {
-            queryParams.append('location', locationInput);
+            selectedServices.forEach((item, index) => {
+                const serviceItem = document.createElement("div");
+                serviceItem.classList.add("service-item");
+                serviceItem.innerHTML = `
+                    <div class="item-left">
+                        <div class="item-title">${index + 1}. ${item.service}</div>
+                        <div class="item-sub-title">${item.subService}</div>
+                    </div>
+                    <div class="item-right">
+                        <span style="cursor:pointer" class="item-delete-btn" data-index="${index}">
+                            &#10005;
+                        </span>
+                    </div>
+                `;
+                selectedContainer.appendChild(serviceItem);
+            });
+
+            // Update the service count and selected person text.
+            serviceCount.innerText = selectedServices.length;
+            personCount.innerText = selectedServices.length > 0 ?
+                `${selectedServices.length} Person${selectedServices.length > 1 ? "s" : ""}` :
+                "Select";
+
+            // Attach delete functionality.
+            document.querySelectorAll(".item-delete-btn").forEach((btn) => {
+                btn.addEventListener("click", (event) => {
+                    const index = event.target.getAttribute("data-index");
+                    selectedServices.splice(index, 1); // Remove from array
+                    renderSelectedServices(); // Re-render UI
+                    if (selectedServices.length === 0) {
+                        addButton.style.display = "block";
+                        selectServiceDropdown.style.display = "block";
+                    }
+                    updateHiddenInput();
+                });
+            });
+        };
+
+        // Function to check if both selects have valid selections.
+        function checkSelection() {
+            if (serviceSelector.value !== "Select" && subServiceSelector.value !== "Select") {
+                addButton.style.display = "block"; // Show "Add" button
+            } else {
+                addButton.style.display = "none"; // Hide "Add" button
+            }
         }
 
-        // Construct the URL with query parameters
-        let url = "{{ url('available-services') }}/" + selectedServiceId;
-        if (queryParams.toString()) {
-            url += '?' + queryParams.toString();
-        }
+        // Attach change listeners to update button display.
+        serviceSelector.addEventListener("change", checkSelection);
+        subServiceSelector.addEventListener("change", checkSelection);
+        checkSelection(); // Initial check
 
-        window.location.href = url;
+        // Add button click event.
+        addButton.addEventListener("click", () => {
+            const selectedService = serviceSelector.value;
+            const selectedSubService = subServiceSelector.value;
+
+            // Validate selection.
+            if (selectedService === "Select" || selectedSubService === "Select") {
+                alert("Please select a valid service and sub-service.");
+                return;
+            }
+
+            // Add the selection to the array.
+            selectedServices.push({
+                service: selectedService,
+                subService: selectedSubService // This should be the service ID or service name as needed.
+            });
+
+            // Update hidden input with the full array.
+            updateHiddenInput();
+
+            // Hide the add button and dropdown, then re-render.
+            addButton.style.display = "none";
+            selectedServiceContainer.style.display = 'block';
+            renderSelectedServices();
+            selectServiceDropdown.style.display = "none";
+        });
+
+        // Additional UI toggling handlers.
+        doneBtn.addEventListener('click', () => {
+            selectedServiceContainer.style.display = "none";
+        });
+
+        openServiceBtn.addEventListener("click", () => {
+            selectedServiceContainer.style.display = "flex";
+        });
+
+        cancelBtn.addEventListener("click", () => {
+            selectServiceDropdown.style.display = "none";
+            selectedServiceContainer.style.display = "block";
+            addButton.style.display = "none";
+            serviceSelector.value = "Select";
+            subServiceSelector.value = "Select";
+        });
+
+        // Search button handler remains unchanged.
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            let selectedServiceIds = document.getElementById('service_id').value.trim();
+            if (!selectedServiceIds) {
+                return;
+            }
+            let locationInput = document.getElementById('location-input').value.trim();
+            let queryParams = new URLSearchParams();
+            queryParams.append('service_ids', selectedServiceIds);
+            if (locationInput) {
+                queryParams.append('location', locationInput);
+            }
+            let url = "{{ url('available-services') }}";
+            if (queryParams.toString()) {
+                url += '?' + queryParams.toString();
+            }
+            window.location.href = url;
+        });
     });
 </script>

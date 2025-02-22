@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Review;
+use App\Models\Service;
 use App\Models\UserService;
 use Illuminate\View\View;
 
@@ -13,15 +14,29 @@ class AvailableServicesController extends Controller {
      *
      * @return View
      */
-    public function index($serviceId): View {
+    public function index(): View {
         $rating     = request('rating');
         $priceRange = request('price_range');
         $location   = request('location');
 
-        $query = UserService::where('status', 'active')->with(['service', 'user']);
+        // Retrieve service IDs from query parameters.
+        $serviceIds = request('service_ids');
+        if ($serviceIds && !is_array($serviceIds)) {
+            $serviceIds = explode(',', $serviceIds);
+        }
 
-        if ($serviceId) {
-            $query->where('service_id', $serviceId);
+        // Fetch the selected service names regardless of approved services.
+        $selectedServiceNames = [];
+        if (!empty($serviceIds)) {
+            $selectedServiceNames = Service::whereIn('id', $serviceIds)
+                ->pluck('services_name')
+                ->toArray();
+        }
+
+        // Filter approved services based on serviceIds.
+        $query = UserService::where('status', 'active')->with(['service', 'user']);
+        if (!empty($serviceIds)) {
+            $query->whereIn('service_id', $serviceIds);
         }
 
         $approvedServices = $query->get()->map(function ($service) {
@@ -98,11 +113,12 @@ class AvailableServicesController extends Controller {
         }
 
         return view('frontend.layouts.available_services.index', [
-            'serviceId'        => $serviceId,
-            'approvedServices' => $approvedServices,
-            'selectedRating'   => $rating,
-            'selectedPrice'    => $priceRange,
-            'location'         => $location,
+            'serviceIds'           => $serviceIds,
+            'selectedServiceNames' => $selectedServiceNames,
+            'approvedServices'     => $approvedServices,
+            'selectedRating'       => $rating,
+            'selectedPrice'        => $priceRange,
+            'location'             => $location,
         ]);
     }
 }

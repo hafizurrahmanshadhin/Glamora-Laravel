@@ -10,6 +10,21 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
+
+    <style>
+        .services-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .services-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -18,12 +33,19 @@
         <section class="padding-top-from-header">
             <div class="categories-tax-service-section">
                 <div class="section-padding-x">
-                    <h2>Browse “{{ $approvedServices[0]->service->services_name ?? '' }}”</h2>
+                    @php
+                        $serviceNames = $selectedServiceNames;
+                    @endphp
+                    <h2>Browse “{{ implode(', ', $serviceNames) }}”</h2>
                     <p class="categori-heading-para">
                         Showing {{ $approvedServices->count() }} Results for <a href="#">Personal Tax Preparation
                             Preparation</a>
                     </p>
-                    <form method="GET" action="{{ route('available-services', ['serviceId' => $serviceId]) }}">
+
+                    <form method="GET" action="{{ route('available-services') }}">
+                        <input type="hidden" name="service_ids"
+                            value="{{ isset($serviceIds) ? implode(',', (array) $serviceIds) : '' }}">
+
                         <div class="explore-card-filter-wrapper">
                             <div class="rating-filter">
                                 <select name="rating" onchange="this.form.submit()">
@@ -54,32 +76,47 @@
 
 
                     {{-- Loop through active services --}}
+                    @php
+                        $groupedServices = $approvedServices->groupBy('user_id');
+                    @endphp
+
                     <div class="categories-tax-card-wrapper">
-                        @foreach ($approvedServices as $userService)
+                        @foreach ($groupedServices as $userId => $userServices)
+                            @php
+                                $user = $userServices->first()->user;
+                                $avgRating = $userServices->avg('average_rating');
+                                $totalReviews = $userServices->sum('review_count');
+                            @endphp
+
                             <div class="explore-tax-single-card">
-                                <div style="background-image: url('{{ $userService->image ? asset($userService->image) : asset('frontend/images/default.png') }}')"
-                                    class="explore-card-img-are">
+                                <div class="explore-card-img-are"
+                                    style="background-image: url('{{ $userServices->first()->image ? asset($userServices->first()->image) : asset('frontend/images/default.png') }}')">
                                 </div>
-                                <div class="explore-rating-area">
-                                    <p class="explore-ratings-star-count">
-                                        <span>
+
+                                <div class="explore-card-content">
+                                    <h4 class="expert-name">
+                                        {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}
+                                    </h4>
+
+                                    <div class="explore-rating-area">
+                                        <div class="stars-rating">
                                             @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= floor($userService->average_rating))
+                                                @if ($i <= floor($avgRating))
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                                         viewBox="0 0 24 24" fill="#FBB040">
                                                         <path
                                                             d="M12 2l2.39 6.85h7.21l-5.69 4.14 2.39 6.85-5.69-4.14-5.69 4.14 2.39-6.85-5.69-4.14h7.21z" />
                                                     </svg>
-                                                @elseif($i == ceil($userService->average_rating) && fmod($userService->average_rating, 1) != 0)
+                                                @elseif($i == ceil($avgRating) && fmod($avgRating, 1) != 0)
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                                         viewBox="0 0 24 24">
                                                         <defs>
-                                                            <linearGradient id="half-star">
+                                                            <linearGradient id="half-star-{{ $userId }}">
                                                                 <stop offset="50%" stop-color="#FBB040" />
                                                                 <stop offset="50%" stop-color="#BABABA" />
                                                             </linearGradient>
                                                         </defs>
-                                                        <path fill="url(#half-star)"
+                                                        <path fill="url(#half-star-{{ $userId }})"
                                                             d="M12 2l2.39 6.85h7.21l-5.69 4.14 2.39 6.85-5.69-4.14-5.69 4.14 2.39-6.85-5.69-4.14h7.21z" />
                                                     </svg>
                                                 @else
@@ -90,27 +127,37 @@
                                                     </svg>
                                                 @endif
                                             @endfor
-                                        </span>
-                                        <span class="explore-rating-count">
-                                            {{ $userService->average_rating ?? 0 }}
-                                            <span>({{ $userService->review_count ?? 0 }})</span>
-                                        </span>
-                                    </p>
+                                        </div>
+                                        <div class="rating-text">
+                                            <span>{{ number_format($avgRating, 1) ?? 0 }}</span>
+                                            <span>({{ $totalReviews ?? 0 }})</span>
+                                        </div>
+                                    </div>
 
-                                    <h5 class="tm-price">
-                                        {{ $userService->total_price ?? 0 }}$
-                                    </h5>
-                                </div>
-                                <div class="explore-card-heading-para">
-                                    <h4>
-                                        {{ $userService->user->first_name ?? '' }}
-                                        {{ $userService->user->last_name ?? '' }}
-                                    </h4>
-                                    <div class="check-availability-bookmarks">
-                                        <a
-                                            href="{{ route('service-provider-profile', ['userId' => $userService->user_id, 'serviceId' => $serviceId]) }}">
-                                            Check Availability
-                                        </a>
+                                    <div class="explore-card-heading-para">
+                                        <strong>Services Offered:</strong>
+                                    </div>
+
+                                    <div>
+                                        <ul class="services-list">
+                                            @foreach ($userServices as $service)
+                                                <li>
+                                                    <span
+                                                        class="service-name">{{ $service->service->services_name ?? '' }}</span>
+                                                    <span class="service-price">
+                                                        {{ $service->total_price ?? 0 }}$</span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+
+                                    <div class="explore-card-heading-para">
+                                        <div class="check-availability-bookmarks">
+                                            <a
+                                                href="{{ route('service-provider-profile', ['userId' => $user->id, 'serviceId' => $userServices->first()->service->id ?? $userServices->first()->service_id]) }}?service_ids={{ request('service_ids') }}">
+                                                Check Availability
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
