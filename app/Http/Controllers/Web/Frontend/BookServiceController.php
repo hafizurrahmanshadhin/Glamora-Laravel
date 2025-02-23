@@ -24,9 +24,10 @@ class BookServiceController extends Controller {
     public function index(Request $request): View {
         $serviceProviderId = $request->query('service_provider_id');
         $serviceId         = $request->query('service_id');
-        $serviceIds        = explode(',', $request->query('service_ids'));
 
-        // Fetch the UserService with the related Service
+        $serviceIdsParam = $request->query('service_ids');
+        $serviceIds      = $serviceIdsParam ? explode(',', $serviceIdsParam) : [$serviceId];
+
         $userService = UserService::with('service')
             ->where('user_id', $serviceProviderId)
             ->where('service_id', $serviceId)
@@ -35,13 +36,12 @@ class BookServiceController extends Controller {
         $price       = $userService->total_price;
         $serviceName = $userService->service->services_name;
 
-        // Fetch all selected services with their prices from UserService
+        // If multiple services are selected, get them; otherwise fallback to the single service
         $selectedServices = UserService::with('service')
-            ->whereIn('service_id', $serviceIds)
             ->where('user_id', $serviceProviderId)
+            ->whereIn('service_id', $serviceIds)
             ->get();
 
-        // Calculate the total price of all selected services
         $totalPrice = $selectedServices->sum('total_price');
 
         return view('frontend.layouts.booking.index', compact(

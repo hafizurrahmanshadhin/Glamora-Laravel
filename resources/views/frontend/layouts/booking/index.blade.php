@@ -19,7 +19,8 @@
                 <input type="hidden" name="appointment_time" id="appointmentTime">
                 <input type="hidden" name="service_provider_id" id="serviceProviderId" value="{{ $serviceProviderId }}">
                 <input type="hidden" name="service_id" id="serviceId" value="{{ $serviceId }}">
-                <input type="hidden" name="service_ids" id="service_ids" value="{{ implode(',', $serviceIds) }}">
+                <input type="hidden" name="service_ids" id="service_ids"
+                    value="{{ !empty($serviceIds) ? implode(',', $serviceIds) : '' }}">
                 <input type="hidden" name="total_price" id="totalPrice" value="{{ $totalPrice }}">
 
                 {{-- Step - 1: How you want to take this service? START --}}

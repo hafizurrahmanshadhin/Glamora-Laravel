@@ -21,7 +21,7 @@ Route::get('/reset', [ResetController::class, 'RunMigrations'])->name('reset');
 
 // Route for Landing Page
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/available-services', [AvailableServicesController::class, 'index'])->name('available-services');
+Route::get('/available-services/{serviceId?}', [AvailableServicesController::class, 'index'])->name('available-services');
 Route::get('/service-category', [ServiceCategoryController::class, 'index'])->name('service-category');
 Route::get('/service-provider-profile/{userId}/service/{serviceId}', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile');
 Route::get('/faq', [FAQController::class, 'index'])->name('faq');

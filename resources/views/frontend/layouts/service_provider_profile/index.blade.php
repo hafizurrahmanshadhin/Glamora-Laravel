@@ -84,7 +84,7 @@
                                     </div>
                                     <div class="tm-service-name-price-wrapper">
                                         <h4>{{ $userService->service->services_name ?? 'Unknown Service' }}</h4>
-                                        <h5 class="tm-price">{{ $userService->offered_price }}$</h5>
+                                        <h5 class="tm-price">{{ $userService->total_price }}$</h5>
                                     </div>
                                 </a>
                             @endforeach

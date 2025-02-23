@@ -34,15 +34,18 @@
             <div class="categories-tax-service-section">
                 <div class="section-padding-x">
                     @php
-                        $serviceNames = $selectedServiceNames;
+                        $heading = !empty($selectedServiceNames)
+                            ? implode(', ', $selectedServiceNames)
+                            : 'All Services';
                     @endphp
-                    <h2>Browse “{{ implode(', ', $serviceNames) }}”</h2>
+
+                    <h2>Browse “{{ $heading }}”</h2>
                     <p class="categori-heading-para">
                         Showing {{ $approvedServices->count() }} Results for <a href="#">Personal Tax Preparation
                             Preparation</a>
                     </p>
 
-                    <form method="GET" action="{{ route('available-services') }}">
+                    <form method="GET" action="{{ route('available-services', ['serviceId' => $serviceId]) }}">
                         <input type="hidden" name="service_ids"
                             value="{{ isset($serviceIds) ? implode(',', (array) $serviceIds) : '' }}">
 

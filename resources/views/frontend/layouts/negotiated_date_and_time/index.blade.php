@@ -231,7 +231,7 @@
                         @csrf
                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                         <input type="hidden" name="action_type" value="yes">
-                        <button type="submit" class="submit-btn">I’m Available</button>
+                        <button type="submit" class="submit-btn" id="yesFormBtn" disabled>I’m Available</button>
                     </form>
 
                     {{-- “Send Offer” form (shown if availability=no) --}}
@@ -258,7 +258,7 @@
 
     <script>
         (function() {
-            // Label active state
+            // Label active state for the availability radio group
             const labels = document.querySelectorAll('.confirm-time-left-label-wrapper label');
             labels.forEach((label) => {
                 label.addEventListener('click', () => {
@@ -273,54 +273,58 @@
                 const dateInput = document.getElementById('appointment-date-new');
                 const timeDropdown = document.getElementById('appointment-time');
                 const negotiateNotice = document.querySelector('.negotiate-time-notice');
-                const submitButton = document.querySelector('.submit-btn'); // in lower area
 
                 // Forms in lower area
                 const yesForm = document.getElementById('yesForm');
                 const noForm = document.getElementById('noForm');
+                const yesFormBtn = document.getElementById('yesFormBtn');
 
-                // By default, fields are disabled (as per HTML)
-                function toggleFieldsAndUI(enable) {
-                    if (enable) {
-                        // For "No" => show noForm and enable date/time fields
+                // Initialize default state (no radio selected)
+                yesForm.style.display = 'none';
+                noForm.style.display = 'none';
+                negotiateNotice.style.display = 'none';
+                yesFormBtn.disabled = true;
+
+                // Toggle function:
+                // If isNoSelected is true, switch to "No" state (show noForm, enable date/time fields)
+                // Otherwise, switch to "Yes" state (show yesForm and enable its button, disable date/time fields)
+                function toggleFieldsAndUI(isNoSelected) {
+                    if (isNoSelected) {
                         yesForm.style.display = 'none';
                         noForm.style.display = 'inline-block';
                         negotiateNotice.style.display = 'block';
                         dateInput.removeAttribute('disabled');
                         timeDropdown.removeAttribute('disabled');
+                        yesFormBtn.disabled = true;
                     } else {
-                        // For "Yes" => show yesForm and disable date/time fields
                         yesForm.style.display = 'inline-block';
                         noForm.style.display = 'none';
                         negotiateNotice.style.display = 'none';
                         dateInput.setAttribute('disabled', 'disabled');
                         timeDropdown.setAttribute('disabled', 'disabled');
+                        yesFormBtn.disabled = false;
                     }
                 }
 
-                // Initialize based on selection
-                toggleFieldsAndUI(false);
-
-                // Change form visibility and UI upon radio change
+                // Listen for changes on the radio buttons
                 radioButtons.forEach((radio) => {
                     radio.addEventListener('change', function() {
                         if (this.value === 'no') {
                             toggleFieldsAndUI(true);
-                        } else {
+                        } else if (this.value === 'yes') {
                             toggleFieldsAndUI(false);
                         }
                     });
                 });
 
-                // Before Submit, update hidden fields inside noForm with current values
+                // Before Submit of noForm, update hidden fields with current date/time values
                 noForm.addEventListener('submit', function(e) {
-                    // Optionally, you can perform validation here
                     document.getElementById('hiddenNewDate').value = dateInput.value;
                     document.getElementById('hiddenNewTime').value = timeDropdown.value;
                 });
             });
 
-            // jQuery datepicker initialization
+            // jQuery datepicker initialization remains as before
             $(function() {
                 $('#appointment-date-new').datepicker({
                     dateFormat: 'dd M yy',
@@ -328,7 +332,6 @@
                     changeYear: true,
                     showButtonPanel: true,
                     onSelect: function(dateText) {
-                        // dateText will be used as the new date
                         $(this).val(dateText);
                     },
                 });

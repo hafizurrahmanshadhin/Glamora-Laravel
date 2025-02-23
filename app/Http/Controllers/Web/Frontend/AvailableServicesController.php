@@ -12,31 +12,37 @@ class AvailableServicesController extends Controller {
     /**
      * Display the available beauty services page.
      *
+     * @param mixed $serviceId Optional serviceId from the route.
      * @return View
      */
-    public function index(): View {
+    public function index($serviceId = null): View {
         $rating     = request('rating');
         $priceRange = request('price_range');
         $location   = request('location');
 
-        // Retrieve service IDs from query parameters.
-        $serviceIds = request('service_ids');
-        if ($serviceIds && !is_array($serviceIds)) {
-            $serviceIds = explode(',', $serviceIds);
+        // Retrieve serviceIds from query parameters.
+        $queryParamIds = request('service_ids');
+        if ($queryParamIds && !is_array($queryParamIds)) {
+            $queryParamIds = explode(',', $queryParamIds);
         }
 
-        // Fetch the selected service names regardless of approved services.
+        // If no query parameter provided but route parameter exists, use that
+        if (empty($queryParamIds) && $serviceId) {
+            $queryParamIds = [$serviceId];
+        }
+
+        // Fetch selected service names (if any)
         $selectedServiceNames = [];
-        if (!empty($serviceIds)) {
-            $selectedServiceNames = Service::whereIn('id', $serviceIds)
+        if (!empty($queryParamIds)) {
+            $selectedServiceNames = Service::whereIn('id', $queryParamIds)
                 ->pluck('services_name')
                 ->toArray();
         }
 
-        // Filter approved services based on serviceIds.
+        // Build the query for approved services.
         $query = UserService::where('status', 'active')->with(['service', 'user']);
-        if (!empty($serviceIds)) {
-            $query->whereIn('service_id', $serviceIds);
+        if (!empty($queryParamIds)) {
+            $query->whereIn('service_id', $queryParamIds);
         }
 
         $approvedServices = $query->get()->map(function ($service) {
@@ -60,21 +66,19 @@ class AvailableServicesController extends Controller {
             return $service;
         });
 
-        // Filter by rating if selected (greater than or equal to the selected rating)
+        // Filter by rating if selected
         if ($rating) {
             $ratingMap = [
-                1 => [5.0, 5.9], // If selected "5 Star", show ratings 5.0 - 5.9
-                2 => [4.0, 4.9], // If selected "4 Star", show ratings 4.0 - 4.9
-                3 => [3.0, 3.9], // If selected "3 Star", show ratings 3.0 - 3.9
-                4 => [2.0, 2.9], // If selected "2 Star", show ratings 2.0 - 2.9
-                5 => [1.0, 1.9], // If selected "1 Star", show ratings 1.0 - 1.9
-                6 => [0.0, 0.9], // If selected "0 Star", show ratings 0.0 - 0.9
+                1 => [5.0, 5.9],
+                2 => [4.0, 4.9],
+                3 => [3.0, 3.9],
+                4 => [2.0, 2.9],
+                5 => [1.0, 1.9],
+                6 => [0.0, 0.9],
             ];
-
             if (isset($ratingMap[$rating])) {
                 [$minRating, $maxRating] = $ratingMap[$rating];
-
-                $approvedServices = $approvedServices->filter(function ($service) use ($minRating, $maxRating) {
+                $approvedServices        = $approvedServices->filter(function ($service) use ($minRating, $maxRating) {
                     return $service->average_rating >= $minRating && $service->average_rating <= $maxRating;
                 });
             }
@@ -104,7 +108,6 @@ class AvailableServicesController extends Controller {
             $approvedServices = $approvedServices->filter(function ($service) use ($location) {
                 if ($service->user && $service->user->businessInformation) {
                     $businessInfo = $service->user->businessInformation;
-                    // Check if either business_address or address contains the search string
                     return stripos($businessInfo->business_address, $location) !== false ||
                     stripos($businessInfo->address, $location) !== false;
                 }
@@ -113,7 +116,8 @@ class AvailableServicesController extends Controller {
         }
 
         return view('frontend.layouts.available_services.index', [
-            'serviceIds'           => $serviceIds,
+            'serviceId'            => $serviceId,
+            'serviceIds'           => $queryParamIds,
             'selectedServiceNames' => $selectedServiceNames,
             'approvedServices'     => $approvedServices,
             'selectedRating'       => $rating,
