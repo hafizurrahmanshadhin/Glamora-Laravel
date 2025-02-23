@@ -22,6 +22,7 @@ return new class extends Migration {
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->string('service_ids')->nullable();
             $table->enum('service_type', ['mobile_services', 'salon_services'])->nullable(false);
             $table->date('appointment_date')->nullable(false);
             $table->string('appointment_time')->nullable(false);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,15 +21,34 @@ class PaymentController extends Controller {
      * @param Booking $booking
      * @return View|RedirectResponse
      */
-    public function makePayment(Booking $booking) {
+    public function makePayment(Booking $booking): RedirectResponse | View {
         if ($booking->user_id !== Auth::id()) {
             return redirect()->route('beauty-expert-dashboard')->with('t-error', 'Unauthorized access.');
         }
 
-        // Load related user service
-        $booking->load('userService.service');
+        // Convert service_ids CSV to an array of integers.
+        $serviceIds = $booking->service_ids ? array_map('intval', explode(',', $booking->service_ids)) : [];
 
-        return view("frontend.layouts.payment.index", compact('booking'));
+        // Get the beauty expert's user ID from the "primary" user service.
+        $serviceProviderId = $booking->userService->user_id;
+
+        // Load all selected user_services related to those service IDs.
+        $selectedServices = UserService::with('service')
+            ->where('user_id', $serviceProviderId)
+            ->whereIn('service_id', $serviceIds)
+            ->get();
+
+        // Calculate discount percentage based on the booking’s service_type.
+        $discountPercentage = $booking->service_type === 'salon_services' ? 10 : 0;
+        // Sum up the total price from all selected services.
+        $servicesTotal = $selectedServices->sum('total_price');
+
+        return view('frontend.layouts.payment.index', compact(
+            'booking',
+            'selectedServices',
+            'discountPercentage',
+            'servicesTotal'
+        ));
     }
 
     public function checkout(Booking $booking) {

@@ -27,7 +27,7 @@ class BookingNotification extends Notification {
         $price       = number_format($this->booking->price, 2);
 
         return [
-            'message'          => "New booking for {$serviceName} by {$clientName} on {$date} at {$time} for \${$price}.",
+            'message'          => "New booking by {$clientName} on {$date} at {$time} for \${$price}.",
             'booking_id'       => $this->booking->id,
             'service_name'     => $serviceName,
             'client_name'      => $clientName,

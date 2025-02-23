@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
-use App\Models\Service;
 use App\Models\User;
 use App\Models\UserService;
 use App\Notifications\BookingNotification;
@@ -45,7 +44,15 @@ class BookServiceController extends Controller {
         // Calculate the total price of all selected services
         $totalPrice = $selectedServices->sum('total_price');
 
-        return view('frontend.layouts.booking.index', compact('serviceProviderId', 'serviceId', 'price', 'serviceName', 'selectedServices', 'totalPrice'));
+        return view('frontend.layouts.booking.index', compact(
+            'serviceProviderId',
+            'serviceId',
+            'price',
+            'serviceName',
+            'selectedServices',
+            'totalPrice',
+            'serviceIds'
+        ));
     }
 
     /**
@@ -62,7 +69,7 @@ class BookServiceController extends Controller {
                 'appointment_time'    => 'required|string',
                 'service_provider_id' => 'required|integer',
                 'service_id'          => 'required|integer',
-                'total_price'         => 'required|numeric', // Validate the total price
+                'total_price'         => 'required|numeric',
             ]);
 
             if ($validator->fails()) {
@@ -74,16 +81,14 @@ class BookServiceController extends Controller {
                 ->where('service_id', $request->service_id)
                 ->firstOrFail();
 
-            // Calculate the price with discount if service_type is salon_services
+            // Use the total price from the request.
             $price = $request->total_price;
-            if ($request->service_type === 'salon_services') {
-                $price = $price - ($price * 0.10);
-            }
 
             // Create the booking with user_service_id
             $booking = Booking::create([
                 'user_id'          => Auth::id(),
                 'user_service_id'  => $userService->id,
+                'service_ids'      => $request->input('service_ids'),
                 'service_type'     => $request->service_type,
                 'appointment_date' => $request->appointment_date,
                 'appointment_time' => $request->appointment_time,
@@ -105,13 +110,26 @@ class BookServiceController extends Controller {
     /**
      * Display the negotiated date and time page.
      *
+     * @param Booking $booking
      * @return View
      */
     public function viewNegotiate(Booking $booking): View {
-        // Fetch the service via the user service relationship
-        $service = $booking->userService->service;
+        // Convert stored service_ids to an array of integers.
+        $serviceIds = $booking->service_ids ? array_map('intval', explode(',', $booking->service_ids)) : [];
 
-        return view('frontend.layouts.negotiated_date_and_time.index', compact('booking', 'service'));
+        // Retrieve the service provider ID from the related userService record.
+        $serviceProviderId = $booking->userService->user_id;
+
+        // Fetch all selected UserService records with related service info.
+        $selectedServices = UserService::with('service')
+            ->where('user_id', $serviceProviderId)
+            ->whereIn('service_id', $serviceIds)
+            ->get();
+
+        return view('frontend.layouts.negotiated_date_and_time.index', [
+            'booking'          => $booking,
+            'selectedServices' => $selectedServices,
+        ]);
     }
 
     /**

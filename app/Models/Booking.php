@@ -21,6 +21,7 @@ class Booking extends Model {
     protected $fillable = [
         'user_id',
         'user_service_id',
+        'service_ids',
         'service_type',
         'appointment_date',
         'appointment_time',
@@ -32,6 +33,7 @@ class Booking extends Model {
         'id'               => 'integer',
         'user_id'          => 'integer',
         'user_service_id'  => 'integer',
+        'service_ids'      => 'string',
         'service_type'     => 'string',
         'appointment_date' => 'date',
         'appointment_time' => 'string',
