@@ -10,6 +10,7 @@ Glamora is a Laravel-based application that connects clients with beauty service
   - [Features](#features)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+  - [Glamora](#glamora)
 
 ## Overview
 
@@ -45,11 +46,12 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
 
 ## Prerequisites
 
-- PHP >= 8.0
+- PHP >= 8.2
 - Composer
-- MySQL or another supported database
-- Node.js and npm (for front-end asset compilation)
+- MySQL
 - Stripe API keys for payment processing
+- Twilio keys for SMS notifications
+- Reverb keys for real-time messaging
 
 ## Installation
 
@@ -102,35 +104,72 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
     STRIPE_SECRET=your_stripe_secret_key
     ```
 
-8. Run the database migrations:
+8. Set up Twilio keys in your .env:
+
+    ```bash
+    TWILIO_SID=your_twilio_sid
+    TWILIO_AUTH_TOKEN=your_twilio_auth_token
+    TWILIO_FROM=your_twilio_phone_number
+    ```
+
+9. Run the database migrations:
 
     ```bash
     php artisan migrate
     php artisan migrate:fresh --seed
     ```
 
-9. Star the development server:
+10. Star the development server:
 
     ```bash
     php artisan serve
     ```
 
-10. Start job processing:
+11. Start job processing:
 
     ```bash
     php artisan queue:work
     ```
 
-11. Start reverb websocket server:
+12. Start reverb websocket server:
 
     ```bash
     php artisan reverb:start --debug
     ```
 
-12. Start the laravel development server:
-
-    ```bash
-    php artisan serve
-    ```
-
 13. Visit `http://localhost:8000` in your browser to view the application.
+
+## Glamora
+
+[Live Link Our Server](https://armie0101.softvencefsd.xyz)
+
+[Live Link Client Server](https://glamora.au)
+
+> ---
+>
+> ## 🔑 Login Credentials
+>
+>
+> ## For Admin
+>
+> **Email:** <admin@admin.com>
+>
+> **Password:** 12345678
+>
+> ---
+>
+> ## For Client
+>
+> **Email:** <client@client.com>
+>
+> **Password:** 12345678
+>
+> ---
+>
+> ## For Beauty Expert
+>
+> **Email:** <beauty-expert@beauty-expert.com>
+>
+> **Password:** 12345678
+>
+> ---
