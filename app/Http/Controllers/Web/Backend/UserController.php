@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Web\Backend;
 
-use App\Http\Controllers\Controller;
-use App\Mail\StatusUpdateMail;
-use App\Models\User;
 use Exception;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use App\Mail\StatusUpdateMail;
 use Yajra\DataTables\DataTables;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller {
     /**
@@ -111,6 +112,7 @@ class UserController extends Controller {
 
             // Queue the status update email
             Mail::to($user->email)->queue(new StatusUpdateMail($user));
+            Log::info('Mail Send to mail: ' . $user->email);
 
             return response()->json([
                 'success' => true,
