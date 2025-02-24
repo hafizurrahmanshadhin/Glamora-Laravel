@@ -144,6 +144,8 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
 
 ## [Live Link](https://glamora.au)
 
+---
+
 > ---
 >
 > ## 🔑 Login Credentials
