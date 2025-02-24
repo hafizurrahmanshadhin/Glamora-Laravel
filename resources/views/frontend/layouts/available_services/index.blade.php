@@ -88,7 +88,9 @@
                             @php
                                 $user = $userServices->first()->user;
                                 $avgRating = $userServices->avg('average_rating');
-                                $totalReviews = $userServices->sum('review_count');
+                                $totalReviews = $userServices->count()
+                                    ? $userServices->sum('review_count') / $userServices->count()
+                                    : 0;
                             @endphp
 
                             <div class="explore-tax-single-card">
