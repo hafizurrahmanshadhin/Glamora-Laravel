@@ -11,7 +11,8 @@ Glamora is a Laravel-based application that connects clients with beauty service
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Glamora](#glamora)
-  - [Live Link](#live-link)
+  - [Live Link Our Server](#live-link-our-server)
+  - [Live Link Client Server](#live-link-client-server)
 
 ## Overview
 
@@ -142,7 +143,9 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
 
 ## Glamora
 
-## [Live Link](https://glamora.au)
+## [Live Link Our Server](https://armie0101.softvencefsd.xyz)
+
+## [Live Link Client Server](https://glamora.au)
 
 ---
 
