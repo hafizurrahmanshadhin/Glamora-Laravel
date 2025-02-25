@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/tarek.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/categories.css') }}">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.css') }}">
 @endpush
 
 @section('content')
@@ -253,7 +253,7 @@
 
 
 @push('scripts')
-    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.js') }}"></script>
     <script src="{{ asset('frontend/js/joint-client.js') }}"></script>
 
     <script>

@@ -3,13 +3,13 @@
 @section('title', 'Service Provider Registration')
 
 @push('styles')
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/leaflet.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/plugins/owl.carousel.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/home.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/service-provider-step-form.css') }}" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/flatpickr.min.css') }}" />
+    <script src="{{ asset('frontend/custom-downloaded-cdn/flatpickr.js') }}"></script>
+    <link href="{{ asset('frontend/custom-downloaded-cdn/aos.css') }}" rel="stylesheet" />
 @endpush
 
 @section('content')

@@ -16,15 +16,11 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek-common.css') }}" />
 <link rel="stylesheet" href="{{ asset('frontend/css/common.css') }}" />
 <link rel="stylesheet" href="{{ asset('frontend/css/home.css') }}" />
-
-<link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
-<link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="{{ asset('frontend/custom-downloaded-cdn/slick.min.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ asset('frontend/custom-downloaded-cdn/slick-theme.min.css') }}" />
+<link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/flatpickr.min.css') }}" />
+<script src="{{ asset('frontend/custom-downloaded-cdn/flatpickr.js') }}"></script>
+<link href="{{ asset('frontend/custom-downloaded-cdn/aos.css') }}" rel="stylesheet" />
 
 {{-- Sweet Alert css --}}
 <link href="{{ asset('backend/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css">

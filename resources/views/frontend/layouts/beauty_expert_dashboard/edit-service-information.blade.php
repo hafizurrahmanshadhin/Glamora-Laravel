@@ -3,13 +3,13 @@
 @section('title', 'Edit Service Information')
 
 @push('styles')
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/leaflet.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/plugins/owl.carousel.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/home.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/service-provider-step-form.css') }}" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/flatpickr.min.css') }}" />
+    <script src="{{ asset('frontend/custom-downloaded-cdn/flatpickr.js') }}"></script>
+    <link href="{{ asset('frontend/custom-downloaded-cdn/aos.css') }}" rel="stylesheet" />
 @endpush
 
 @section('content')
@@ -61,8 +61,8 @@
 
                         <div class="item">
                             <label for="bio">Bio</label>
-                            <input type="text" name="bio" id="bio" value="{{ old('bio', $businessInfo->bio) }}"
-                                required>
+                            <input type="text" name="bio" id="bio"
+                                value="{{ old('bio', $businessInfo->bio) }}" required>
                         </div>
 
                         <div class="item">
@@ -95,12 +95,12 @@
                                     fill="none">
                                     <path
                                         d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582
-                                                                                                                                                        25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
-                                                                                                                                                        33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
-                                                                                                                                                        34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
-                                                                                                                                                        29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
-                                                                                                                                                        6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
-                                                                                                                                                        6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                                                                                                                                            25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
+                                                                                                                                                            33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
+                                                                                                                                                            34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
+                                                                                                                                                            29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
+                                                                                                                                                            6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
+                                                                                                                                                            6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
                                         stroke="#222222" stroke-width="1.5" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
@@ -372,9 +372,9 @@
                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                 <path
                                                     d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4
-                                                                                                         24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
-                                                                                                         47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
-                                                                                                         0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                                                                                             24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
+                                                                                                             47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
+                                                                                                             0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                             </svg>
                                         </div>
                                     </td>

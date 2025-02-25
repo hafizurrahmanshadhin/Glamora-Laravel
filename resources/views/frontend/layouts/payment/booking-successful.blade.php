@@ -5,7 +5,7 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('frontend/css/tarek.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/categories.css') }}">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.css') }}">
 @endpush
 
 @section('content')
@@ -35,7 +35,7 @@
 @endsection
 
 @push('scripts')
-    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.js') }}"></script>
+    <script src="{{ asset('frontend/custom-downloaded-cdn/js.stripe.com') }}"></script>
     <script src="{{ asset('frontend/js/joint-client.js') }}"></script>
 @endpush

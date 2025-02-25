@@ -110,7 +110,10 @@ class UserController extends Controller {
             $user->save();
 
             // Queue the status update email
-            Mail::to($user->email)->queue(new StatusUpdateMail($user));
+            // Mail::to($user->email)->queue(new StatusUpdateMail($user));
+
+            // Send the status update email directly
+            Mail::to($user->email)->send(new StatusUpdateMail($user));
 
             return response()->json([
                 'success' => true,

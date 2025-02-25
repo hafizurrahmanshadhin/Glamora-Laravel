@@ -4,8 +4,8 @@
 <script src="{{ asset('frontend/js/main.js') }}"></script>
 <script src="{{ asset('frontend/js/home.js') }}"></script>
 <script src="{{ asset('frontend/js/search-feature.js') }}"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{{ asset('frontend/custom-downloaded-cdn/aos.js') }}"></script>
+<script src="{{ asset('frontend/custom-downloaded-cdn/axios.min.js') }}"></script>
 
 {{-- Sweet Alerts js --}}
 <script src="{{ asset('backend/libs/sweetalert2/sweetalert2.min.js') }}"></script>
@@ -24,7 +24,7 @@
     });
 </script>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script type="text/javascript" src="{{ asset('frontend/custom-downloaded-cdn/slick.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $(".slider").slick({

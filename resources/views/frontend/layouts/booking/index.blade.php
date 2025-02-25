@@ -5,7 +5,7 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('frontend/css/tarek.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/categories.css') }}">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.css') }}">
 @endpush
 
 @section('content')
@@ -254,14 +254,14 @@
 
     <div id="loader"
         style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
-        <img src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="Loading...">
+        <img src="{{ asset('frontend/custom-downloaded-cdn/loader.gif') }}" alt="Loading...">
     </div>
 @endsection
 
 @push('scripts')
-    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.js') }}"></script>
     <script src="{{ asset('frontend/js/joint-client.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="{{ asset('frontend/custom-downloaded-cdn/moment.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
