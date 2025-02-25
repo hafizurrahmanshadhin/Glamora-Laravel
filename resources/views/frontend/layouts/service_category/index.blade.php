@@ -19,20 +19,22 @@
         {{-- service category banner section start --}}
         <section class="service-category-banner-section">
             <div class="service-banner-content-wrapper">
-                <h1>Explore Our Categories of Expert <span>Beauty
-                        Services</span> </h1>
-                <p>Find the perfect beauty professional for your unique
+                <h1>Explore Our Categories of Expert <span>Beauty Services</span> </h1>
+                <p>
+                    Find the perfect beauty professional for your unique
                     needs. Whether you're looking for a stunning new
                     hairstyle, flawless makeup for a special event, or a
                     refreshing spa experience, we have an expert ready to
-                    help you shine.</p>
-                <!-- search container start -->
-                <div class="search-container ">
+                    help you shine.
+                </p>
 
+                {{-- search container start --}}
+                <div class="search-container ">
                     <div class="item location">
                         <div class="title">Location</div>
-                        <input placeholder="Search" type="text" />
+                        <input id="location-input" placeholder="Search" type="text" value="{{ request('location') }}">
                     </div>
+
                     <div class="item date">
                         <div class="title">Date</div>
                         <div class="date-picker-container">
@@ -45,6 +47,7 @@
                             </svg>
                         </div>
                     </div>
+
                     <div class="item service">
                         <div class="title">Service</div>
                         <div class="select-service-container">
@@ -55,9 +58,9 @@
                                         d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
                                 </svg>
                             </div>
+
                             <div class="selected-service-container">
                                 <div class="selected-service-container-list">
-
                                 </div>
                                 <div class="selected-service-container-top mt-4">
                                     <div class="selected-service-container-count">
@@ -67,6 +70,7 @@
                                 </div>
                                 <div class="done-btn">Done</div>
                             </div>
+
                             <div class="select-service-dropdown">
                                 <div class="select-service-dropdown-options d-flex flex-column gap-3 ">
                                     <div class="item d-flex flex-column gap-2">
@@ -74,35 +78,36 @@
                                         <select id="service-selector" class="form-select"
                                             aria-label="Default select example">
                                             <option selected>Select</option>
-                                            <option value="Non Bridal">Non Bridal (Party, Specials Occasions)</option>
+                                            <option value="Non Bridal">Non Bridal (Party, Special Occasion)</option>
                                             <option value="Bride">Bride</option>
                                             <option value="Flower Girl">Flower Girl</option>
                                         </select>
                                     </div>
+
                                     <div class="item d-flex flex-column gap-2">
                                         <div class="title">What service would you like?</div>
-                                        <select id="sub-service-selector" class="form-select"
-                                            aria-label="Default select example">
-                                            <option selected>Select</option>
-                                            <option value="Mackup Only">Mackup Only</option>
-                                            <option value="Hair Down">Hair Down</option>
-                                            <option value="Hair Up">Hair Up</option>
-                                            <option value="Makeup and Hair Down">Makeup and Hair Down</option>
-                                            <option value="Makeup and Hair Up">Makeup and Hair Up</option>
+                                        <select name="serviceId" class="form-select" id="sub-service-selector">
+                                            <option value="" selected disabled>Select</option>
+                                            @foreach ($services as $service)
+                                                <option value="{{ $service->id }}">{{ $service->services_name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
+
                                 </div>
+
                                 <div class="d-flex gap-4 align-items-center ">
                                     <div style="display: none;" class="select-service-dropdown-add-btn mt-4">Add</div>
                                     <div class="select-service-dropdown-cancel-btn mt-4">Cancel</div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                     <div class="search-btn-container">
                         <div class="title"></div>
-                        <a href="./service-category.html" class="search-btn mt-4">
+                        <input type="hidden" name="service_id" id="service_id">
+                        <button id="searchBtn" class="search-btn mt-4">
                             <svg xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30"
                                 fill="none">
                                 <path
@@ -111,10 +116,10 @@
                                 <path d="M21.0547 20.5547L26.7501 26.2501" stroke="white" stroke-width="3"
                                     stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                        </a>
+                        </button>
                     </div>
                 </div>
-                <!-- search container end -->
+                {{-- search container end --}}
             </div>
         </section>
         {{-- service category banner section end --}}
@@ -127,7 +132,7 @@
                         <div class="categories-tax-single-card">
                             <div class="catagories-tax-card-hover d-none"></div>
                             <h3>{{ $service->services_name ?? '' }}</h3>
-                            <div class="categories-text-wrapper">
+                            {{-- <div class="categories-text-wrapper">
                                 <p>
                                     <img src="{{ asset('frontend/images/people-tick.svg') }}" alt>
                                     {{ $service->user_services_count ?? '' }} expert
@@ -137,7 +142,7 @@
                                     <img src="{{ asset('frontend/images/tick-Icon.svg') }}" alt>
                                     40 works in progress
                                 </p>
-                            </div>
+                            </div> --}}
                             <a href="{{ route('available-services', ['serviceId' => $service->id]) }}">Explore
                                 <img src="{{ asset('frontend/images/arrow-right.svg') }}" alt>
                             </a>
@@ -154,4 +159,148 @@
 
 @push('scripts')
     <script src="{{ asset('frontend/js/owl.carousel.min.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Array to hold the selected services.
+            let selectedServices = [];
+
+            // Get references to all necessary elements.
+            const serviceSelector = document.getElementById("service-selector");
+            const subServiceSelector = document.getElementById("sub-service-selector");
+            const addButton = document.querySelector(".select-service-dropdown-add-btn");
+            const openServiceBtn = document.querySelector(".select-service-btn");
+            const doneBtn = document.querySelector(".done-btn");
+            const cancelBtn = document.querySelector(".select-service-dropdown-cancel-btn");
+            const selectedServiceContainer = document.querySelector(".selected-service-container");
+            const selectServiceDropdown = document.querySelector(".select-service-dropdown");
+            const selectedContainer = document.querySelector(".selected-service-container-list");
+            const serviceCount = document.getElementById("service-count");
+            const personCount = document.querySelector(".selected-person-count");
+
+            // Function to update hidden input based on selected services array.
+            function updateHiddenInput() {
+                let serviceIds = selectedServices.map(item => item.subService).join(',');
+                document.getElementById("service_id").value = serviceIds;
+            }
+
+            // Function to render the list of selected services.
+            const renderSelectedServices = () => {
+                selectedContainer.innerHTML = ""; // Clear current list
+
+                selectedServices.forEach((item, index) => {
+                    const serviceItem = document.createElement("div");
+                    serviceItem.classList.add("service-item");
+                    serviceItem.innerHTML = `
+                        <div class="item-left">
+                            <div class="item-title">${index + 1}. ${item.service}</div>
+                            <div class="item-sub-title">${item.subService}</div>
+                        </div>
+                        <div class="item-right">
+                            <span style="cursor:pointer" class="item-delete-btn" data-index="${index}">
+                                &#10005;
+                            </span>
+                        </div>
+                    `;
+                    selectedContainer.appendChild(serviceItem);
+                });
+
+                // Update the service count and selected person text.
+                serviceCount.innerText = selectedServices.length;
+                personCount.innerText = selectedServices.length > 0 ?
+                    `${selectedServices.length} Person${selectedServices.length > 1 ? "s" : ""}` :
+                    "Select";
+
+                // Attach delete functionality.
+                document.querySelectorAll(".item-delete-btn").forEach((btn) => {
+                    btn.addEventListener("click", (event) => {
+                        const index = event.target.getAttribute("data-index");
+                        selectedServices.splice(index, 1); // Remove from array
+                        renderSelectedServices(); // Re-render UI
+                        if (selectedServices.length === 0) {
+                            addButton.style.display = "block";
+                            selectServiceDropdown.style.display = "block";
+                        }
+                        updateHiddenInput();
+                    });
+                });
+            };
+
+            // Function to check if both selects have valid selections.
+            function checkSelection() {
+                if (serviceSelector.value !== "Select" && subServiceSelector.value !== "Select") {
+                    addButton.style.display = "block"; // Show "Add" button
+                } else {
+                    addButton.style.display = "none"; // Hide "Add" button
+                }
+            }
+
+            // Attach change listeners to update button display.
+            serviceSelector.addEventListener("change", checkSelection);
+            subServiceSelector.addEventListener("change", checkSelection);
+            checkSelection(); // Initial check
+
+            // Add button click event.
+            addButton.addEventListener("click", () => {
+                const selectedService = serviceSelector.value;
+                const selectedSubService = subServiceSelector.value;
+
+                // Validate selection.
+                if (selectedService === "Select" || selectedSubService === "Select") {
+                    alert("Please select a valid service and sub-service.");
+                    return;
+                }
+
+                // Add the selection to the array.
+                selectedServices.push({
+                    service: selectedService,
+                    subService: selectedSubService // This should be the service ID or service name as needed.
+                });
+
+                // Update hidden input with the full array.
+                updateHiddenInput();
+
+                // Hide the add button and dropdown, then re-render.
+                addButton.style.display = "none";
+                selectedServiceContainer.style.display = 'block';
+                renderSelectedServices();
+                selectServiceDropdown.style.display = "none";
+            });
+
+            // Additional UI toggling handlers.
+            doneBtn.addEventListener('click', () => {
+                selectedServiceContainer.style.display = "none";
+            });
+
+            openServiceBtn.addEventListener("click", () => {
+                selectedServiceContainer.style.display = "flex";
+            });
+
+            cancelBtn.addEventListener("click", () => {
+                selectServiceDropdown.style.display = "none";
+                selectedServiceContainer.style.display = "block";
+                addButton.style.display = "none";
+                serviceSelector.value = "Select";
+                subServiceSelector.value = "Select";
+            });
+
+            // Search button handler remains unchanged.
+            document.getElementById('searchBtn').addEventListener('click', function() {
+                let selectedServiceIds = document.getElementById('service_id').value.trim();
+                if (!selectedServiceIds) {
+                    return;
+                }
+                let locationInput = document.getElementById('location-input').value.trim();
+                let queryParams = new URLSearchParams();
+                queryParams.append('service_ids', selectedServiceIds);
+                if (locationInput) {
+                    queryParams.append('location', locationInput);
+                }
+                let url = "{{ url('available-services') }}";
+                if (queryParams.toString()) {
+                    url += '?' + queryParams.toString();
+                }
+                window.location.href = url;
+            });
+        });
+    </script>
 @endpush
