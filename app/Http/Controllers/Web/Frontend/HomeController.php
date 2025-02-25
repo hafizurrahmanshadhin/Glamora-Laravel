@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\UserService;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\View\View;
 
 class HomeController extends Controller {
@@ -17,6 +18,7 @@ class HomeController extends Controller {
      * @return View
      */
     public function index(): View {
+        Artisan::call('optimize:clear');
         $systemSetting = SystemSetting::first();
 
         $approvedServices = UserService::where('status', 'active')

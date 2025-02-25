@@ -131,6 +131,8 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
 
     ```bash
     php artisan queue:work
+
+    #/usr/local/bin/php /home/qfe9ow4285wl/public_html/artisan queue:work
     ```
 
 12. Start reverb websocket server:
