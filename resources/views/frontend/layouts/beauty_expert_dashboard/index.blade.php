@@ -108,7 +108,7 @@
                 <div class="bottom">
                     <div class="bottom-top">
                         <div class="item">
-                            <div class="title">Rating as buyer</div>
+                            <div class="title">Rating</div>
                             <div class="ratings">
                                 @if ($averageRating)
                                     @for ($i = 1; $i <= 5; $i++)
@@ -203,15 +203,6 @@
                                         <p class="armie-service-type-name">
                                             {{ $booking->userService->service->services_name ?? '' }}
                                         </p>
-                                    </div>
-                                    <div class="check-availability-bookmarks">
-                                        <a
-                                            href="{{ route('service-provider-profile', [
-                                                'userId' => $booking->user->id,
-                                                'serviceId' => $booking->userService->service->id,
-                                            ]) }}">
-                                            View
-                                        </a>
                                     </div>
                                 </div>
                             </div>

@@ -71,6 +71,15 @@ class ServiceSeeder extends Seeder {
                 'updated_at'    => '2025-01-19 00:06:37',
                 'deleted_at'    => null,
             ],
+            [
+                'id'            => 8,
+                'services_name' => 'Bridal make up or hair',
+                'platform_fee'  => 20,
+                'status'        => 'active',
+                'created_at'    => '2025-01-19 00:06:37',
+                'updated_at'    => '2025-01-19 00:06:37',
+                'deleted_at'    => null,
+            ],
         ]);
     }
 }
