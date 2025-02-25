@@ -108,7 +108,7 @@
 
 @push('scripts')
     <script src="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.js') }}"></script>
-    <script src="{{ asset('frontend/custom-downloaded-cdn/js.stripe.com') }}"></script>
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="{{ asset('frontend/js/joint-client.js') }}"></script>
     <script>
         const stripe = Stripe('{{ config('services.stripe.key') }}');
