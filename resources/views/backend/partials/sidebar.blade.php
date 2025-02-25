@@ -129,6 +129,39 @@
                     </a>
                 </li>
 
+                {{-- <hr> --}}
+                {{-- CMS --}}
+                {{-- <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->is('admin/settings*') ? 'active' : '' }}"
+                        href="#sidebarPages" data-bs-toggle="collapse" role="button"
+                        aria-expanded="{{ request()->is('admin/settings*') ? 'true' : 'false' }}"
+                        aria-controls="sidebarPages">
+                        <i class="ri-settings-3-line"></i>
+                        <span data-key="t-pages">CMS</span>
+                    </a>
+
+                    <div class="collapse menu-dropdown {{ request()->is('admin/settings*') ? 'show' : '' }}"
+                        id="sidebarPages">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('profile.setting') }}"
+                                    class="nav-link {{ request()->routeIs('profile.setting') ? 'active' : '' }}"
+                                    data-key="t-profile-setting">
+                                    Profile Settings
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('system.index') }}"
+                                    class="nav-link {{ request()->routeIs('system.index') ? 'active' : '' }}"
+                                    data-key="t-system-settings">
+                                    System Settings
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> --}}
+
                 <hr>
                 {{-- Settings --}}
                 <li class="nav-item">
