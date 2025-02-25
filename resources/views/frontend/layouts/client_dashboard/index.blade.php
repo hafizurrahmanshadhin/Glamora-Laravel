@@ -67,7 +67,7 @@
                 <div class="text-content">
                     <div class="title-italic">Welcome back,</div>
                     <div class="banner-title">
-                        {{ ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) ?? '' }}
+                        {{ Auth::user()->first_name . ' ' . Auth::user()->last_name ?? '' }}
                     </div>
                     <div class="text">
                         Start now to connect with trusted tax professionals, book appointments, and manage your

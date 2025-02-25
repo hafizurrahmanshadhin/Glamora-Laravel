@@ -81,7 +81,7 @@
                                 <div class="title">Select who would like the service</div>
                                 <select id="service-selector" class="form-select" aria-label="Default select example">
                                     <option selected>Select</option>
-                                    <option value="Non Bridal">Non Bridal (Party, Specials Occasions)</option>
+                                    <option value="Non Bridal">Non Bridal (Party, Special Occasion)</option>
                                     <option value="Bride">Bride</option>
                                     <option value="Flower Girl">Flower Girl</option>
                                 </select>

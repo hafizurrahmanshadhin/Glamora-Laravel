@@ -37,7 +37,7 @@ class ServiceSeeder extends Seeder {
             ],
             [
                 'id'            => 4,
-                'services_name' => 'Half Up, Half Down Only',
+                'services_name' => 'Hair half up, half down',
                 'platform_fee'  => 20,
                 'status'        => 'active',
                 'created_at'    => '2025-01-19 00:05:58',
@@ -64,7 +64,7 @@ class ServiceSeeder extends Seeder {
             ],
             [
                 'id'            => 7,
-                'services_name' => 'Makeup with Half Up, Down',
+                'services_name' => 'Makeup with hair half up, half down',
                 'platform_fee'  => 20,
                 'status'        => 'active',
                 'created_at'    => '2025-01-19 00:06:37',

@@ -12,7 +12,7 @@
                 <div class="sign-in-up-form-area">
                     <div class="form-header-para">
                         <h1>Sign Up</h1>
-                        <p>Old user? <a href="{{ route('login') }}">Log Into Your account</a></p>
+                        <p>Existing User? <a href="{{ route('login') }}">Sign in here</a></p>
                     </div>
 
                     <form class="tm-sign-in-up-form" method="POST" action="{{ route('register') }}">
@@ -80,8 +80,6 @@
                         </div>
 
                         <button class="sign-up-common-btn" type="submit">Sign Up</button>
-                        <p class="tm-create-btn-link">Already have an account?? <a href="{{ route('login') }}">Sign In</a>
-                        </p>
                     </form>
                 </div>
             </div>
