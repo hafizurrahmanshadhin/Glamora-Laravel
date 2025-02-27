@@ -4,6 +4,7 @@ use App\Http\Controllers\Web\Backend\AvailableServicesController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
+use App\Http\Controllers\Web\Backend\HomePageImageController;
 use App\Http\Controllers\Web\Backend\NewsletterSubscriptionController;
 use App\Http\Controllers\Web\Backend\ReportController;
 use App\Http\Controllers\Web\Backend\ServiceController;
@@ -75,4 +76,11 @@ Route::controller(NewsletterSubscriptionController::class)->group(function () {
     Route::get('/newsletter-subscription', 'index')->name('newsletter-subscription.index');
     Route::get('/newsletter-subscription/status/{id}', 'status')->name('newsletter-subscription.status');
     Route::delete('/newsletter-subscription/destroy/{id}', 'destroy')->name('newsletter-subscription.destroy');
+});
+
+//! Route for CMS Home Page Image
+Route::controller(HomePageImageController::class)->prefix('cms')->group(function () {
+    Route::get('/home-page', 'index')->name('cms.home-page.index');
+    Route::post('/home-page/store', 'store')->name('cms.home-page.store');
+    Route::delete('/home-page/{id}', 'destroy')->name('cms.home-page.destroy');
 });
