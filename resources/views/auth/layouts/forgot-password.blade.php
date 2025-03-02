@@ -7,7 +7,7 @@
         <div class="container">
             <div class="sign-in-up-content-wrapper">
                 <div class="sign-in-up-image-area">
-                    <img src="{{ asset('frontend/images/sign-in-banner.png') }}" alt="Forgot Password">
+                    <img src="{{ asset($authBanner->image ?? 'frontend/images/sign-in-banner.png') }}" alt="Auth Banner">
                 </div>
 
                 <div class="sign-in-up-form-area">

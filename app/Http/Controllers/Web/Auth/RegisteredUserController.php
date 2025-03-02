@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\CMSImage;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -18,7 +19,11 @@ class RegisteredUserController extends Controller {
      * Display the registration view.
      */
     public function create(): View {
-        return view('auth.layouts.register');
+        $authBanner = CMSImage::where('page', 'auth')
+            ->where('status', 'active')
+            ->first();
+
+        return view('auth.layouts.register', compact('authBanner'));
     }
 
     /**

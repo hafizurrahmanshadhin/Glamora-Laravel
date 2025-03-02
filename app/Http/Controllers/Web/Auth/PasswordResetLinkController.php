@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\CMSImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -13,7 +14,11 @@ class PasswordResetLinkController extends Controller {
      * Display the password reset link request view.
      */
     public function create(): View {
-        return view('auth.layouts.forgot-password');
+        $authBanner = CMSImage::where('page', 'auth')
+            ->where('status', 'active')
+            ->first();
+
+        return view('auth.layouts.forgot-password', compact('authBanner'));
     }
 
     /**

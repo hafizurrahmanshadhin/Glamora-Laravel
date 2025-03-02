@@ -38,6 +38,8 @@
                         {{ route('beauty-expert-dashboard') }}
                     @elseif(Auth::user()->role == 'client')
                         {{ route('client-dashboard') }}
+                    @elseif(Auth::user()->role == 'admin')
+                        {{ route('dashboard') }}
                     @else
                         {{ route('index') }} @endif
 @else
@@ -137,6 +139,8 @@
                         {{ route('beauty-expert-dashboard') }}
                     @elseif(Auth::user()->role == 'client')
                         {{ route('client-dashboard') }}
+                    @elseif(Auth::user()->role == 'admin')
+                        {{ route('dashboard') }}
                     @else
                         {{ route('index') }} @endif
 @else

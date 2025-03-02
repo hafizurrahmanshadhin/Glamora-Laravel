@@ -146,18 +146,18 @@
                             <li class="nav-item">
                                 <a href="{{ route('cms.home-page.index') }}"
                                     class="nav-link {{ request()->routeIs('cms.home-page.index') ? 'active' : '' }}"
-                                    data-key="t-profile-setting">
+                                    data-key="t-home-page">
                                     Home Page
                                 </a>
                             </li>
 
-                            {{-- <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('cms.auth-page.index') }}"
                                     class="nav-link {{ request()->routeIs('cms.auth-page.index') ? 'active' : '' }}"
-                                    data-key="t-system-settings">
+                                    data-key="t-auth-page">
                                     Auth Page
                                 </a>
-                            </li> --}}
+                            </li>
                         </ul>
                     </div>
                 </li>

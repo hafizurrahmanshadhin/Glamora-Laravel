@@ -17,7 +17,7 @@ use App\Http\Controllers\Web\Frontend\ServiceProviderProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Route for Reset Database and Optimize Clear
-Route::get('/reset', [ResetController::class, 'RunMigrations'])->name('reset');
+Route::get('/reset', [ResetController::class, 'Reset'])->name('reset');
 
 // Route for Landing Page
 Route::get('/', [HomeController::class, 'index'])->name('index');

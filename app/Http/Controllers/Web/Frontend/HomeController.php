@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\CMSImage;
 use App\Models\Review;
 use App\Models\Service;
 use App\Models\SystemSetting;
@@ -51,6 +52,11 @@ class HomeController extends Controller {
     //         ->with('businessInformation')
     //         ->get();
 
+    //     Fetch dynamic home page banners from the CMS images table
+    //     $homeBanners = CMSImage::where('page', 'home')
+    //         ->where('status', 'active')
+    //         ->get();
+
     //     return view('frontend.layouts.home.index', compact(
     //         'systemSetting',
     //         'approvedServices',
@@ -58,7 +64,8 @@ class HomeController extends Controller {
     //         'reviews',
     //         'averageRating',
     //         'totalReviews',
-    //         'topBeautyExperts'
+    //         'topBeautyExperts',
+    //         'homeBanners'
     //     ));
     // }
 
@@ -97,6 +104,11 @@ class HomeController extends Controller {
             ->with('businessInformation')
             ->get();
 
+        // Fetch dynamic home page banners from the CMS images table
+        $homeBanners = CMSImage::where('page', 'home')
+            ->where('status', 'active')
+            ->get();
+
         return view('frontend.layouts.home.index', compact(
             'systemSetting',
             'approvedServices',
@@ -104,7 +116,8 @@ class HomeController extends Controller {
             'reviews',
             'averageRating',
             'totalReviews',
-            'topBeautyExperts'
+            'topBeautyExperts',
+            'homeBanners'
         ));
     }
 }

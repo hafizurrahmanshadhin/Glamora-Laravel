@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\CMSImage;
 use App\Models\PasswordReset;
 use App\Models\User;
 use Carbon\Carbon;
@@ -20,8 +21,11 @@ class PhoneNumberVerificationController extends Controller {
      * @return View
      */
     public function index() {
-        // This view shows the form where the user enters their phone number.
-        return view('auth.layouts.verification-using-phone-number');
+        $authBanner = CMSImage::where('page', 'auth')
+            ->where('status', 'active')
+            ->first();
+
+        return view('auth.layouts.verification-using-phone-number', compact('authBanner'));
     }
 
     /**

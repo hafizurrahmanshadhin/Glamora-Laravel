@@ -13,14 +13,13 @@ class ResetController extends Controller {
      *
      * @return JsonResponse
      */
-    public function RunMigrations(): JsonResponse {
+    public function Reset(): JsonResponse {
         try {
-            Artisan::call('migrate:fresh --seed');
             Artisan::call('optimize:clear');
 
-            return Helper::jsonResponse(true, 'System Reset Successfully', 200);
+            return Helper::jsonResponse(true, 'System Optimized Successfully', 200);
         } catch (Exception $e) {
-            return Helper::jsonResponse(false, 'An Error Occurred While Resetting The System.', 500, ['error' => $e->getMessage()]);
+            return Helper::jsonResponse(false, 'An Error Occurred While Optimizing The System.', 500, ['error' => $e->getMessage()]);
         }
     }
 }

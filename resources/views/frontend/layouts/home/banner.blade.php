@@ -128,33 +128,28 @@
     <div data-aos="fade-left" class="img-slider">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                    class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                    aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                    aria-label="Slide 3"></button>
+                @foreach ($homeBanners as $index => $banner)
+                    <button type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}"
+                        aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}">
+                    </button>
+                @endforeach
             </div>
 
             <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="{{ asset('frontend/images/home-banner.png') }}" alt="" />
-                    <div class="carousel-caption">
-                        <h5>First slide label</h5>
+                @if ($homeBanners->isNotEmpty())
+                    @foreach ($homeBanners as $homeBanner)
+                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                            <img src="{{ asset($homeBanner->image ?? 'frontend/images/home-banner.png') }}"
+                                alt="Home banner" class="d-block w-100">
+                        </div>
+                    @endforeach
+                @else
+                    <div class="carousel-item active">
+                        <img src="{{ asset('frontend/images/home-banner.png') }}" alt="Default Banner"
+                            class="d-block w-100">
                     </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="{{ asset('frontend/images/home-banner.png') }}" alt="" />
-                    <div class="carousel-caption">
-                        <h5>First slide label</h5>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="{{ asset('frontend/images/home-banner.png') }}" alt="" />
-                    <div class="carousel-caption">
-                        <h5>First slide label</h5>
-                    </div>
-                </div>
+                @endif
             </div>
 
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
@@ -162,7 +157,6 @@
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-
             <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
                 data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>

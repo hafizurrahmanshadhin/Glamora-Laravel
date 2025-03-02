@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Database\Seeders\BookingSeeder;
 use Database\Seeders\BusinessInformationSeeder;
+use Database\Seeders\CMSImageSeeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\DynamicPageSeeder;
@@ -47,6 +48,7 @@ class DatabaseSeeder extends Seeder {
             NewsletterSubscriptionSeeder::class,
             UserToolSeeder::class,
             UserGallerySeeder::class,
+            CMSImageSeeder::class,
         ]);
     }
 }

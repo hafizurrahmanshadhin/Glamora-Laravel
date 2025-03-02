@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Auth\LoginRequest;
+use App\Models\CMSImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,12 @@ class AuthenticatedSessionController extends Controller {
      * Display the login view.
      */
     public function create(): View {
-        return view('auth.layouts.login');
+        // Fetch dynamic auth page banners from the CMS images table
+        $authBanner = CMSImage::where('page', 'auth')
+            ->where('status', 'active')
+            ->first();
+
+        return view('auth.layouts.login', compact('authBanner'));
     }
 
     /**

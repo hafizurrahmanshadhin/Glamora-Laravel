@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\CMSImage;
 use App\Models\PasswordReset;
 use App\Models\User;
 use Carbon\Carbon;
@@ -18,7 +19,11 @@ class EmailVerificationController extends Controller {
      * @return View
      */
     public function index(): View {
-        return view('auth.layouts.verification-using-email');
+        $authBanner = CMSImage::where('page', 'auth')
+            ->where('status', 'active')
+            ->first();
+
+        return view('auth.layouts.verification-using-email', compact('authBanner'));
     }
 
     /**
@@ -64,7 +69,11 @@ class EmailVerificationController extends Controller {
      *
      */
     public function otpVerificationView(): View {
-        return view('auth.layouts.otp-verification');
+        $authBanner = CMSImage::where('page', 'auth')
+            ->where('status', 'active')
+            ->first();
+
+        return view('auth.layouts.otp-verification', compact('authBanner'));
     }
 
     /**

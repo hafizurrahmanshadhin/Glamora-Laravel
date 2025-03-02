@@ -2,50 +2,6 @@
 
 @section('title', 'Home Page Image')
 
-@section('content')
-    <div class="page-content">
-        <div class="container-fluid">
-            <!-- Page Title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('cms.home-page.index') }}">Table</a>
-                                </li>
-                                <li class="breadcrumb-item active">Home Page Images</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Image Cards -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Home Page Images Gallery</h5>
-                            <a href="javascript:void(0);" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#addImageModal">
-                                <i class="ri-add-line align-middle me-1"></i> Add New Image
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <div class="row" id="image-grid">
-                                <!-- Dynamic images will be loaded here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @include('backend.layouts.cms.home-page.modals.add-image')
-@endsection
-
 @push('styles')
     <style>
         .image-card {
@@ -62,10 +18,11 @@
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
 
+        /* Updated to show full image ratio */
         .card-img {
-            height: 200px;
-            object-fit: cover;
             width: 100%;
+            height: auto;
+            object-fit: contain;
         }
 
         .image-actions {
@@ -92,6 +49,74 @@
         }
     </style>
 @endpush
+
+@section('content')
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('cms.home-page.index') }}">Table</a>
+                                </li>
+                                <li class="breadcrumb-item active">Home Page Images</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Home Page Images Gallery</h5>
+                            <a href="javascript:void(0);" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#addImageModal">
+                                <i class="ri-add-line align-middle me-1"></i> Add New Image
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="image-grid">
+                                <!-- Dynamic images will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addImageModal" tabindex="-1" aria-labelledby="addImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addImageModalLabel">Upload New Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadImageForm" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Select Image</label>
+                            <input type="file" class="form-control" name="image" id="image" accept="image/*">
+                            <div class="form-text">Allowed formats: jpeg, png, jpg, gif (Max size: 20MB)</div>
+                            <div class="invalid-feedback" id="imageError"></div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ri-upload-line align-middle me-1"></i> Upload Image
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 
 @push('scripts')
     <script>

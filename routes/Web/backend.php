@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\Backend\AuthPageImageController;
 use App\Http\Controllers\Web\Backend\AvailableServicesController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
@@ -83,4 +84,10 @@ Route::controller(HomePageImageController::class)->prefix('cms')->group(function
     Route::get('/home-page', 'index')->name('cms.home-page.index');
     Route::post('/home-page/store', 'store')->name('cms.home-page.store');
     Route::delete('/home-page/{id}', 'destroy')->name('cms.home-page.destroy');
+});
+
+//! Route for CMS Auth Page Image
+Route::controller(AuthPageImageController::class)->prefix('cms')->group(function () {
+    Route::get('/auth-page', 'index')->name('cms.auth-page.index');
+    Route::post('/auth-page/store', 'store')->name('cms.auth-page.store');
 });
