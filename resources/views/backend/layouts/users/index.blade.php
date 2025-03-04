@@ -300,7 +300,7 @@
                             $('#businessLicense')
                                 .attr('href', data.business_info.license)
                                 .attr('target', '_blank')
-                                .attr('download', '')
+                                .removeAttr('download', '')
                                 .text('View License');
                         } else {
                             $('#businessLicense')
@@ -326,8 +326,8 @@
                                 ${
                                     service.image
                                         ? `<a href="${service.image}" target="_blank">
-                                                                                           <img src="${service.image}" class="img-thumbnail mt-1" width="80">
-                                                                                       </a>`
+                                                                                               <img src="${service.image}" class="img-thumbnail mt-1" width="80">
+                                                                                           </a>`
                                         : ''
                                 }
                             </li>
