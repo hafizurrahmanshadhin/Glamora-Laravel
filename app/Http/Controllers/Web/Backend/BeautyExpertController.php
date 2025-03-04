@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
-class UserController extends Controller {
+class BeautyExpertController extends Controller {
     /**
-     * Display the list of all users.
+     * Display the list of all beauty expert users.
      *
      * @param Request $request
      * @return View|JsonResponse
@@ -50,11 +50,11 @@ class UserController extends Controller {
                 ->rawColumns(['name', 'status', 'action'])
                 ->make();
         }
-        return view('backend.layouts.users.index');
+        return view('backend.layouts.users.beauty_expert.index');
     }
 
     /**
-     * Display the specified user details.
+     * Display the specified beauty expert user details.
      *
      * @param  int  $id
      * @return JsonResponse
@@ -95,7 +95,7 @@ class UserController extends Controller {
     }
 
     /**
-     * Toggle the status of the specified users.
+     * Toggle the status of the specified beauty expert users.
      *
      * @param  Request  $request
      * @param  int  $id
@@ -110,10 +110,10 @@ class UserController extends Controller {
             $user->save();
 
             // Queue the status update email
-            // Mail::to($user->email)->queue(new StatusUpdateMail($user));
+            Mail::to($user->email)->queue(new StatusUpdateMail($user));
 
             // Send the status update email directly
-            Mail::to($user->email)->send(new StatusUpdateMail($user));
+            // Mail::to($user->email)->send(new StatusUpdateMail($user));
 
             return response()->json([
                 'success' => true,
@@ -129,7 +129,7 @@ class UserController extends Controller {
     }
 
     /**
-     * Remove the specified users from storage.
+     * Remove the specified beauty expert users from storage.
      *
      * @param  int  $id
      * @return JsonResponse

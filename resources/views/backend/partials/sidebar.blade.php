@@ -59,11 +59,34 @@
 
                 {{-- Users --}}
                 <li class="nav-item">
-                    <a href="{{ route('user.index') }}"
-                        class="nav-link menu-link {{ request()->routeIs('user.index') ? 'active' : '' }}">
+                    <a class="nav-link menu-link {{ request()->is('admin/user*') ? 'active' : '' }}"
+                        href="#sidebarUsers" data-bs-toggle="collapse" role="button"
+                        aria-expanded="{{ request()->is('admin/user*') ? 'true' : 'false' }}"
+                        aria-controls="sidebarUsers">
                         <i class="ri-group-line"></i>
-                        <span data-key="t-dashboard">Users</span>
+                        <span data-key="t-users">Users</span>
                     </a>
+
+                    <div class="collapse menu-dropdown {{ request()->is('admin/user*') ? 'show' : '' }}"
+                        id="sidebarUsers">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('user.client.index') }}"
+                                    class="nav-link {{ request()->routeIs('user.client.index') ? 'active' : '' }}"
+                                    data-key="t-client">
+                                    Client
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('user.beauty-expert.index') }}"
+                                    class="nav-link {{ request()->routeIs('user.beauty-expert.index') ? 'active' : '' }}"
+                                    data-key="t-beauty-expert">
+                                    Beauty Expert
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
                 {{-- Service --}}

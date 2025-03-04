@@ -25,7 +25,7 @@
 
                 {{-- Step - 1: How you want to take this service? START --}}
                 <div class="tm-multi-step-form-step active">
-                    <h2 class="tm-multistep-form-heading">How you want to take this service?</h2>
+                    <h2 class="tm-multistep-form-heading">How do you want to take this service?</h2>
                     <div class="tm-multi-step-option-container">
                         <div class="client-tax-preparer-option">
                             <input id="role" value type="hidden" name="user-type" />

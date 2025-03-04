@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'Users List')
+@section('title', 'Beauty Expert Users List')
 
 @section('content')
     <div class="page-content">
@@ -11,8 +11,8 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Table</a></li>
-                                <li class="breadcrumb-item active">User List</li>
+                                <li class="breadcrumb-item"><a href="{{ route('user.beauty-expert.index') }}">Table</a></li>
+                                <li class="breadcrumb-item active">Beauty Expert User List</li>
                             </ol>
                         </div>
                     </div>
@@ -35,7 +35,6 @@
                                         <th class="column-id">#</th>
                                         <th class="column-content">Name</th>
                                         <th class="column-content">Email</th>
-                                        <th class="column-content">Role</th>
                                         <th class="column-content">Status</th>
                                         <th class="column-content text-center">Action</th>
                                     </tr>
@@ -121,7 +120,7 @@
                     serverSide: true,
                     pagingType: "full_numbers",
                     ajax: {
-                        url: "{{ route('user.index') }}",
+                        url: "{{ route('user.beauty-expert.index') }}",
                         type: "GET",
                     },
                     dom: "<'row table-topbar'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>>" +
@@ -154,12 +153,6 @@
                         {
                             data: 'email',
                             name: 'email',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'role',
-                            name: 'role',
                             orderable: true,
                             searchable: true
                         },
@@ -197,7 +190,7 @@
 
         // Status Change
         function changeStatus(id, status) {
-            let url = '{{ route('user.status', ':id') }}';
+            let url = '{{ route('user.beauty-expert.status', ':id') }}';
             url = url.replace(':id', id);
 
             axios.post(url, {
@@ -242,7 +235,7 @@
 
         // Delete Button
         function deleteItem(id) {
-            let url = '{{ route('user.destroy', ':id') }}';
+            let url = '{{ route('user.beauty-expert.destroy', ':id') }}';
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",
@@ -266,7 +259,7 @@
 
         // Fetch and display user details
         function showUserDetails(id) {
-            let url = '{{ route('user.show', ':id') }}';
+            let url = '{{ route('user.beauty-expert.show', ':id') }}';
             url = url.replace(':id', id);
 
             axios.get(url)
@@ -326,8 +319,8 @@
                                 ${
                                     service.image
                                         ? `<a href="${service.image}" target="_blank">
-                                                                                               <img src="${service.image}" class="img-thumbnail mt-1" width="80">
-                                                                                           </a>`
+                                                                                                       <img src="${service.image}" class="img-thumbnail mt-1" width="80">
+                                                                                                   </a>`
                                         : ''
                                 }
                             </li>
