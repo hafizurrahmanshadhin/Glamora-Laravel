@@ -147,6 +147,7 @@ class ServiceProviderProfileController extends Controller {
         $gallery = UserGallery::create([
             'user_id' => $user->id,
             'image'   => $uploadedPath,
+            'status'  => 'inactive',
         ]);
 
         return Helper::jsonResponse(true, 'Gallery image added successfully.', 201, $gallery);

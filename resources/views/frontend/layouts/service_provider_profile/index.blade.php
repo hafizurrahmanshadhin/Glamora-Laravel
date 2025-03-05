@@ -3,10 +3,6 @@
 @section('title', 'Service Provider Profile')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/fontawesome.min.css') }}">
-
-    {{-- All custom CSS Links --}}
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
@@ -118,7 +114,7 @@
                     <div class="tm-service-gallery">
                         <h3>Gallery of Previous Work</h3>
                         <div class="gallery-grid">
-                            @foreach ($user->userGalleries as $gallery)
+                            @foreach ($user->userGalleries->where('status', 'active') as $gallery)
                                 <a href="#" class="gallery-item">
                                     <div class="gallery-item-img-area">
                                         <img src="{{ asset($gallery->image) }}" alt="Gallery Image">

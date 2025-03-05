@@ -3,8 +3,6 @@
 @section('title', 'Profile')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/fontawesome.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
@@ -134,6 +132,12 @@
                                 <a href="#" class="gallery-item" data-gallery-id="{{ $gallery->id }}">
                                     <div class="gallery-item-img-area" style="position: relative;">
                                         <img src="{{ asset($gallery->image) }}" alt="Gallery Image">
+                                        @if ($gallery->status === 'inactive')
+                                            <div class="approval-message"
+                                                style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.6); color: #fff; padding: 5px; text-align: center; z-index: 11;">
+                                                Needs to be approved by Admin first before being published
+                                            </div>
+                                        @endif
                                         <span class="remove-gallery" data-gallery-id="{{ $gallery->id }}"
                                             style="position: absolute; top:5px; right:5px; cursor:pointer; z-index: 10;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22"
@@ -372,21 +376,31 @@
                     .then(function(response) {
                         if (response.data.status) {
                             const gallery = response.data.data;
+                            const approvalMessage = gallery.status === 'inactive' ?
+                                `<div class="approval-message"
+                                 style="position:absolute; bottom:0; left:0; width:100%;
+                                        text-align:center; background-color:rgba(0,0,0,0.6);
+                                        color:#fff; padding:5px; z-index:11;">
+                                   Needs to be approved by Admin first before being published
+                               </div>` :
+                                '';
+
                             const newGallery = `
-                        <a href="#" class="gallery-item" data-gallery-id="${gallery.id}">
-                            <div class="gallery-item-img-area" style="position: relative;">
-                                <img src="/${gallery.image}" alt="Gallery Image">
-                                <span class="remove-gallery" data-gallery-id="${gallery.id}"
-                                    style="position: absolute; top:5px; right:5px; cursor:pointer;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 21 22" fill="none">
-                                        <rect y="0.5" width="21" height="21" rx="10.5" fill="#BABABA" />
-                                        <path d="M15.7667 6.5L11.5139 11.3455L16 16.5H13.9543L10.509 12.3848L6.93801 16.5H5L9.50408 11.3455L5.28711 6.5H7.31485L10.5269 10.3483L13.8467 6.5H15.7667Z" fill="#6B6B6B" />
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="tm-overlay"></div>
-                        </a>
-                    `;
+                            <a href="#" class="gallery-item" data-gallery-id="${gallery.id}">
+                                <div class="gallery-item-img-area" style="position: relative;">
+                                    <img src="/${gallery.image}" alt="Gallery Image">
+                                    <span class="remove-gallery" data-gallery-id="${gallery.id}"
+                                          style="position: absolute; top:5px; right:5px; cursor:pointer;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 21 22" fill="none">
+                                            <rect y="0.5" width="21" height="21" rx="10.5" fill="#BABABA"/>
+                                            <path d="M15.7667 6.5L11.5139 11.3455L16 16.5H13.9543L10.509 12.3848L6.93801 16.5H5L9.50408 11.3455L5.28711 6.5H7.31485L10.5269 10.3483L13.8467 6.5H15.7667Z" fill="#6B6B6B"/>
+                                        </svg>
+                                    </span>
+                                    ${approvalMessage}
+                                </div>
+                                <div class="tm-overlay"></div>
+                            </a>
+                        `;
                             $(".gallery-grid").append(newGallery);
                             imageInput.value = '';
                             $("#preview").attr("src", "").hide();
@@ -406,8 +420,6 @@
         $(document).on("click", ".remove-gallery", function(e) {
             e.preventDefault();
             const galleryId = $(this).data("gallery-id");
-            console.log(galleryId);
-            // Generate a URL with a placeholder and replace it with galleryId
             axios.delete("{{ route('gallery.destroy', ['gallery' => 'GALLERY_ID']) }}".replace("GALLERY_ID",
                     galleryId))
                 .then(function(response) {

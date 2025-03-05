@@ -111,6 +111,7 @@ class BusinessInformationController extends Controller {
                         'offered_price' => $data['offered_price'],
                         'total_price'   => $data['total_price'],
                         'image'         => $imagePath,
+                        'status'        => 'active',
                     ]
                 );
             }
