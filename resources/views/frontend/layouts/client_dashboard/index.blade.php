@@ -33,7 +33,7 @@
 @section('content')
     <div class="dashboard-layout section-padding-x">
         <div class="dashboard-left">
-            <div class="dashboard-profile-container">
+            <div class="dashboard-profile-container" style="min-height: 300px;">
                 <div class="top">
                     <div class="img-content">
                         <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
@@ -52,11 +52,10 @@
                         <div class="item">
                             <div class="title">Upcoming Bookings ({{ $upcomingBookings->count() }})</div>
                         </div>
-                    </div>
-                    <div class="bottom-bottom">
-                        <a href="" class="common-btn">
-                            View Bookings
-                        </a>
+
+                        <div class="item">
+                            <div class="title">Pending Requests ({{ $pendingRequests->count() }})</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -136,7 +135,7 @@
                                     <div
                                         class="armie-service-location-type d-flex align-items-center justify-content-between">
                                         <p class="armie-service-type-name">
-                                            {{ $booking->userService->service->services_name ?? '' }}
+                                            {!! $booking->servicesText !!}
                                         </p>
                                     </div>
                                     <div class="check-availability-bookmarks">
@@ -186,7 +185,7 @@
                                     <div
                                         class="armie-service-location-type d-flex align-items-center justify-content-between">
                                         <p class="armie-service-type-name">
-                                            {{ $booking->userService->service->services_name ?? '' }}
+                                            {!! $booking->servicesText !!}
                                         </p>
                                     </div>
                                     <div class="check-availability-bookmarks">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Report;
 use App\Models\Review;
+use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,19 @@ class ClientDashboardController extends Controller {
             ->orderBy('appointment_date', 'asc')
             ->get();
 
+        // Attach formatted service names to each booking
+        foreach ($upcomingBookings as $booking) {
+            $serviceNames = [];
+            if (!empty($booking->service_ids)) {
+                $serviceIds = explode(',', $booking->service_ids);
+                $services   = Service::whereIn('id', $serviceIds)
+                    ->pluck('services_name')
+                    ->toArray();
+                $serviceNames = $services;
+            }
+            $booking->servicesText = implode('<br>', $serviceNames);
+        }
+
         $pendingRequests = Booking::where('user_id', $user->id)
             ->whereDoesntHave('payments', function ($q) {
                 $q->where('payment_status', 'completed');
@@ -35,6 +49,17 @@ class ClientDashboardController extends Controller {
             ->with(['userService.user', 'userService.service', 'payments'])
             ->orderBy('appointment_date', 'asc')
             ->get();
+
+        // Attach formatted service names for each pending booking
+        foreach ($pendingRequests as $booking) {
+            $serviceNames = [];
+            if (!empty($booking->service_ids)) {
+                $serviceIds   = explode(',', $booking->service_ids);
+                $services     = Service::whereIn('id', $serviceIds)->pluck('services_name')->toArray();
+                $serviceNames = $services;
+            }
+            $booking->servicesText = implode('<br>', $serviceNames);
+        }
 
         return view('frontend.layouts.client_dashboard.index', compact('upcomingBookings', 'pendingRequests'));
     }

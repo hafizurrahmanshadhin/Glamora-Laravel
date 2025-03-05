@@ -201,7 +201,7 @@
                                     <div
                                         class="armie-service-location-type d-flex align-items-center justify-content-between">
                                         <p class="armie-service-type-name">
-                                            {{ $booking->userService->service->services_name ?? '' }}
+                                            {!! $booking->servicesText !!}
                                         </p>
                                     </div>
                                 </div>

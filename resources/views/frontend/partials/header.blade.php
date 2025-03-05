@@ -10,7 +10,7 @@
         </svg>
         <a href="{{ route('index') }}" class="logo">
             <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt=""
-                style="width: 194px; height: 42px;">
+                style="width: 125px; height: 42px;">
         </a>
     </div>
 

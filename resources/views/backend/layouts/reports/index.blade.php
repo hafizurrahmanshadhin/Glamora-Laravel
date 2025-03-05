@@ -27,22 +27,24 @@
                             <h5 class="card-title mb-0">All Report List</h5>
                         </div>
                         <div class="card-body">
-                            <table id="datatable"
-                                class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                                style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th class="column-id">#</th>
-                                        <th class="column-content">Report From</th>
-                                        <th class="column-content">Report To</th>
-                                        <th class="column-content">Message</th>
-                                        <th class="column-content text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{-- Dynamic Data --}}
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table id="datatable"
+                                    class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                                    style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="column-id">#</th>
+                                            <th class="column-content">Report From</th>
+                                            <th class="column-content">Report To</th>
+                                            <th class="column-content">Message</th>
+                                            <th class="column-content text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{-- Dynamic Data --}}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

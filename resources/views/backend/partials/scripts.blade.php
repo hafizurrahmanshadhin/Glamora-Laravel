@@ -172,4 +172,7 @@
 
 {{-- App js --}}
 <script src="{{ asset('backend/js/app.js') }}"></script>
+
+<script src="{{ asset('backend/custom_downloaded_file/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('backend/custom_downloaded_file/responsive.bootstrap5.min.js') }}"></script>
 @stack('scripts')

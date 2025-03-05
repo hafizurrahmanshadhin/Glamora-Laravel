@@ -11,7 +11,8 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('settings.dynamic_page.index') }}">Settings</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('settings.dynamic_page.index') }}">Settings</a>
+                                </li>
                                 <li class="breadcrumb-item active">Dynamic Page</li>
                             </ol>
                         </div>
@@ -30,22 +31,24 @@
                                 id="addNewPage">Add New Page</a>
                         </div>
                         <div class="card-body">
-                            <table id="datatable"
-                                class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                                style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th class="column-id">#</th>
-                                        <th class="column-title">Page Title</th>
-                                        <th class="column-content">Page Content</th>
-                                        <th class="column-status">Status</th>
-                                        <th class="column-action">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{-- Dynamic Data --}}
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table id="datatable"
+                                    class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                                    style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="column-id">#</th>
+                                            <th class="column-title">Page Title</th>
+                                            <th class="column-content">Page Content</th>
+                                            <th class="column-status">Status</th>
+                                            <th class="column-action">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{-- Dynamic Data --}}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

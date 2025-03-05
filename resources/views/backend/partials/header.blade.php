@@ -2,6 +2,20 @@
     $systemSetting = App\Models\SystemSetting::first();
 @endphp
 
+<style>
+    @media (max-width: 768px) {
+        .app-menu.navbar-menu {
+            z-index: 9999;
+            /* ensure sidebar is on top */
+        }
+
+        .topbar-wrapper {
+            z-index: 1000;
+            /* ensure header is below sidebar */
+        }
+    }
+</style>
+
 <div class="topbar-wrapper shadow">
     <header id="page-topbar">
         <div class="layout-width">

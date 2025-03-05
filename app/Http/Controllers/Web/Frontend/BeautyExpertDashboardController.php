@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\BusinessInformation;
 use App\Models\Review;
+use App\Models\Service;
 use App\Models\TravelRadius;
 use App\Models\UserService;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,17 @@ class BeautyExpertDashboardController extends Controller {
             ->with(['user', 'userService.service', 'payments'])
             ->orderBy('appointment_date', 'asc')
             ->get();
+
+        // Convert service_ids to line-separated service names
+        foreach ($upcomingBookings as $booking) {
+            $serviceNames = [];
+            if (!empty($booking->service_ids)) {
+                $serviceIds   = explode(',', $booking->service_ids);
+                $services     = Service::whereIn('id', $serviceIds)->pluck('services_name')->toArray();
+                $serviceNames = $services;
+            }
+            $booking->servicesText = implode('<br>', $serviceNames);
+        }
 
         // Fetch pending requests where payment is not completed
         $pendingRequests = Booking::whereHas('userService', function ($query) use ($user) {
