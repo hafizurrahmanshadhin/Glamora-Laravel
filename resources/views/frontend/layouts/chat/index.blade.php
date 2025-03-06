@@ -7,12 +7,71 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/categories.css') }}" />
     <style>
+        /* Keep your core design */
         .individual-messages {
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             scroll-behavior: smooth;
+            /* Fixed height for desktop */
             height: 400px;
+        }
+
+        .user-messages {
+            display: flex;
+            flex-direction: column;
+            /* Set a fixed overall height so that the reply form is always visible */
+            height: 700px;
+        }
+
+        .reply-input-container {
+            margin-top: auto;
+        }
+
+        /* Responsive styles for mobile devices */
+        @media (max-width: 768px) {
+            .dashboard-layout {
+                margin-top: 0;
+                padding: 10px;
+            }
+
+            .messages-container {
+                display: flex;
+                flex-direction: column;
+                /* Use full viewport height */
+                height: 100vh;
+            }
+
+            /* Hide the inbox on mobile */
+            .inbox {
+                display: none;
+            }
+
+            .user-messages {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                /* Reserve full viewport height minus some padding if needed */
+                height: calc(100vh - 20px);
+            }
+
+            .individual-messages {
+                flex: 1;
+                overflow-y: auto;
+                height: auto;
+            }
+
+            .reply-input-container {
+                margin-top: auto;
+                padding: 10px;
+                background: #fff;
+                border-top: 1px solid #eaeaea;
+            }
+
+            .user-name,
+            .text {
+                font-size: 14px;
+            }
         }
     </style>
 @endpush
@@ -41,15 +100,14 @@
                         <div class="message-container">
                             <div class="message-container-top">
                                 <div class="title">{{ $receiver->first_name ?? '' }} {{ $receiver->last_name ?? '' }}</div>
-                                <div class="time">7min</div>
+                                {{-- <div class="time">7min</div> --}}
                             </div>
-                            <div class="text">If the super sale starts</div>
+                            {{-- <div class="text">If the super sale starts</div> --}}
                         </div>
                     </div>
                 </div>
             </div>
             {{-- inbox container end --}}
-
 
             {{-- Chat messages container start --}}
             <div id="user-messages" class="user-messages">
@@ -96,7 +154,6 @@
                         @endif
                     @endforeach
                 </div>
-
 
                 <form id="chatForm" class="reply-input-container mb-2">
                     @csrf
@@ -157,7 +214,6 @@
                 .catch(err => console.error(err));
         });
 
-
         function addChatMessage(msg, isMine) {
             const chatContainer = document.getElementById('chatContainer');
             // If it's me, show my local user avatar, else use msg.sender.avatar
@@ -167,18 +223,15 @@
             const senderName = isMine ?
                 "{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}" :
                 `${msg.sender.first_name} ${msg.sender.last_name}`;
-
             const messageText = msg.message;
-
             const wrapper = document.createElement('div');
             wrapper.classList.add('single-message', isMine ? 'my-message' : 'opposite-message');
-
             wrapper.innerHTML = `
             ${!isMine ? `
-                                                <div class="user-profile">
-                                                    <img src="${senderAvatar}" alt="user" />
-                                                </div>
-                                            ` : ''}
+                                                        <div class="user-profile">
+                                                            <img src="${senderAvatar}" alt="user" />
+                                                        </div>
+                                                    ` : ''}
             <div class="right-content">
                 <div class="user-name">${senderName}</div>
                 <div class="user-text">
@@ -187,13 +240,13 @@
                 </div>
             </div>
             ${isMine ? `
-                                                <div class="user-profile">
-                                                    <img src="${senderAvatar}" alt="user" />
-                                                </div>
-                                            ` : ''}
+                                                        <div class="user-profile">
+                                                            <img src="${senderAvatar}" alt="user" />
+                                                        </div>
+                                                    ` : ''}
         `;
             chatContainer.appendChild(wrapper);
-            // Auto-scroll to the bottom
+            // Auto-scroll to the bottom of the messages area
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     </script>
