@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserService;
 use App\Notifications\BookingNotification;
 use App\Notifications\BookingStatusNotification;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -153,9 +154,14 @@ class BookServiceController extends Controller {
 
         case 'yes':
             // “I’m Available” - pass existing date/time/price
+            $formattedDate = Carbon::parse($booking->appointment_date)->format('Y-m-d');
+            $formattedTime = $booking->appointment_time
+            ? Carbon::parse($booking->appointment_time)->format('h:i A')
+            : 'No time set';
+
             $client->notify(new BookingStatusNotification(
                 $booking,
-                "I’m Available with Date: {$booking->appointment_date}, Time: {$booking->appointment_time}, Price: {$booking->price}"
+                "I’m Available with Date: {$formattedDate}, Time: {$formattedTime}, Price: {$booking->price}"
             ));
             return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Availability confirmed.');
 
@@ -167,10 +173,14 @@ class BookServiceController extends Controller {
                 'price'            => $request->new_price,
             ]);
 
-            // Now send a notification using the updated booking details
+            $formattedDate = Carbon::parse($booking->appointment_date)->format('Y-m-d');
+            $formattedTime = $booking->appointment_time
+            ? Carbon::parse($booking->appointment_time)->format('h:i A')
+            : 'No time set';
+
             $client->notify(new BookingStatusNotification(
                 $booking,
-                "New Offer! Date: {$booking->appointment_date}, Time: {$booking->appointment_time}, Price: {$booking->price}"
+                "New Offer! Date: {$formattedDate}, Time: {$formattedTime}, Price: {$booking->price}"
             ));
             return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Offer sent.');
 

@@ -165,10 +165,11 @@
                         <div class="tm-available-label-input-wrapper">
                             <label for="appointment-date">Date:</label>
                             <div class="date-input-wrapper">
-                                <input type="text" id="appointment-date-new" class="date-input"
+                                <input type="text" id="appointment-date-display" class="date-input"
                                     placeholder="09 | Oct | 2024"
-                                    value="{{ \Carbon\Carbon::parse($booking->appointment_date)->format('d | M | Y') }}"
-                                    disabled />
+                                    value="{{ \Carbon\Carbon::parse($booking->appointment_date)->format('d | M | Y') }}" />
+                                <input type="hidden" id="appointment-date-new"
+                                    value="{{ $booking->appointment_date->format('Y-m-d') }}" />
                             </div>
                         </div>
 
@@ -289,13 +290,16 @@
                 // If isNoSelected is true, switch to "No" state (show noForm, enable date/time fields)
                 // Otherwise, switch to "Yes" state (show yesForm and enable its button, disable date/time fields)
                 function toggleFieldsAndUI(isNoSelected) {
+                    const datePicker = $('#appointment-date-display');
+                    const timeDropdown = document.getElementById('appointment-time');
+
                     if (isNoSelected) {
+                        // Enable date and time inputs
+                        datePicker.datepicker('enable');
+                        timeDropdown.removeAttribute('disabled');
+                        // Show relevant form
                         yesForm.style.display = 'none';
                         noForm.style.display = 'inline-block';
-                        negotiateNotice.style.display = 'block';
-                        dateInput.removeAttribute('disabled');
-                        timeDropdown.removeAttribute('disabled');
-                        yesFormBtn.disabled = true;
                     } else {
                         yesForm.style.display = 'inline-block';
                         noForm.style.display = 'none';
@@ -319,22 +323,44 @@
 
                 // Before Submit of noForm, update hidden fields with current date/time values
                 noForm.addEventListener('submit', function(e) {
-                    document.getElementById('hiddenNewDate').value = dateInput.value;
-                    document.getElementById('hiddenNewTime').value = timeDropdown.value;
+                    // Always use hidden ISO date value
+                    document.getElementById('hiddenNewDate').value =
+                        document.getElementById('appointment-date-new').value;
+
+                    // Convert 12h time to 24h format
+                    const time12h = document.getElementById('appointment-time').value;
+                    const [time, modifier] = time12h.split(' ');
+                    let [hours, minutes] = time.split(':');
+
+                    if (modifier === 'PM' && hours !== '12') hours = parseInt(hours) + 12;
+                    if (modifier === 'AM' && hours === '12') hours = '00';
+
+                    document.getElementById('hiddenNewTime').value =
+                        `${hours.toString().padStart(2, '0')}:${minutes}:00`;
                 });
             });
 
             // jQuery datepicker initialization remains as before
             $(function() {
-                $('#appointment-date-new').datepicker({
-                    dateFormat: 'dd M yy',
+                // Initialize datepicker with dual format support
+                const datePicker = $('#appointment-date-display').datepicker({
+                    dateFormat: 'dd | M | yy', // Display format
+                    altFormat: 'yy-mm-dd', // Hidden ISO format
+                    altField: '#appointment-date-new',
                     changeMonth: true,
                     changeYear: true,
                     showButtonPanel: true,
-                    onSelect: function(dateText) {
-                        $(this).val(dateText);
-                    },
+                    beforeShow: function(input, inst) {
+                        // Initialize with current ISO date
+                        const isoDate = $('#appointment-date-new').val();
+                        $(this).datepicker('setDate', new Date(isoDate));
+                    }
                 });
+
+                // Initially disable if "No" isn't selected
+                if (!document.querySelector('input[name="availability"][value="no"]:checked')) {
+                    datePicker.datepicker('disable');
+                }
             });
         })();
     </script>
