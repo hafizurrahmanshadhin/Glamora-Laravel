@@ -98,12 +98,12 @@
                     </a>
                 </li>
 
-                {{-- Available Beauty Services --}}
+                {{-- Image Approval Request --}}
                 <li class="nav-item">
-                    <a href="{{ route('available.services.index') }}"
-                        class="nav-link menu-link {{ request()->routeIs('available.services.*') ? 'active' : '' }}">
-                        <i class="ri-scissors-cut-line"></i>
-                        <span data-key="t-faq">Available Service</span>
+                    <a href="{{ route('image-approval-request.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('image-approval-request.*') ? 'active' : '' }}">
+                        <i class="ri-image-edit-line"></i>
+                        <span data-key="t-faq" style="white-space: nowrap">Image Approval Request</span>
                     </a>
                 </li>
 

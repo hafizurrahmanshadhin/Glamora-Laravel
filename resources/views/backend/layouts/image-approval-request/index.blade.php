@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'Available Services')
+@section('title', 'Image Approval Request')
 
 @section('content')
     <div class="page-content">
@@ -11,8 +11,9 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('available.services.index') }}">Table</a></li>
-                                <li class="breadcrumb-item active">Available Services</li>
+                                <li class="breadcrumb-item"><a href="{{ route('image-approval-request.index') }}">Table</a>
+                                </li>
+                                <li class="breadcrumb-item active">Image Approval Request</li>
                             </ol>
                         </div>
                     </div>
@@ -25,7 +26,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">All Available Services</h5>
+                            <h5 class="card-title mb-0">All Request</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -37,7 +38,7 @@
                                             <th class="column-id">#</th>
                                             <th class="column-content">Name</th>
                                             <th class="column-content">Email</th>
-                                            <th class="column-content">Service</th>
+                                            <th class="column-content">Image</th>
                                             <th class="column-content">Status</th>
                                         </tr>
                                     </thead>
@@ -52,6 +53,19 @@
             </div>
         </div>
     </div>
+
+    {{-- Image Preview Modal Start --}}
+    <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body" style="text-align: center;">
+                    <img id="previewModalImage" src="" alt="Preview" style="max-width: 100%; height: auto;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Image Preview Modal End --}}
 @endsection
 
 @push('scripts')
@@ -75,7 +89,7 @@
                     serverSide: true,
                     pagingType: "full_numbers",
                     ajax: {
-                        url: "{{ route('available.services.index') }}",
+                        url: "{{ route('image-approval-request.index') }}",
                         type: "GET",
                     },
                     dom: "<'row table-topbar'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>>" +
@@ -111,8 +125,8 @@
                             searchable: true
                         },
                         {
-                            data: 'service_name',
-                            name: 'service_name',
+                            data: 'image',
+                            name: 'image',
                             orderable: true,
                             searchable: true
                         },
@@ -141,10 +155,17 @@
             }
         });
 
+        // Capture click on any link that triggers the modal
+        $(document).on('click', '[data-bs-target="#imagePreviewModal"]', function(e) {
+            e.preventDefault();
+            const imageSrc = $(this).data('image-src');
+            $('#previewModalImage').attr('src', imageSrc);
+        });
+
         // Status Change using Axios
         function changeStatus(id, status) {
-            let url = '{{ route('available.services.status', ':id') }}';
-            url = url.replace(':id', id);
+            let url = '{{ route('image-approval-request.status', ':userGallery') }}';
+            url = url.replace(':userGallery', id);
 
             axios.post(url, {
                     status: status,
@@ -152,8 +173,9 @@
                 })
                 .then(function(response) {
                     let resp = response.data;
-                    $('#availableServicesTable').DataTable().ajax.reload();
-                    if (resp.success) {
+                    $('#datatable').DataTable().ajax.reload();
+
+                    if (resp.status) {
                         toastr.success(resp.message);
                     } else {
                         toastr.error(resp.message);

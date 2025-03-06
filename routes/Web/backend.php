@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\Web\Backend\AuthPageImageController;
-use App\Http\Controllers\Web\Backend\AvailableServicesController;
 use App\Http\Controllers\Web\Backend\BeautyExpertController;
 use App\Http\Controllers\Web\Backend\ClientController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
 use App\Http\Controllers\Web\Backend\HomePageImageController;
+use App\Http\Controllers\Web\Backend\ImageApprovalRequestController;
 use App\Http\Controllers\Web\Backend\NewsletterSubscriptionController;
 use App\Http\Controllers\Web\Backend\ReportController;
 use App\Http\Controllers\Web\Backend\ServiceController;
@@ -44,10 +44,10 @@ Route::controller(ServiceController::class)->group(function () {
     Route::delete('/service/destroy/{id}', 'destroy')->name('service.destroy');
 });
 
-//! Route for Available Beauty Services Page
-Route::controller(AvailableServicesController::class)->group(function () {
-    Route::get('/available-services', 'index')->name('available.services.index');
-    Route::post('/available-services/status/{id}', 'status')->name('available.services.status');
+//! Route for Image Approval Request Page
+Route::controller(ImageApprovalRequestController::class)->group(function () {
+    Route::get('/image-approval-request', 'index')->name('image-approval-request.index');
+    Route::post('/image-approval-request/status/{userGallery}', 'status')->name('image-approval-request.status');
 });
 
 //! Route for FAQ Page
