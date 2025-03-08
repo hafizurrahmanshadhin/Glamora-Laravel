@@ -172,6 +172,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="item">
                         <div class="range-slider-content">
                             <div class="range-title">
@@ -199,6 +200,7 @@
                         </div>
                     </div>
                     <div style="border-bottom: 1px solid #222; width: 100%; height: 1px;"></div>
+
                     <div class="item">
                         <div class="range-slider-content">
                             <div class="range-title">
@@ -225,6 +227,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="item">
                         <div class="range-slider-content">
                             <div class="d-flex minimum-booking-value-container align-items-center gap-3">
@@ -247,7 +250,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 {{-- step progress start --}}
@@ -412,6 +414,8 @@
     <script>
         let map;
         let currentMarker;
+        let travelRadiusCircle; // New variable for the travel radius circle
+
         // Default set to Canberra, Australia:
         // Latitude: 35°18' S  => approximately -35.3
         // Longitude: 149°07' E => approximately 149.1167
@@ -446,9 +450,34 @@
                 });
         }
 
-        // Function to initialize the map on the given container
+        // Create or update the travel radius circle
+        function updateTravelRadiusCircle(kmValue) {
+            if (!map || !currentMarker) return;
+            const latLng = currentMarker.getLatLng();
+            const radiusInMeters = kmValue * 1000;
+
+            if (travelRadiusCircle) {
+                travelRadiusCircle.setLatLng(latLng);
+                travelRadiusCircle.setRadius(radiusInMeters);
+            } else {
+                travelRadiusCircle = L.circle(latLng, {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.2,
+                    radius: radiusInMeters
+                }).addTo(map);
+            }
+
+            if (kmValue > 1) {
+                map.fitBounds(travelRadiusCircle.getBounds(), {
+                    animate: true,
+                    padding: [20, 20]
+                });
+            }
+        }
+
+        // Function to initialize the map
         function initializeMap() {
-            // Set a fixed height for the map container
             const mapElement = document.getElementById('map');
             mapElement.style.height = "400px";
 
@@ -460,7 +489,6 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
             }).addTo(map);
-            L.control.zoom().addTo(map);
 
             const customIcon = L.icon({
                 iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -471,7 +499,6 @@
                 shadowSize: [41, 41]
             });
 
-            // Function to set/update marker and retrieve the address
             function updateMarker(lat, lng) {
                 document.getElementById('latitude').value = lat;
                 document.getElementById('longitude').value = lng;
@@ -496,21 +523,25 @@
                     animate: true
                 });
 
-                // Fetch address using Nominatim reverse geocoding
+                // Reverse geocoding
                 fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById('address').value = data.display_name || 'Unknown';
-                        // Debounce auto-save to prevent too many requests
-                        debounceAutoSave(1000); // 1 second delay
+                        debounceAutoSave(1000);
                     })
                     .catch(() => {
                         document.getElementById('address').value = 'Location not found';
                         debounceAutoSave(1000);
                     });
+
+                // Also update the travel circle if there's a travel-radius slider
+                const travelSlider = document.getElementById('travel-radius');
+                if (travelSlider) {
+                    updateTravelRadiusCircle(travelSlider.value);
+                }
             }
 
-            // Try geolocation; if not available, use default (Canberra)
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -532,16 +563,14 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const step2 = document.getElementById('service-provider-step-form-2');
-            // Use MutationObserver to detect when step2 becomes visible
             const observer = new MutationObserver((mutations, obs) => {
                 if (window.getComputedStyle(step2).display !== "none") {
-                    // Initialize the map if not already done
                     if (typeof map === 'undefined' || !map) {
                         initializeMap();
                     } else if (map.invalidateSize) {
                         setTimeout(() => {
                             map.invalidateSize();
-                        }, 300); // delay to ensure container renders fully
+                        }, 300);
                     }
                     obs.disconnect();
                 }
@@ -555,24 +584,20 @@
 
     {{-- for range slider --}}
     <script>
-        // Helper function to update the slider value and position
         function updateSliderValue(slider, indicator) {
             const value = slider.value;
             const min = slider.min;
             const max = slider.max;
-
-            // Update the value text
             indicator.textContent = value;
-
-            // Calculate the position of the indicator
             const percentage = ((value - min) / (max - min)) * 100;
             const offset = (percentage / 100) * slider.offsetWidth;
-
-            // Update the position of the value indicator
             indicator.style.left = `${offset}px`;
+
+            if (slider.id === 'travel-radius' && typeof updateTravelRadiusCircle === 'function') {
+                updateTravelRadiusCircle(value);
+            }
         }
 
-        // Initialize sliders
         const sliders = [{
                 id: "free-radius",
                 indicatorId: "indicator-free-radius"
@@ -593,12 +618,10 @@
         }) => {
             const slider = document.getElementById(id);
             const indicator = document.getElementById(indicatorId);
-
-            // Add event listener for input
-            slider.addEventListener("input", () => updateSliderValue(slider, indicator));
-
-            // Initialize position and value
-            updateSliderValue(slider, indicator);
+            if (slider && indicator) {
+                slider.addEventListener("input", () => updateSliderValue(slider, indicator));
+                updateSliderValue(slider, indicator);
+            }
         });
     </script>
 

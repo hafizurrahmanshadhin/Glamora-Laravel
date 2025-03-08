@@ -95,12 +95,12 @@
                                     fill="none">
                                     <path
                                         d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582
-                                                                                                                                                            25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
-                                                                                                                                                            33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
-                                                                                                                                                            34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
-                                                                                                                                                            29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
-                                                                                                                                                            6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
-                                                                                                                                                            6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                                                                                                                                                        25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
+                                                                                                                                                                        33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
+                                                                                                                                                                        34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
+                                                                                                                                                                        29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
+                                                                                                                                                                        6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
+                                                                                                                                                                        6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
                                         stroke="#222222" stroke-width="1.5" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
@@ -179,6 +179,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="item">
                             <div class="range-slider-content">
                                 <div class="range-title">
@@ -209,6 +210,7 @@
                             </div>
                         </div>
                         <div style="border-bottom: 1px solid #222; width: 100%; height: 1px;"></div>
+
                         <div class="item">
                             <div class="range-slider-content">
                                 <div class="range-title">
@@ -237,6 +239,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="item">
                             <div class="range-slider-content">
                                 <div class="d-flex minimum-booking-value-container align-items-center gap-3">
@@ -372,9 +375,9 @@
                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                 <path
                                                     d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4
-                                                                                                             24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
-                                                                                                             47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
-                                                                                                             0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                                                                                                         24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
+                                                                                                                         47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
+                                                                                                                         0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                             </svg>
                                         </div>
                                     </td>
@@ -409,13 +412,13 @@
     <script>
         let map;
         let currentMarker;
-        // Default set to Canberra, Australia:
-        // Latitude: 35°18' S  => approximately -35.3
-        // Longitude: 149°07' E => approximately 149.1167
+        let travelRadiusCircle; // Global variable for the travel radius circle
+
+        // Default coordinates (Canberra)
         const defaultLat = -35.3;
         const defaultLng = 149.1167;
 
-        // Debounce timer to limit auto-save frequency
+        // Debounce timer for auto-save
         let autoSaveTimer;
 
         function debounceAutoSave(delay) {
@@ -443,21 +446,50 @@
                 });
         }
 
-        // Function to initialize the map on the given container
+        // Function to update or create the travel radius circle on the map
+        function updateTravelRadiusCircle(kmValue) {
+            if (!map) return; // Ensure map is initialized
+            const latLng = currentMarker ? currentMarker.getLatLng() : map.getCenter();
+            const radiusInMeters = kmValue * 1000; // Convert KM to meters
+
+            if (travelRadiusCircle) {
+                // Update circle if it already exists
+                travelRadiusCircle.setLatLng(latLng);
+                travelRadiusCircle.setRadius(radiusInMeters);
+            } else {
+                // Create the circle if it doesn't exist yet
+                travelRadiusCircle = L.circle(latLng, {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.2,
+                    radius: radiusInMeters
+                }).addTo(map);
+            }
+
+            // Auto-adjust map view if radius is more than 1km
+            if (kmValue > 1) {
+                map.fitBounds(travelRadiusCircle.getBounds(), {
+                    animate: true,
+                    padding: [20, 20]
+                });
+            }
+        }
+
+        // Function to initialize the map
         function initializeMap() {
-            // Set a fixed height for the map container
             const mapElement = document.getElementById('map');
             mapElement.style.height = "400px";
 
+            // Remove extra zoom control by not adding our own since default is enabled.
             map = L.map('map', {
                 center: [defaultLat, defaultLng],
                 zoom: 13,
                 scrollWheelZoom: true
+                // Do not disable zoomControl: true is the default
             });
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
             }).addTo(map);
-            L.control.zoom().addTo(map);
 
             const customIcon = L.icon({
                 iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -468,7 +500,7 @@
                 shadowSize: [41, 41]
             });
 
-            // Function to set/update marker and retrieve the address
+            // Function to update the marker and associated circle on the map
             function updateMarker(lat, lng) {
                 document.getElementById('latitude').value = lat;
                 document.getElementById('longitude').value = lng;
@@ -493,13 +525,16 @@
                     animate: true
                 });
 
-                // Fetch address using Nominatim reverse geocoding
+                // Update the travel radius circle based on the current slider value
+                const travelRadiusValue = document.getElementById('travel-radius').value;
+                updateTravelRadiusCircle(travelRadiusValue);
+
+                // Reverse geocoding to fetch address
                 fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById('address').value = data.display_name || 'Unknown';
-                        // Debounce auto-save to prevent too many requests
-                        debounceAutoSave(1000); // 1 second delay
+                        debounceAutoSave(1000);
                     })
                     .catch(() => {
                         document.getElementById('address').value = 'Location not found';
@@ -507,7 +542,7 @@
                     });
             }
 
-            // Try geolocation; if not available, use default (Canberra)
+            // Use geolocation if available, otherwise fallback to default location
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -527,18 +562,17 @@
     </script>
 
     <script>
+        // Wait until the second step of the form is visible before initializing the map
         document.addEventListener("DOMContentLoaded", function() {
             const step2 = document.getElementById('service-provider-step-form-2');
-            // Use MutationObserver to detect when step2 becomes visible
             const observer = new MutationObserver((mutations, obs) => {
                 if (window.getComputedStyle(step2).display !== "none") {
-                    // Initialize the map if not already done
                     if (typeof map === 'undefined' || !map) {
                         initializeMap();
                     } else if (map.invalidateSize) {
                         setTimeout(() => {
                             map.invalidateSize();
-                        }, 300); // delay to ensure container renders fully
+                        }, 300);
                     }
                     obs.disconnect();
                 }
@@ -550,26 +584,18 @@
         });
     </script>
 
-    {{-- for range slider --}}
     <script>
-        // Helper function to update the slider value and position
+        // Update slider value display and update the travel radius circle on slider change
         function updateSliderValue(slider, indicator) {
             const value = slider.value;
             const min = slider.min;
             const max = slider.max;
-
-            // Update the value text
-            indicator.textContent = value;
-
-            // Calculate the position of the indicator
+            indicator.textContent = value + " km";
             const percentage = ((value - min) / (max - min)) * 100;
             const offset = (percentage / 100) * slider.offsetWidth;
-
-            // Update the position of the value indicator
             indicator.style.left = `${offset}px`;
         }
 
-        // Initialize sliders
         const sliders = [{
                 id: "free-radius",
                 indicatorId: "indicator-free-radius"
@@ -590,12 +616,16 @@
         }) => {
             const slider = document.getElementById(id);
             const indicator = document.getElementById(indicatorId);
-
-            // Add event listener for input
-            slider.addEventListener("input", () => updateSliderValue(slider, indicator));
-
-            // Initialize position and value
+            slider.addEventListener("input", () => {
+                updateSliderValue(slider, indicator);
+                if (id === "travel-radius") {
+                    updateTravelRadiusCircle(slider.value);
+                }
+            });
             updateSliderValue(slider, indicator);
+            if (id === "travel-radius") {
+                updateTravelRadiusCircle(slider.value);
+            }
         });
     </script>
 
