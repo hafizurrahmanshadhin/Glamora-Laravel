@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\BookingCancellationBeforeAppointment;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Report;
@@ -66,5 +67,9 @@ class Booking extends Model {
 
     public function reports(): HasMany {
         return $this->hasMany(Report::class);
+    }
+
+    public function bookingCancellationBeforeAppointments(): HasMany {
+        return $this->hasMany(BookingCancellationBeforeAppointment::class, 'booking_id');
     }
 }

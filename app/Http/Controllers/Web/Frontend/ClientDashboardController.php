@@ -46,6 +46,7 @@ class ClientDashboardController extends Controller {
             ->whereDoesntHave('payments', function ($q) {
                 $q->where('payment_status', 'completed');
             })
+            ->whereDoesntHave('bookingCancellationBeforeAppointments')
             ->with(['userService.user', 'userService.service', 'payments'])
             ->orderBy('appointment_date', 'asc')
             ->get();

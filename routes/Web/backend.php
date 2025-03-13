@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Web\Backend\AfterPaymentController;
 use App\Http\Controllers\Web\Backend\AuthPageImageController;
 use App\Http\Controllers\Web\Backend\BeautyExpertController;
+use App\Http\Controllers\Web\Backend\BeforePaymentController;
 use App\Http\Controllers\Web\Backend\ClientController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
@@ -99,4 +101,19 @@ Route::controller(HomePageImageController::class)->prefix('cms')->group(function
 Route::controller(AuthPageImageController::class)->prefix('cms')->group(function () {
     Route::get('/auth-page', 'index')->name('cms.auth-page.index');
     Route::post('/auth-page/store', 'store')->name('cms.auth-page.store');
+});
+
+//! Booking Cancellation Routes
+Route::prefix('booking-cancellation')->group(function () {
+    // Before Payment
+    Route::controller(BeforePaymentController::class)->group(function () {
+        Route::get('/before-payment', 'index')->name('before-payment.index');
+        Route::get('/before-payment/show/{id}', 'show')->name('before-payment.show');
+    });
+
+    // After Payment
+    Route::controller(AfterPaymentController::class)->group(function () {
+        Route::get('/after-payment', 'index')->name('after-payment.index');
+        Route::get('/after-payment/show/{id}', 'show')->name('after-payment.show');
+    });
 });

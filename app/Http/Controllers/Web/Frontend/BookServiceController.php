@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\BookingCancellationBeforeAppointment;
 use App\Models\User;
 use App\Models\UserService;
 use App\Notifications\BookingNotification;
@@ -145,6 +146,12 @@ class BookServiceController extends Controller {
 
         switch ($request->action_type) {
         case 'cancel':
+            BookingCancellationBeforeAppointment::create([
+                'booking_id'   => $booking->id,
+                'canceled_by'  => Auth::id(), // The user performing the cancel
+                'requested_by' => $client->id, // The original booking request's user
+            ]);
+
             // Notify client that the request is declined
             $client->notify(new BookingStatusNotification(
                 $booking,

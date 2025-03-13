@@ -139,7 +139,8 @@
             <div class="confirm-time-div">
                 <div class="confirm-time-upper-area">
                     <div class="confirm-time-left">
-                        <h3>Are you Available at this time?</h3>
+                        {{-- <h3>Are you Available at this time?</h3> --}}
+                        <h3>What time would you need to start by?</h3>
                         <div class="confirm-time-left-label-wrapper">
                             <label>
                                 <input type="radio" name="availability" value="yes" />
@@ -162,7 +163,8 @@
                     </div>
 
                     <div class="confirm-time-right">
-                        <div class="tm-available-label-input-wrapper">
+                        {{-- <div class="tm-available-label-input-wrapper"> --}}
+                        <div class="tm-available-label-input-wrapper" style="display:none;">
                             <label for="appointment-date">Date:</label>
                             <div class="date-input-wrapper">
                                 <input type="text" id="appointment-date-display" class="date-input"
@@ -252,6 +254,118 @@
     </div>
 @endsection
 
+{{-- @push('scripts')
+    <script src="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.js') }}"></script>
+    <script src="{{ asset('frontend/js/joint-client.js') }}"></script>
+
+    <script>
+        (function() {
+            // Label active state for the availability radio group
+            const labels = document.querySelectorAll('.confirm-time-left-label-wrapper label');
+            labels.forEach((label) => {
+                label.addEventListener('click', () => {
+                    labels.forEach((lbl) => lbl.classList.remove('active'));
+                    label.classList.add('active');
+                });
+            });
+
+            // Main DOMContentLoaded logic
+            document.addEventListener('DOMContentLoaded', function() {
+                const radioButtons = document.querySelectorAll('input[name="availability"]');
+                const dateInput = document.getElementById('appointment-date-new');
+                const timeDropdown = document.getElementById('appointment-time');
+                const negotiateNotice = document.querySelector('.negotiate-time-notice');
+
+                // Forms in lower area
+                const yesForm = document.getElementById('yesForm');
+                const noForm = document.getElementById('noForm');
+                const yesFormBtn = document.getElementById('yesFormBtn');
+
+                // Initialize default state (no radio selected)
+                yesForm.style.display = 'none';
+                noForm.style.display = 'none';
+                negotiateNotice.style.display = 'none';
+                yesFormBtn.disabled = true;
+
+                // Toggle function:
+                // If isNoSelected is true, switch to "No" state (show noForm, enable date/time fields)
+                // Otherwise, switch to "Yes" state (show yesForm and enable its button, disable date/time fields)
+                function toggleFieldsAndUI(isNoSelected) {
+                    const datePicker = $('#appointment-date-display');
+                    const timeDropdown = document.getElementById('appointment-time');
+
+                    if (isNoSelected) {
+                        // Enable date and time inputs
+                        datePicker.datepicker('enable');
+                        timeDropdown.removeAttribute('disabled');
+                        // Show relevant form
+                        yesForm.style.display = 'none';
+                        noForm.style.display = 'inline-block';
+                    } else {
+                        yesForm.style.display = 'inline-block';
+                        noForm.style.display = 'none';
+                        negotiateNotice.style.display = 'none';
+                        dateInput.setAttribute('disabled', 'disabled');
+                        timeDropdown.setAttribute('disabled', 'disabled');
+                        yesFormBtn.disabled = false;
+                    }
+                }
+
+                // Listen for changes on the radio buttons
+                radioButtons.forEach((radio) => {
+                    radio.addEventListener('change', function() {
+                        if (this.value === 'no') {
+                            toggleFieldsAndUI(true);
+                        } else if (this.value === 'yes') {
+                            toggleFieldsAndUI(false);
+                        }
+                    });
+                });
+
+                // Before Submit of noForm, update hidden fields with current date/time values
+                noForm.addEventListener('submit', function(e) {
+                    // Always use hidden ISO date value
+                    document.getElementById('hiddenNewDate').value =
+                        document.getElementById('appointment-date-new').value;
+
+                    // Convert 12h time to 24h format
+                    const time12h = document.getElementById('appointment-time').value;
+                    const [time, modifier] = time12h.split(' ');
+                    let [hours, minutes] = time.split(':');
+
+                    if (modifier === 'PM' && hours !== '12') hours = parseInt(hours) + 12;
+                    if (modifier === 'AM' && hours === '12') hours = '00';
+
+                    document.getElementById('hiddenNewTime').value =
+                        `${hours.toString().padStart(2, '0')}:${minutes}:00`;
+                });
+            });
+
+            // jQuery datepicker initialization remains as before
+            $(function() {
+                // Initialize datepicker with dual format support
+                const datePicker = $('#appointment-date-display').datepicker({
+                    dateFormat: 'dd | M | yy', // Display format
+                    altFormat: 'yy-mm-dd', // Hidden ISO format
+                    altField: '#appointment-date-new',
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: true,
+                    beforeShow: function(input, inst) {
+                        // Initialize with current ISO date
+                        const isoDate = $('#appointment-date-new').val();
+                        $(this).datepicker('setDate', new Date(isoDate));
+                    }
+                });
+
+                // Initially disable if "No" isn't selected
+                if (!document.querySelector('input[name="availability"][value="no"]:checked')) {
+                    datePicker.datepicker('disable');
+                }
+            });
+        })();
+    </script>
+@endpush --}}
 
 @push('scripts')
     <script src="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.js') }}"></script>
@@ -320,6 +434,13 @@
                         }
                     });
                 });
+
+                // Added code: hide yes/no block, default to "no," and trigger its logic
+                document.querySelector('.confirm-time-left-label-wrapper').style.display = 'none';
+                const noRadio = document.querySelector('input[name="availability"][value="no"]');
+                noRadio.checked = true;
+                toggleFieldsAndUI(true);
+                // End of added code
 
                 // Before Submit of noForm, update hidden fields with current date/time values
                 noForm.addEventListener('submit', function(e) {

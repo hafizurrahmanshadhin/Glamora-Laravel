@@ -152,6 +152,40 @@
                     </a>
                 </li>
 
+                {{-- Booking Cancellation List --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->is('booking-cancellation*') ? 'active' : '' }}"
+                        href="#bookingCancellation" data-bs-toggle="collapse" role="button"
+                        aria-expanded="{{ request()->is('booking-cancellation*') ? 'true' : 'false' }}"
+                        aria-controls="bookingCancellation">
+                        <i class="ri-close-circle-line"></i>
+                        <span data-key="t-booking-cancellation" style="white-space: nowrap">Booking
+                            Cancellation</span>
+                    </a>
+
+                    <div class="collapse menu-dropdown {{ request()->is('booking-cancellation*') ? 'show' : '' }}"
+                        id="bookingCancellation">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('before-payment.index') }}"
+                                    class="nav-link {{ request()->routeIs('before-payment.index') ? 'active' : '' }}"
+                                    data-key="t-before-payment">
+                                    Before Payment
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('after-payment.index') }}"
+                                    class="nav-link {{ request()->routeIs('after-payment.index') ? 'active' : '' }}"
+                                    data-key="t-after-payment">
+                                    After Payment
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+
                 <hr>
                 {{-- CMS --}}
                 <li class="nav-item">
