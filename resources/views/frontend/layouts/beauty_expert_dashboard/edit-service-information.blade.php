@@ -95,12 +95,12 @@
                                     fill="none">
                                     <path
                                         d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582
-                                                                                                                                                                        25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
-                                                                                                                                                                        33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
-                                                                                                                                                                        34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
-                                                                                                                                                                        29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
-                                                                                                                                                                        6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
-                                                                                                                                                                        6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                                                                                                                                                                                                                25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
+                                                                                                                                                                                                                                33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
+                                                                                                                                                                                                                                34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
+                                                                                                                                                                                                                                29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
+                                                                                                                                                                                                                                6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
+                                                                                                                                                                                                                                6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
                                         stroke="#222222" stroke-width="1.5" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
@@ -239,7 +239,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="item">
                             <div class="range-slider-content">
                                 <div class="d-flex minimum-booking-value-container align-items-center gap-3">
@@ -375,9 +375,9 @@
                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                 <path
                                                     d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4
-                                                                                                                         24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
-                                                                                                                         47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
-                                                                                                                         0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                                                                                                                                                                 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
+                                                                                                                                                                                 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
+                                                                                                                                                                                 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                             </svg>
                                         </div>
                                     </td>
@@ -412,7 +412,9 @@
     <script>
         let map;
         let currentMarker;
-        let travelRadiusCircle; // Global variable for the travel radius circle
+        let travelRadiusCircle;
+        let freeRadiusCircle;
+        let maxRadiusCircle;
 
         // Default coordinates (Canberra)
         const defaultLat = -35.3;
@@ -446,19 +448,71 @@
                 });
         }
 
-        // Function to update or create the travel radius circle on the map
-        function updateTravelRadiusCircle(kmValue) {
-            if (!map) return; // Ensure map is initialized
+        // New function for updating free radius circle (green):
+        function updateFreeRadiusCircle(kmValue) {
+            if (!map) return;
             const latLng = currentMarker ? currentMarker.getLatLng() : map.getCenter();
-            const radiusInMeters = kmValue * 1000; // Convert KM to meters
+            const radiusInMeters = kmValue * 1000;
+
+            if (freeRadiusCircle) {
+                freeRadiusCircle.setLatLng(latLng);
+                freeRadiusCircle.setRadius(radiusInMeters);
+            } else {
+                freeRadiusCircle = L.circle(latLng, {
+                    color: 'green',
+                    fillColor: '#32CD32',
+                    fillOpacity: 0.2,
+                    radius: radiusInMeters
+                }).addTo(map);
+            }
+
+            // Auto-zoom if radius is more than 1km
+            if (kmValue > 1 && freeRadiusCircle) {
+                map.fitBounds(freeRadiusCircle.getBounds(), {
+                    animate: true,
+                    padding: [20, 20]
+                });
+            }
+        }
+
+        // Existing function for updating travel radius circle (orange):
+        function updateTravelRadiusCircle(kmValue) {
+            if (!map) return;
+            const latLng = currentMarker ? currentMarker.getLatLng() : map.getCenter();
+            const radiusInMeters = kmValue * 1000;
 
             if (travelRadiusCircle) {
-                // Update circle if it already exists
                 travelRadiusCircle.setLatLng(latLng);
                 travelRadiusCircle.setRadius(radiusInMeters);
             } else {
-                // Create the circle if it doesn't exist yet
                 travelRadiusCircle = L.circle(latLng, {
+                    color: 'orange',
+                    fillColor: '#FFA500',
+                    fillOpacity: 0.2,
+                    radius: radiusInMeters
+                }).addTo(map);
+            }
+
+            // Move this inside the function:
+            if (kmValue > 1 && travelRadiusCircle) {
+                map.fitBounds(travelRadiusCircle.getBounds(), {
+                    animate: true,
+                    padding: [20, 20]
+                });
+            }
+        }
+
+        // New function for updating max radius circle (red):
+        function updateMaxRadiusCircle(kmValue) {
+            if (!map) return;
+            const latLng = currentMarker ? currentMarker.getLatLng() : map.getCenter();
+            const radiusInMeters = kmValue * 1000;
+
+            if (maxRadiusCircle) {
+                maxRadiusCircle.setLatLng(latLng);
+                maxRadiusCircle.setRadius(radiusInMeters);
+            } else {
+                maxRadiusCircle = L.circle(latLng, {
                     color: 'red',
                     fillColor: '#f03',
                     fillOpacity: 0.2,
@@ -466,9 +520,9 @@
                 }).addTo(map);
             }
 
-            // Auto-adjust map view if radius is more than 1km
-            if (kmValue > 1) {
-                map.fitBounds(travelRadiusCircle.getBounds(), {
+            // Auto-zoom if radius is more than 1km
+            if (kmValue > 1 && maxRadiusCircle) {
+                map.fitBounds(maxRadiusCircle.getBounds(), {
                     animate: true,
                     padding: [20, 20]
                 });
@@ -525,9 +579,14 @@
                     animate: true
                 });
 
-                // Update the travel radius circle based on the current slider value
+                // Update circles based on slider values:
+                const freeRadiusValue = document.getElementById('free-radius').value;
                 const travelRadiusValue = document.getElementById('travel-radius').value;
+                const maxRadiusValue = document.getElementById('max-radius').value;
+
+                updateFreeRadiusCircle(freeRadiusValue);
                 updateTravelRadiusCircle(travelRadiusValue);
+                updateMaxRadiusCircle(maxRadiusValue);
 
                 // Reverse geocoding to fetch address
                 fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
@@ -618,13 +677,25 @@
             const indicator = document.getElementById(indicatorId);
             slider.addEventListener("input", () => {
                 updateSliderValue(slider, indicator);
+                if (id === "free-radius") {
+                    updateFreeRadiusCircle(slider.value);
+                }
                 if (id === "travel-radius") {
                     updateTravelRadiusCircle(slider.value);
                 }
+                if (id === "max-radius") {
+                    updateMaxRadiusCircle(slider.value);
+                }
             });
             updateSliderValue(slider, indicator);
+            if (id === "free-radius") {
+                updateFreeRadiusCircle(slider.value);
+            }
             if (id === "travel-radius") {
                 updateTravelRadiusCircle(slider.value);
+            }
+            if (id === "max-radius") {
+                updateMaxRadiusCircle(slider.value);
             }
         });
     </script>

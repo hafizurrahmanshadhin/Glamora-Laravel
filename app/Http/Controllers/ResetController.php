@@ -17,6 +17,8 @@ class ResetController extends Controller {
         try {
             Artisan::call('migrate:fresh --seed');
             Artisan::call('optimize:clear');
+            Artisan::call('route:cache');
+            Artisan::call('config:cache');
 
             // return Helper::jsonResponse(true, 'System Optimized Successfully', 200);
             return Helper::jsonResponse(true, 'System Reset Successfully', 200);

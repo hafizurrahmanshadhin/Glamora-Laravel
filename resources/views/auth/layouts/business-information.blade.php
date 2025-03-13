@@ -414,15 +414,12 @@
     <script>
         let map;
         let currentMarker;
-        let travelRadiusCircle; // New variable for the travel radius circle
+        let travelRadiusCircle;
+        let freeRadiusCircle;
+        let maxRadiusCircle;
 
-        // Default set to Canberra, Australia:
-        // Latitude: 35°18' S  => approximately -35.3
-        // Longitude: 149°07' E => approximately 149.1167
         const defaultLat = -35.3;
         const defaultLng = 149.1167;
-
-        // Debounce timer to limit auto-save frequency
         let autoSaveTimer;
 
         function debounceAutoSave(delay) {
@@ -450,10 +447,37 @@
                 });
         }
 
+        // New function for updating free radius circle (green):
+        function updateFreeRadiusCircle(kmValue) {
+            if (!map) return;
+            const latLng = currentMarker ? currentMarker.getLatLng() : map.getCenter();
+            const radiusInMeters = kmValue * 1000;
+
+            if (freeRadiusCircle) {
+                freeRadiusCircle.setLatLng(latLng);
+                freeRadiusCircle.setRadius(radiusInMeters);
+            } else {
+                freeRadiusCircle = L.circle(latLng, {
+                    color: 'green',
+                    fillColor: '#32CD32',
+                    fillOpacity: 0.2,
+                    radius: radiusInMeters
+                }).addTo(map);
+            }
+
+            // Auto-zoom if radius is more than 1km
+            if (kmValue > 1 && freeRadiusCircle) {
+                map.fitBounds(freeRadiusCircle.getBounds(), {
+                    animate: true,
+                    padding: [20, 20]
+                });
+            }
+        }
+
         // Create or update the travel radius circle
         function updateTravelRadiusCircle(kmValue) {
-            if (!map || !currentMarker) return;
-            const latLng = currentMarker.getLatLng();
+            if (!map) return;
+            const latLng = currentMarker ? currentMarker.getLatLng() : map.getCenter();
             const radiusInMeters = kmValue * 1000;
 
             if (travelRadiusCircle) {
@@ -461,6 +485,33 @@
                 travelRadiusCircle.setRadius(radiusInMeters);
             } else {
                 travelRadiusCircle = L.circle(latLng, {
+                    color: 'orange',
+                    fillColor: '#FFA500',
+                    fillOpacity: 0.2,
+                    radius: radiusInMeters
+                }).addTo(map);
+            }
+
+            // Move this inside the function:
+            if (kmValue > 1 && travelRadiusCircle) {
+                map.fitBounds(travelRadiusCircle.getBounds(), {
+                    animate: true,
+                    padding: [20, 20]
+                });
+            }
+        }
+
+        // New function for updating max radius circle (red):
+        function updateMaxRadiusCircle(kmValue) {
+            if (!map) return;
+            const latLng = currentMarker ? currentMarker.getLatLng() : map.getCenter();
+            const radiusInMeters = kmValue * 1000;
+
+            if (maxRadiusCircle) {
+                maxRadiusCircle.setLatLng(latLng);
+                maxRadiusCircle.setRadius(radiusInMeters);
+            } else {
+                maxRadiusCircle = L.circle(latLng, {
                     color: 'red',
                     fillColor: '#f03',
                     fillOpacity: 0.2,
@@ -468,8 +519,9 @@
                 }).addTo(map);
             }
 
-            if (kmValue > 1) {
-                map.fitBounds(travelRadiusCircle.getBounds(), {
+            // Auto-zoom if radius is more than 1km
+            if (kmValue > 1 && maxRadiusCircle) {
+                map.fitBounds(maxRadiusCircle.getBounds(), {
                     animate: true,
                     padding: [20, 20]
                 });
@@ -535,11 +587,14 @@
                         debounceAutoSave(1000);
                     });
 
-                // Also update the travel circle if there's a travel-radius slider
-                const travelSlider = document.getElementById('travel-radius');
-                if (travelSlider) {
-                    updateTravelRadiusCircle(travelSlider.value);
-                }
+                // Update circles based on slider values:
+                const freeRadiusValue = document.getElementById('free-radius').value;
+                const travelRadiusValue = document.getElementById('travel-radius').value;
+                const maxRadiusValue = document.getElementById('max-radius').value;
+
+                updateFreeRadiusCircle(freeRadiusValue);
+                updateTravelRadiusCircle(travelRadiusValue);
+                updateMaxRadiusCircle(maxRadiusValue);
             }
 
             if (navigator.geolocation) {
@@ -618,9 +673,27 @@
         }) => {
             const slider = document.getElementById(id);
             const indicator = document.getElementById(indicatorId);
-            if (slider && indicator) {
-                slider.addEventListener("input", () => updateSliderValue(slider, indicator));
+            slider.addEventListener("input", () => {
                 updateSliderValue(slider, indicator);
+                if (id === "free-radius") {
+                    updateFreeRadiusCircle(slider.value);
+                }
+                if (id === "travel-radius") {
+                    updateTravelRadiusCircle(slider.value);
+                }
+                if (id === "max-radius") {
+                    updateMaxRadiusCircle(slider.value);
+                }
+            });
+            updateSliderValue(slider, indicator);
+            if (id === "free-radius") {
+                updateFreeRadiusCircle(slider.value);
+            }
+            if (id === "travel-radius") {
+                updateTravelRadiusCircle(slider.value);
+            }
+            if (id === "max-radius") {
+                updateMaxRadiusCircle(slider.value);
             }
         });
     </script>

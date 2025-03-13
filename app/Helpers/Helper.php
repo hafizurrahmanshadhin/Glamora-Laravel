@@ -21,7 +21,6 @@ class Helper {
      */
     public static function fileUpload($file, string $folder, string $name = null): ?string {
         if (!$file || !$file->isValid()) {
-            Log::error('File is not valid.');
             return null;
         }
 
@@ -31,17 +30,14 @@ class Helper {
         $path      = public_path('uploads/' . $folder);
         if (!file_exists($path)) {
             if (!mkdir($path, 0755, true) && !is_dir($path)) {
-                Log::error('Failed to create directory: ' . $path);
                 return null;
             }
         }
 
         try {
             $file->move($path, $imageName);
-            Log::info('File uploaded successfully to: ' . $path . '/' . $imageName);
             return 'uploads/' . $folder . '/' . $imageName;
         } catch (Exception $e) {
-            Log::error('File upload error: ' . $e->getMessage());
             return null;
         }
     }
@@ -56,7 +52,6 @@ class Helper {
         if (file_exists($path)) {
             try {
                 unlink($path);
-                Log::info('File deleted successfully: ' . $path);
             } catch (Exception $e) {
                 Log::error('File deletion error: ' . $e->getMessage());
             }
