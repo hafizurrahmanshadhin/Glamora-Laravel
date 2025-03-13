@@ -11,8 +11,8 @@
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('report.index') }}">Table</a></li>
-                                <li class="breadcrumb-item active">Report List</li>
+                                <li class="breadcrumb-item"><a href="{{ route('before-payment.index') }}">Table</a></li>
+                                <li class="breadcrumb-item active">Booking Cancellation List Before Payment</li>
                             </ol>
                         </div>
                     </div>
@@ -34,9 +34,8 @@
                                     <thead>
                                         <tr>
                                             <th class="column-id">#</th>
-                                            <th class="column-content">Report From</th>
-                                            <th class="column-content">Report To</th>
-                                            <th class="column-content">Message</th>
+                                            <th class="column-content">Canceled By</th>
+                                            <th class="column-content">Requested By</th>
                                             <th class="column-content text-center">Action</th>
                                         </tr>
                                     </thead>
@@ -74,7 +73,7 @@
                     serverSide: true,
                     pagingType: "full_numbers",
                     ajax: {
-                        url: "{{ route('report.index') }}",
+                        url: "{{ route('before-payment.index') }}",
                         type: "GET",
                     },
                     dom: "<'row table-topbar'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>>" +
@@ -99,22 +98,18 @@
                             className: 'text-center'
                         },
                         {
-                            data: 'report_from',
-                            name: 'report_from',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'report_to',
-                            name: 'report_to',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
-                            data: 'message',
-                            name: 'message',
+                            data: 'canceled_by_name',
+                            name: 'canceled_by_name',
                             orderable: true,
                             searchable: true,
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'requested_by_name',
+                            name: 'requested_by_name',
+                            orderable: true,
+                            searchable: true,
+                            className: 'text-center'
                         },
                         {
                             data: 'action',

@@ -20,9 +20,26 @@ class BeforePaymentController extends Controller {
      */
     public function index(Request $request): View | JsonResponse {
         if ($request->ajax()) {
-            $data = BookingCancellationBeforeAppointment::latest()->get();
+            $data = BookingCancellationBeforeAppointment::with(['canceledBy', 'requestedBy'])->latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
+
+            // New column to display the user who canceled
+                ->addColumn('canceled_by_name', function ($user) {
+                    if ($user->canceledBy) {
+                        return $user->canceledBy->first_name . ' ' . $user->canceledBy->last_name;
+                    }
+                    return 'N/A';
+                })
+
+            // New column to display the user who requested the booking
+                ->addColumn('requested_by_name', function ($user) {
+                    if ($user->requestedBy) {
+                        return $user->requestedBy->first_name . ' ' . $user->requestedBy->last_name;
+                    }
+                    return 'N/A';
+                })
+
                 ->addColumn('action', function ($report) {
                     return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
                                 <a href="javascript:void(0);" onclick="showReportDetails(' . $report->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewReportModal">
@@ -30,7 +47,7 @@ class BeforePaymentController extends Controller {
                                 </a>
                             </div>';
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['canceled_by_name', 'requested_by_name', 'action'])
                 ->make();
         }
         return view('backend.layouts.booking-cancellation.before-payment.index');
