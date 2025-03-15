@@ -193,7 +193,7 @@
                         href="#sidebarCMSPages" data-bs-toggle="collapse" role="button"
                         aria-expanded="{{ request()->is('admin/cms*') ? 'true' : 'false' }}"
                         aria-controls="sidebarCMSPages">
-                        <i class="ri-settings-3-line"></i>
+                        <i class="ri-pages-line"></i>
                         <span data-key="t-pages">CMS</span>
                     </a>
 

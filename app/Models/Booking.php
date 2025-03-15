@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\BookingCancellationAfterAppointment;
 use App\Models\BookingCancellationBeforeAppointment;
 use App\Models\Order;
 use App\Models\Payment;
@@ -71,5 +72,9 @@ class Booking extends Model {
 
     public function bookingCancellationBeforeAppointments(): HasMany {
         return $this->hasMany(BookingCancellationBeforeAppointment::class, 'booking_id');
+    }
+
+    public function bookingCancellationAfterAppointments(): HasMany {
+        return $this->hasMany(BookingCancellationAfterAppointment::class, 'booking_id');
     }
 }

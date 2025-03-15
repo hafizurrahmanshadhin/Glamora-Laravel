@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Booking;
+use App\Models\BookingCancellationAfterAppointment;
 use App\Models\BookingCancellationBeforeAppointment;
 use App\Models\BusinessInformation;
 use App\Models\Order;
@@ -108,6 +109,14 @@ class User extends Authenticatable implements JWTSubject {
 
     public function bookingCancellationBeforeAppointmentRequests(): HasMany {
         return $this->hasMany(BookingCancellationBeforeAppointment::class, 'requested_by');
+    }
+
+    public function bookingCancellationAfterAppointments(): HasMany {
+        return $this->hasMany(BookingCancellationAfterAppointment::class, 'canceled_by');
+    }
+
+    public function bookingCancellationAfterAppointmentRequests(): HasMany {
+        return $this->hasMany(BookingCancellationAfterAppointment::class, 'requested_by');
     }
 
     /**

@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Web\Frontend;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\BookingCancellationAfterAppointment;
 use App\Models\BusinessInformation;
 use App\Models\Review;
 use App\Models\Service;
 use App\Models\TravelRadius;
 use App\Models\UserService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +33,7 @@ class BeautyExpertDashboardController extends Controller {
             ->whereHas('payments', function ($query) {
                 $query->where('payment_status', 'completed');
             })
+            ->whereDoesntHave('bookingCancellationAfterAppointments')
             ->with(['user', 'userService.service', 'payments'])
             ->orderBy('appointment_date', 'asc')
             ->get();
@@ -107,5 +111,37 @@ class BeautyExpertDashboardController extends Controller {
         UserService::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
 
         return response()->json(['status' => 'success']);
+    }
+
+    /**
+     * Cancel a booking after appointments have been made.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function bookingCancellationAfterAppointments(Request $request): JsonResponse {
+        $request->validate([
+            'booking_id' => 'required|integer|exists:bookings,id',
+        ]);
+
+        try {
+            // Find the booking to cancel
+            $booking = Booking::findOrFail($request->booking_id);
+
+            // The currently logged-in user is “canceling_by”
+            $canceledBy = Auth::id() ?? null;
+            // The “requested_by” from the original booking (or any logic you prefer)
+            $requestedBy = $booking->user_id ?? null;
+
+            BookingCancellationAfterAppointment::create([
+                'booking_id'   => $booking->id,
+                'canceled_by'  => $canceledBy,
+                'requested_by' => $requestedBy,
+            ]);
+
+            return Helper::jsonResponse(true, 'Appointment canceled successfully.', 200);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'Failed to cancel appointment', 500, null, $e->getMessage());
+        }
     }
 }

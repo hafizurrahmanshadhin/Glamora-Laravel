@@ -190,6 +190,17 @@
                                                     fill="#222222" />
                                             </svg>
                                         </a>
+
+                                        <a class="appointment-done" data-bs-toggle="modal" data-bs-target="#appointmentDone"
+                                            data-booking-id="{{ $booking->id }}" style="cursor: pointer;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                                fill="none" viewBox="0 0 32 32">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M16 3C8.82 3 3 8.82 3 16C3 23.18 8.82 29 16 29C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM16 27C9.93 27 5 22.07 5 16C5 9.93 9.93 5 16 5C22.07 5 27 9.93 27 16C27 22.07 22.07 27 16 27ZM11.29 11.29L16 16L20.71 11.29L22.12 12.71L17.41 16L22.12 19.29L20.71 20.71L16 17.41L11.29 20.71L9.88 19.29L14.59 16L9.88 12.71L11.29 11.29Z"
+                                                    fill="#222222" />
+                                            </svg>
+                                        </a>
+
                                     </div>
                                 </div>
                                 <div class="upcoming-apointment-devider"></div>
@@ -215,6 +226,26 @@
             </section>
         </div>
     </div>
+
+    {{-- Appointments Cancel Modal Start --}}
+    <div class="modal fade" id="appointmentDone" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body tm-modal-body">
+                    <h2>Do you want to cancel this appointment?</h2>
+                    <div class="tm-multistep-btn-wrapper">
+                        <button id="confirmCancellationBtn" class="tm-multi-step-submit-form" type="button">
+                            Yes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Appointments Cancel Modal End --}}
 @endsection
 
 @push('scripts')
@@ -245,6 +276,47 @@
             }
 
             checkbox.addEventListener("change", updateAvailability);
+        });
+    </script>
+
+    <script>
+        // If there's a stored message, show it after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const storedMessage = localStorage.getItem('cancellationMessage');
+            if (storedMessage) {
+                toastr.success(storedMessage);
+                localStorage.removeItem('cancellationMessage');
+            }
+        });
+
+        let bookingIdForCancellation = null;
+        document.querySelectorAll('.appointment-done').forEach(function(element) {
+            element.addEventListener('click', function() {
+                bookingIdForCancellation = this.getAttribute('data-booking-id');
+            });
+        });
+
+        document.getElementById('confirmCancellationBtn').addEventListener('click', function() {
+            if (!bookingIdForCancellation) {
+                return;
+            }
+            axios.post('{{ route('booking-cancellation-after-appointments') }}', {
+                    booking_id: bookingIdForCancellation
+                })
+                .then(function(response) {
+                    if (response.data.status) {
+                        // Save success message, then reload
+                        localStorage.setItem('cancellationMessage', response.data.message ||
+                            'Appointment canceled successfully.');
+                        location.reload();
+                    } else {
+                        alert(response.data.message || 'Failed to cancel appointment.');
+                    }
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    alert('Error occurred while canceling appointment.');
+                });
         });
     </script>
 @endpush
