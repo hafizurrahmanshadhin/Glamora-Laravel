@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class BookingSeeder extends Seeder {
-    public function run(): void {
+    public function run() {
         DB::table('bookings')->insert([
             [
                 'id'               => 1,
@@ -18,8 +19,8 @@ class BookingSeeder extends Seeder {
                 'appointment_time' => '7:00 PM',
                 'price'            => 32.40,
                 'status'           => 'active',
-                'created_at'       => '2025-01-31 23:44:26',
-                'updated_at'       => '2025-01-31 23:44:26',
+                'created_at'       => Carbon::parse('2025-01-31 17:44:26'),
+                'updated_at'       => Carbon::parse('2025-01-31 17:44:26'),
                 'deleted_at'       => null,
             ],
             [
@@ -32,8 +33,8 @@ class BookingSeeder extends Seeder {
                 'appointment_time' => '9:00 AM',
                 'price'            => 240.00,
                 'status'           => 'active',
-                'created_at'       => '2025-01-31 23:44:54',
-                'updated_at'       => '2025-01-31 23:44:54',
+                'created_at'       => Carbon::parse('2025-01-31 17:44:54'),
+                'updated_at'       => Carbon::parse('2025-01-31 17:44:54'),
                 'deleted_at'       => null,
             ],
             [
@@ -46,8 +47,8 @@ class BookingSeeder extends Seeder {
                 'appointment_time' => '7:00 PM',
                 'price'            => 442.80,
                 'status'           => 'active',
-                'created_at'       => '2025-01-31 23:45:34',
-                'updated_at'       => '2025-01-31 23:45:34',
+                'created_at'       => Carbon::parse('2025-01-31 17:45:34'),
+                'updated_at'       => Carbon::parse('2025-01-31 17:45:34'),
                 'deleted_at'       => null,
             ],
             [
@@ -60,8 +61,8 @@ class BookingSeeder extends Seeder {
                 'appointment_time' => '9:00 AM',
                 'price'            => 10.80,
                 'status'           => 'active',
-                'created_at'       => '2025-01-31 23:48:00',
-                'updated_at'       => '2025-01-31 23:48:00',
+                'created_at'       => Carbon::parse('2025-01-31 17:48:00'),
+                'updated_at'       => Carbon::parse('2025-01-31 17:48:00'),
                 'deleted_at'       => null,
             ],
             [
@@ -74,8 +75,64 @@ class BookingSeeder extends Seeder {
                 'appointment_time' => '11:00 PM',
                 'price'            => 540.00,
                 'status'           => 'active',
-                'created_at'       => '2025-01-31 23:48:59',
-                'updated_at'       => '2025-01-31 23:48:59',
+                'created_at'       => Carbon::parse('2025-01-31 17:48:59'),
+                'updated_at'       => Carbon::parse('2025-01-31 17:48:59'),
+                'deleted_at'       => null,
+            ],
+            [
+                'id'               => 6,
+                'user_id'          => 2,
+                'user_service_id'  => 1,
+                'service_ids'      => '1,2,3',
+                'service_type'     => 'salon_services',
+                'appointment_date' => '2025-03-31',
+                'appointment_time' => '5:00 AM',
+                'price'            => 64.80,
+                'status'           => 'active',
+                'created_at'       => Carbon::parse('2025-03-14 20:58:23'),
+                'updated_at'       => Carbon::parse('2025-03-14 20:58:23'),
+                'deleted_at'       => null,
+            ],
+            [
+                'id'               => 7,
+                'user_id'          => 2,
+                'user_service_id'  => 1,
+                'service_ids'      => '1',
+                'service_type'     => 'mobile_services',
+                'appointment_date' => '2025-03-27',
+                'appointment_time' => '3:00 AM',
+                'price'            => 12.00,
+                'status'           => 'active',
+                'created_at'       => Carbon::parse('2025-03-14 21:00:45'),
+                'updated_at'       => Carbon::parse('2025-03-14 21:00:45'),
+                'deleted_at'       => null,
+            ],
+            [
+                'id'               => 8,
+                'user_id'          => 4,
+                'user_service_id'  => 6,
+                'service_ids'      => '8,7,6',
+                'service_type'     => 'mobile_services',
+                'appointment_date' => '2025-03-28',
+                'appointment_time' => '7:00 PM',
+                'price'            => 156.00,
+                'status'           => 'active',
+                'created_at'       => Carbon::parse('2025-03-14 21:03:27'),
+                'updated_at'       => Carbon::parse('2025-03-14 21:03:27'),
+                'deleted_at'       => null,
+            ],
+            [
+                'id'               => 9,
+                'user_id'          => 4,
+                'user_service_id'  => 2,
+                'service_ids'      => '2',
+                'service_type'     => 'salon_services',
+                'appointment_date' => '2025-03-21',
+                'appointment_time' => '2:00 AM',
+                'price'            => 21.60,
+                'status'           => 'active',
+                'created_at'       => Carbon::parse('2025-03-14 21:04:04'),
+                'updated_at'       => Carbon::parse('2025-03-14 21:04:04'),
                 'deleted_at'       => null,
             ],
         ]);

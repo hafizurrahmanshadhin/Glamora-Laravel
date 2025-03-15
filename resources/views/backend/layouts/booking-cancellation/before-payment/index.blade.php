@@ -50,6 +50,25 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal for viewing cancellation details start --}}
+    <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="UserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="UserModalLabel" class="modal-title">Cancellation Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- Filled via JS --}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal for viewing cancellation details end --}}
 @endsection
 
 @push('scripts')
@@ -135,5 +154,60 @@
                 });
             }
         });
+    </script>
+
+    <script>
+        function showUserDetails(id) {
+            let url = '{{ route('before-payment.show', ':id') }}'.replace(':id', id);
+
+            axios.get(url)
+                .then(function(response) {
+                    // Because the response now has { status, message, code, data: {...} }
+                    const responseData = response.data.data;
+
+                    // Convert service string into an array if needed
+                    let servicesList = [];
+                    if (typeof responseData.services === 'string' && responseData.services !== 'N/A') {
+                        servicesList = responseData.services.split(',').map(s => s.trim());
+                    }
+
+                    // Build a list for the service names
+                    let servicesHtml = '';
+                    if (servicesList.length > 0) {
+                        servicesList.forEach(function(service, index) {
+                            servicesHtml += `<li>${service}</li>`;
+                        });
+                    } else {
+                        servicesHtml = '<li>N/A</li>';
+                    }
+
+                    // Render final HTML
+                    const modalBody = document.querySelector('#viewUserModal .modal-body');
+                    modalBody.innerHTML = `
+                    <div style="line-height:1.6;">
+                        <h6><b>Canceled By:</b></h6>
+                        <p>
+                            <strong>Name:</strong> ${responseData.canceled_by_name}<br/>
+                            <strong>Email:</strong> ${responseData.canceled_by_email}
+                        </p>
+                        <hr>
+                        <h6><b>Requested By:</b></h6>
+                        <p>
+                            <strong>Name:</strong> ${responseData.requested_by_name}<br/>
+                            <strong>Email:</strong> ${responseData.requested_by_email}
+                        </p>
+                        <hr>
+                        <h6><b>Requested Services:</b></h6>
+                        <ol>
+                            ${servicesHtml}
+                        </ol>
+                    </div>
+                `;
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    toastr.error('Could not fetch details.');
+                });
+        }
     </script>
 @endpush
