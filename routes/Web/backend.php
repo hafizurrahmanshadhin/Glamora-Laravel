@@ -114,6 +114,7 @@ Route::prefix('booking-cancellation')->group(function () {
     // After Payment
     Route::controller(AfterPaymentController::class)->group(function () {
         Route::get('/after-payment', 'index')->name('after-payment.index');
-        Route::get('/after-payment/show/{id}', 'show')->name('after-payment.show');
+        Route::post('/ban-user', 'banUser')->name('user.ban');
+        Route::post('/comment', 'storeComment')->name('admin-comment');
     });
 });

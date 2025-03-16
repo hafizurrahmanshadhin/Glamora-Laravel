@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->enum('role', ['admin', 'client', 'beauty_expert'])->nullable(false);
             $table->enum('availability', ['available', 'unavailable'])->default('available');
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('banned_until')->nullable();
 
             $table->rememberToken();
             $table->timestamp('created_at')->useCurrent();

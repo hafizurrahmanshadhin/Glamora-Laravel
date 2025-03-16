@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\AdminCommentSeeder;
+use Database\Seeders\BookingCancellationAfterAppointmentSeeder;
 use Database\Seeders\BookingCancellationBeforeAppointmentSeeder;
 use Database\Seeders\BookingSeeder;
 use Database\Seeders\BusinessInformationSeeder;
@@ -51,6 +53,8 @@ class DatabaseSeeder extends Seeder {
             UserGallerySeeder::class,
             CMSImageSeeder::class,
             BookingCancellationBeforeAppointmentSeeder::class,
+            BookingCancellationAfterAppointmentSeeder::class,
+            AdminCommentSeeder::class,
         ]);
     }
 }

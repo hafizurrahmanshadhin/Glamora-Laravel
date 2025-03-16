@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AdminComment;
 use App\Models\Booking;
 use App\Models\BookingCancellationAfterAppointment;
 use App\Models\BookingCancellationBeforeAppointment;
@@ -48,6 +49,7 @@ class User extends Authenticatable implements JWTSubject {
             'google_id'                => 'string',
             'role'                     => 'string',
             'status'                   => 'string',
+            'banned_until'             => 'datetime',
             'availability'             => 'string',
             'created_at'               => 'datetime',
             'updated_at'               => 'datetime',
@@ -117,6 +119,10 @@ class User extends Authenticatable implements JWTSubject {
 
     public function bookingCancellationAfterAppointmentRequests(): HasMany {
         return $this->hasMany(BookingCancellationAfterAppointment::class, 'requested_by');
+    }
+
+    public function adminComments(): HasMany {
+        return $this->hasMany(AdminComment::class);
     }
 
     /**

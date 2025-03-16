@@ -24,7 +24,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">All Report List</h5>
+                            <h5 class="card-title mb-0">All User List</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -34,8 +34,11 @@
                                     <thead>
                                         <tr>
                                             <th class="column-id">#</th>
-                                            <th class="column-content">Canceled By</th>
-                                            <th class="column-content">Requested By</th>
+                                            <th class="column-content">Name</th>
+                                            <th class="column-content">Email</th>
+                                            <th class="column-content">Phone Number</th>
+                                            <th class="column-content text-center">Comment</th>
+                                            <th class="column-content text-center">Ban Status</th>
                                             <th class="column-content text-center">Action</th>
                                         </tr>
                                     </thead>
@@ -51,16 +54,77 @@
         </div>
     </div>
 
-    {{-- Modal for viewing cancellation details start --}}
-    <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="UserModalLabel" aria-hidden="true">
+    {{-- Modal for banning a user start --}}
+    <div class="modal fade" id="banUserModal" tabindex="-1" aria-labelledby="banUserModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 id="UserModalLabel" class="modal-title">Cancellation Details</h5>
+                    <h5 class="modal-title" id="banUserModalLabel">Ban User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {{-- Filled via JS --}}
+                    <form id="banUserForm">
+                        <input type="hidden" id="banUserId">
+                        <div class="mb-3">
+                            <label for="banDuration" class="form-label">Select Ban Duration</label>
+                            <select class="form-select" id="banDuration" required>
+                                <option value="">Choose duration</option>
+                                <option value="1">1 day</option>
+                                <option value="3">3 days</option>
+                                <option value="5">5 days</option>
+                                <option value="7">7 days</option>
+                                <option value="10">10 days</option>
+                                <option value="15">15 days</option>
+                                <option value="30">30 days</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" onclick="banUser()">Ban User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal for banning a user end --}}
+
+    {{-- Modal for adding a comment start --}}
+    <div class="modal fade" id="commentUserModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalLabel">Add Comment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="commentUserForm">
+                        <input type="hidden" id="commentUserId">
+                        <div class="mb-3">
+                            <label for="commentText" class="form-label">Enter Comment</label>
+                            <textarea class="form-control" id="commentText" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" onclick="submitComment()">Save Comment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal for adding a comment end --}}
+
+    {{-- Modal to show full comment start --}}
+    <div class="modal fade" id="fullCommentModal" tabindex="-1" aria-labelledby="fullCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fullCommentModalLabel">Full Comment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="fullCommentText">
+                    {{-- Dynamic Data --}}
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -68,12 +132,26 @@
             </div>
         </div>
     </div>
-    {{-- Modal for viewing cancellation details end --}}
+    {{-- Modal to show full comment end --}}
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Helper to safely escape HTML in JS
+            function escapeHtml(text) {
+                return text ? text.replace(/[\"&'\/<>]/g, function(a) {
+                    return {
+                        '"': '&quot;',
+                        '&': '&amp;',
+                        "'": '&#39;',
+                        '/': '&#47;',
+                        '<': '&lt;',
+                        '>': '&gt;'
+                    } [a];
+                }) : '';
+            }
+
             $.ajaxSetup({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -124,10 +202,36 @@
                             className: 'text-center'
                         },
                         {
-                            data: 'requested_by_name',
-                            name: 'requested_by_name',
+                            data: 'email',
+                            name: 'email',
                             orderable: true,
                             searchable: true,
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'phone_number',
+                            name: 'phone_number',
+                            orderable: true,
+                            searchable: true,
+                            className: 'text-center'
+                        },
+                        {
+                            data: null,
+                            name: 'admin_comment',
+                            render: function(data) {
+                                return `<a href="javascript:void(0)" style="color:black; text-decoration:none; cursor:pointer;" onclick="showFullCommentModal('${escapeHtml(data.full_comment)}')">
+                                            ${escapeHtml(data.admin_comment)}
+                                        </a>`;
+                            },
+                            orderable: false,
+                            searchable: false,
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'ban_status',
+                            name: 'ban_status',
+                            orderable: false,
+                            searchable: false,
                             className: 'text-center'
                         },
                         {
@@ -157,57 +261,76 @@
     </script>
 
     <script>
-        function showUserDetails(id) {
-            let url = '{{ route('after-payment.show', ':id') }}'.replace(':id', id);
+        function showBanModal(userId) {
+            $('#banUserId').val(userId);
+            $('#banUserModal').modal('show');
+        }
 
-            axios.get(url)
+        function banUser() {
+            var userId = $('#banUserId').val();
+            var duration = $('#banDuration').val();
+            if (!duration) {
+                alert('Please select a ban duration.');
+                return;
+            }
+            axios.post("{{ route('user.ban') }}", {
+                    user_id: userId,
+                    duration: duration
+                })
                 .then(function(response) {
-                    // Because the response now has { status, message, code, data: {...} }
-                    const responseData = response.data.data;
-
-                    // Convert service string into an array if needed
-                    let servicesList = [];
-                    if (typeof responseData.services === 'string' && responseData.services !== 'N/A') {
-                        servicesList = responseData.services.split(',').map(s => s.trim());
-                    }
-
-                    // Build a list for the service names
-                    let servicesHtml = '';
-                    if (servicesList.length > 0) {
-                        servicesList.forEach(function(service, index) {
-                            servicesHtml += `<li>${service}</li>`;
-                        });
-                    } else {
-                        servicesHtml = '<li>N/A</li>';
-                    }
-
-                    // Render final HTML
-                    const modalBody = document.querySelector('#viewUserModal .modal-body');
-                    modalBody.innerHTML = `
-                    <div style="line-height:1.6;">
-                        <h6><b>Canceled By:</b></h6>
-                        <p>
-                            <strong>Name:</strong> ${responseData.canceled_by_name}<br/>
-                            <strong>Email:</strong> ${responseData.canceled_by_email}
-                        </p>
-                        <hr>
-                        <h6><b>Requested By:</b></h6>
-                        <p>
-                            <strong>Name:</strong> ${responseData.requested_by_name}<br/>
-                            <strong>Email:</strong> ${responseData.requested_by_email}
-                        </p>
-                        <hr>
-                        <h6><b>Requested Services:</b></h6>
-                        <ol>
-                            ${servicesHtml}
-                        </ol>
-                    </div>
-                `;
+                    toastr.success(response.data.message);
+                    $('#banUserModal').modal('hide');
+                    // Reload the DataTable to reflect changes
+                    $('#datatable').DataTable().ajax.reload(null, false);
                 })
                 .catch(function(error) {
-                    console.error(error);
-                    toastr.error('Could not fetch details.');
+                    toastr.error('Failed to ban user.');
                 });
+        }
+    </script>
+
+    <script>
+        function showCommentModal(userId) {
+            // Get the DataTable instance
+            var table = $('#datatable').DataTable();
+            // Find the row data matching the given userId
+            var rowData = table.rows().data().toArray().find(function(row) {
+                return row.id == userId;
+            });
+            // If an existing comment is found and is not 'N/A', populate the textarea
+            if (rowData && rowData.full_comment && rowData.full_comment !== 'N/A') {
+                $('#commentText').val(rowData.full_comment);
+            } else {
+                $('#commentText').val('');
+            }
+            $('#commentUserId').val(userId);
+            $('#commentUserModal').modal('show');
+        }
+
+        function submitComment() {
+            var userId = $('#commentUserId').val();
+            var comment = $('#commentText').val();
+
+            axios.post("{{ route('admin-comment') }}", {
+                    user_id: userId,
+                    comment: comment
+                })
+                .then(function(response) {
+                    toastr.success(response.data.message);
+                    $('#commentUserModal').modal('hide');
+                    // Reload the DataTable so the updated comment shows
+                    $('#datatable').DataTable().ajax.reload(null, false);
+                })
+                .catch(function(error) {
+                    toastr.error('Failed to save comment.');
+                });
+        }
+    </script>
+
+    <script>
+        function showFullCommentModal(comment) {
+            document.getElementById('fullCommentText').textContent = comment;
+            $('#fullCommentModal').modal('show');
         }
     </script>
 @endpush

@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\MakeService;
+use App\Console\Commands\ReactivateBannedUsers;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -12,3 +13,5 @@ Artisan::command('inspire', function () {
 Artisan::command('make:service {name}', function ($name) {
     $this->call(MakeService::class, ['name' => $name]);
 });
+
+Schedule::command(ReactivateBannedUsers::class)->everyMinute();

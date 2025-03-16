@@ -33,6 +33,19 @@ class AuthenticatedSessionController extends Controller {
 
         $user = Auth::user();
 
+        // Check if the user is still banned
+        if ($user->banned_until && now()->lt($user->banned_until)) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            // Show a ban error similar to failed login
+            return redirect()->route('login')
+                ->withErrors([
+                    'email' => 'Your account is banned until ' . $user->banned_until->format('Y-m-d H:i') . '.',
+                ]);
+        }
+
         if ($user->role === 'beauty_expert' && $user->status === 'inactive') {
             Auth::guard('web')->logout();
 
