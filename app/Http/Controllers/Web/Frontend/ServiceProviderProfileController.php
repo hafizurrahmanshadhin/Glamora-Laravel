@@ -25,7 +25,7 @@ class ServiceProviderProfileController extends Controller {
      * @return View
      */
     public function index(Request $request, $userId, $serviceId): View {
-        $user = User::with(['userServices.service'])->findOrFail($userId);
+        $user = User::with(['userServices.service', 'adminComments'])->findOrFail($userId);
 
         // Calculate this user’s average rating
         $avg = Review::where('status', 'active')
@@ -46,6 +46,9 @@ class ServiceProviderProfileController extends Controller {
             $query->where('user_id', $userId);
         })->with(['booking.userService'])->get();
 
+        // Retrieve the latest admin comment for this user
+        $adminComment = $user->adminComments()->orderBy('created_at', 'desc')->first();
+
         return view('frontend.layouts.service_provider_profile.index', [
             'user'          => $user,
             'serviceId'     => $serviceId,
@@ -53,6 +56,7 @@ class ServiceProviderProfileController extends Controller {
             'averageRating' => $averageRating,
             'reviewCount'   => $reviewCount,
             'serviceIds'    => $request->query('service_ids'),
+            'adminComment'  => $adminComment,
         ]);
     }
 
@@ -62,7 +66,7 @@ class ServiceProviderProfileController extends Controller {
      * @return View
      */
     public function editProfile(): View {
-        $user   = Auth::user()->load('userServices.service');
+        $user   = Auth::user()->load('userServices.service', 'adminComments');
         $userId = Auth::id();
 
         // Calculate this user’s average rating
@@ -84,11 +88,15 @@ class ServiceProviderProfileController extends Controller {
             $query->where('user_id', $userId);
         })->with(['booking.userService'])->get();
 
+        // Retrieve the latest admin comment for this user
+        $adminComment = $user->adminComments()->orderBy('created_at', 'desc')->first();
+
         return view('frontend.layouts.beauty_expert_dashboard.profile', [
             'user'          => $user,
             'averageRating' => $averageRating,
             'reviewCount'   => $reviewCount,
             'reviews'       => $reviews,
+            'adminComment'  => $adminComment,
         ]);
     }
 

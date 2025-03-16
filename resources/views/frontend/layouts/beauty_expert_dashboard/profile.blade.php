@@ -175,6 +175,37 @@
                 </h3>
                 <div class="armie-div-line"></div>
                 <div class="tax-profile-left-comment-area">
+                    @if ($adminComment)
+                        <div class="tax-profile-single-comment admin-comment">
+                            <div class="tax-profile-single-comment-header">
+                                <div class="tax-profile-single-comment-author">
+                                    <div class="tax-profile-single-comment-author-img">
+                                        <img src="{{ asset($user->avatar ?? 'backend/images/default_images/user_1.jpg') }}"
+                                            alt="Admin Avatar">
+                                    </div>
+                                    <div class="tax-profile-single-comment-author-name">
+                                        <p>Glamora Admin</p>
+                                        <span>
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                    fill="none">
+                                                    <path fill="#cccccc"
+                                                        d="M12.4497 5.16294C12.4105 5.04741 12.3383 4.94589 12.242 4.87092C12.1457 4.79595 12.0296 4.75081 11.908 4.74108L8.34974 4.45838L6.80999 1.05044C6.76096 0.940672 6.6812 0.847445 6.58034 0.782004C6.47948 0.716563 6.36184 0.681707 6.2416 0.681641C6.12137 0.681575 6.00369 0.716302 5.90276 0.781632C5.80183 0.846962 5.72197 0.940102 5.67281 1.04981L4.13306 4.45838L0.574848 4.74108C0.455298 4.75055 0.341007 4.79426 0.245649 4.86697C0.150291 4.93969 0.0779045 5.03833 0.0371484 5.1511C-0.00360776 5.26387 -0.0110073 5.386 0.0158351 5.50286C0.0426776 5.61973 0.102625 5.72639 0.188506 5.81008L2.818 8.37306L1.88804 12.3994C1.8598 12.5213 1.86885 12.6489 1.91401 12.7655C1.95918 12.8822 2.03837 12.9826 2.14131 13.0537C2.24426 13.1248 2.3662 13.1634 2.49132 13.1643C2.61644 13.1653 2.73895 13.1286 2.84297 13.0591L6.2414 10.7938L9.63984 13.0591C9.74615 13.1297 9.87153 13.166 9.99911 13.1632C10.1267 13.1604 10.2504 13.1186 10.3535 13.0434C10.4566 12.9683 10.5342 12.8633 10.5759 12.7427C10.6176 12.6221 10.6213 12.4917 10.5867 12.3689L9.4451 8.37494L12.2762 5.82756C12.4616 5.66031 12.5296 5.39946 12.4497 5.16294Z" />
+                                                </svg>
+                                            @endfor
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="tax-profile-single-comment-time">
+                                    {{ $adminComment->created_at->diffForHumans() }}
+                                </p>
+                            </div>
+                            <p class="tax-profile-single-comment-content">
+                                {{ $adminComment->comment }}
+                            </p>
+                        </div>
+                    @endif
+
                     @forelse($reviews as $review)
                         <div class="tax-profile-single-comment">
                             <div class="tax-profile-single-comment-header">
