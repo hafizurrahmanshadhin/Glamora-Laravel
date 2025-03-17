@@ -7,6 +7,7 @@ use App\Models\TravelRadius;
 use App\Models\User;
 use App\Models\UserService;
 use Illuminate\Console\Command;
+use Log;
 
 class ReactivateBannedUsers extends Command {
     /**
@@ -29,6 +30,7 @@ class ReactivateBannedUsers extends Command {
      * @return int
      */
     public function handle() {
+        Log::info('test');
         $users = User::whereNotNull('banned_until')
             ->where('banned_until', '<=', now())
             ->get();
