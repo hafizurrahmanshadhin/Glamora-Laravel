@@ -52,7 +52,6 @@
                         <div class="item">
                             <div class="title">Upcoming Bookings ({{ $upcomingBookings->count() }})</div>
                         </div>
-
                         <div class="item">
                             <div class="title">Pending Requests ({{ $pendingRequests->count() }})</div>
                         </div>
@@ -70,8 +69,7 @@
                     </div>
                     <div class="text">
                         Start now to connect with trusted tax professionals, book appointments, and manage your
-                        documents—all in one
-                        place for a smooth tax preparation experience.
+                        documents—all in one place for a smooth tax preparation experience.
                     </div>
                 </div>
                 <div class="img-content">
@@ -115,8 +113,9 @@
                                                     fill="#222222" />
                                             </svg>
                                         </a>
-                                        <a class="appointment-done" data-bs-toggle="modal"
-                                            data-bs-target="#appointmentDone">
+                                        <!-- Add data-booking-id attribute below -->
+                                        <a class="appointment-done" data-booking-id="{{ $booking->id }}"
+                                            data-bs-toggle="modal" data-bs-target="#appointmentDone">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 fill="none" viewBox="0 0 32 32">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -159,7 +158,7 @@
                 {{-- Pending Requests Start --}}
                 <div class="upcoming-apointment-section">
                     <div class="armie-event-view-all d-flex align-items-center justify-content-between">
-                        <h1 class="tm-dashboard-heading">Pending Requests </h1>
+                        <h1 class="tm-dashboard-heading">Pending Requests</h1>
                     </div>
                     <div class="categories-tax-card-wrapper armie-upcoming-appointment-card-wrapper">
                         @forelse($pendingRequests as $booking)
@@ -217,19 +216,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body tm-modal-body">
-                    <h2>Is your appointment Completed ?</h2>
-                    <p class="modal-para">
-                        Help Us to Let Know your experience.
-                    </p>
-
+                    <h2>Is your appointment Completed?</h2>
+                    <p class="modal-para">Help us to let know your experience.</p>
                     <div class="tm-multistep-btn-wrapper">
-                        <a class="tm-appointment-done-btn" type="button" data-bs-toggle="modal"
-                            class="tm-dashboard-booking-landing-btn-2" data-bs-target="#appointmentReview2">
+                        <a class="tm-appointment-done-btn" type="button" onclick="openRefundConfirmationModal()">
                             No
                         </a>
-
                         <button class="tm-multi-step-submit-form" type="button" data-bs-toggle="modal"
-                            class="tm-dashboard-booking-landing-btn-1" data-bs-target="#appointmentReview">
+                            data-bs-target="#appointmentReview">
                             Yes, Done
                         </button>
                     </div>
@@ -238,6 +232,28 @@
         </div>
     </div>
     {{-- Modal-1: Experience Share End --}}
+
+    {{-- Refund Confirmation Modal Start --}}
+    <div class="modal fade" id="refundConfirmationModal" tabindex="-1" aria-labelledby="refundConfirmationModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h2>Refund will not provided</h2>
+                    <p>Are you sure you want to proceed? This will cancel your appointment and no refund will be provided.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" onclick="confirmRefundNotProvided()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Refund Confirmation Modal End --}}
 
     {{-- Modal-2: Experience Share Start --}}
     <div class="modal fade" id="appointmentReview" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -272,7 +288,6 @@
                             </p>
                             <textarea class="tm-modal-textarea" name="review" rows="3" placeholder="Write message here..." required></textarea>
                         </div>
-
                         <div class="tm-multistep-btn-wrapper w-100">
                             <button type="submit" class="tm-multi-step-submit-form tm-dashboard-booking-landing-btn-1">
                                 Submit
@@ -285,7 +300,7 @@
     </div>
     {{-- Modal-2: Experience Share End --}}
 
-    {{-- Modal-3: Appointment not done start --}}
+    {{-- Modal-3: Appointment not done (Report) Start --}}
     <div class="modal fade" id="appointmentReview2" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -299,14 +314,13 @@
                         <input type="hidden" name="booking_id" value="{{ $booking->id ?? '' }}">
                         <div class="appointment-not-done-area">
                             <div class="tm-modal-review-div">
-                                <h2>Wasn't complete your appointment ?</h2>
+                                <h2>Wasn't complete your appointment?</h2>
                                 <div class="tm-report-textarea">
                                     <p>Make A Report</p>
                                     <textarea class="tm-modal-textarea" name="message" rows="3" placeholder="Write your report here..." required></textarea>
                                 </div>
                             </div>
                         </div>
-
                         <div class="tm-multistep-btn-wrapper w-100">
                             <button type="submit" class="tm-multi-step-submit-form tm-dashboard-booking-landing-btn-2">
                                 Submit
@@ -320,13 +334,11 @@
     {{-- Modal-3: Appointment not done End --}}
 @endsection
 
-
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Labels with class="star"
+            // Star rating handling (existing code)
             const stars = document.querySelectorAll('.star');
-            // Radio buttons by name
             const radios = document.querySelectorAll('input[name="rating"]');
 
             function updateStars(selectedValue) {
@@ -353,7 +365,6 @@
                 updateStars(value);
             }
 
-            // Update on radio change
             radios.forEach((radio) => {
                 radio.addEventListener('change', function() {
                     const value = parseInt(this.value);
@@ -361,7 +372,6 @@
                 });
             });
 
-            // Hover effects on labels
             stars.forEach((star, index) => {
                 star.addEventListener('mouseover', function() {
                     handleMouseOver(index);
@@ -370,7 +380,6 @@
                     handleMouseOut();
                 });
                 star.addEventListener('click', function() {
-                    // Find associated radio matching index
                     const radio = document.getElementById(`star${index + 1}`);
                     if (radio) {
                         radio.checked = true;
@@ -379,5 +388,42 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        // Ensure bookingIdForCancellation is set from the appointment-done elements
+        let bookingIdForCancellation = null;
+
+        document.querySelectorAll('.appointment-done').forEach(function(element) {
+            element.addEventListener('click', function() {
+                bookingIdForCancellation = this.getAttribute('data-booking-id');
+                console.log("Selected booking ID:", bookingIdForCancellation);
+            });
+        });
+
+        function openRefundConfirmationModal() {
+            $('#appointmentDone').modal('hide');
+            $('#refundConfirmationModal').modal('show');
+        }
+
+        function confirmRefundNotProvided() {
+            axios.delete("{{ route('client-dashboard.cancel-booking') }}", {
+                    data: {
+                        booking_id: bookingIdForCancellation
+                    }
+                })
+                .then(function(response) {
+                    if (response.data.status === 'success') {
+                        $('#refundConfirmationModal').modal('hide');
+                        $('#appointmentReview2').modal('show');
+                    } else {
+                        toastr.error(response.data.message || 'Failed to cancel booking.');
+                    }
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    toastr.error('Error occurred while canceling appointment.');
+                });
+        }
     </script>
 @endpush

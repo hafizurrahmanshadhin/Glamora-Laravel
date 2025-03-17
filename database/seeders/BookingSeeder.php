@@ -49,7 +49,7 @@ class BookingSeeder extends Seeder {
                 'status'           => 'active',
                 'created_at'       => Carbon::parse('2025-01-31 17:45:34'),
                 'updated_at'       => Carbon::parse('2025-01-31 17:45:34'),
-                'deleted_at'       => null,
+                'deleted_at'       => Carbon::parse('2025-03-17 06:24:39'),
             ],
             [
                 'id'               => 4,
@@ -63,7 +63,7 @@ class BookingSeeder extends Seeder {
                 'status'           => 'active',
                 'created_at'       => Carbon::parse('2025-01-31 17:48:00'),
                 'updated_at'       => Carbon::parse('2025-01-31 17:48:00'),
-                'deleted_at'       => null,
+                'deleted_at'       => Carbon::parse('2025-03-17 06:25:20'),
             ],
             [
                 'id'               => 5,
