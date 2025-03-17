@@ -31,70 +31,66 @@ class AfterPaymentController extends Controller {
                 $grouped = BookingCancellationAfterAppointment::with(['canceledBy', 'requestedBy'])
                     ->latest()
                     ->get()
-                    ->groupBy('canceled_by');
+                    ->groupBy('canceled_by')
+                    ->values();
 
-                $data    = [];
-                $counter = 1;
-                foreach ($grouped as $canceledById => $items) {
-                    if (!$items->first() || !$items->first()->canceledBy) {
-                        continue;
-                    }
-
-                    $canceledUser = $items->first()->canceledBy;
-                    $canceledName = $canceledUser->first_name . ' ' . $canceledUser->last_name;
-                    $email        = $canceledUser->email ?? 'N/A';
-                    $phoneNumber  = $canceledUser->phone_number ?? 'N/A';
-
-                    $requestedNames = [];
-                    foreach ($items as $item) {
-                        if ($item->requestedBy) {
-                            $requestedNames[] = $item->requestedBy->first_name . ' ' . $item->requestedBy->last_name;
+                return DataTables::of($grouped)
+                    ->addIndexColumn()
+                    ->addColumn('id', function ($group) {
+                        return $group->first()->canceledBy->id ?? 'N/A';
+                    })
+                    ->addColumn('canceled_by_name', function ($group) {
+                        $user = $group->first()->canceledBy;
+                        return $user ? $user->first_name . ' ' . $user->last_name : 'N/A';
+                    })
+                    ->addColumn('email', function ($group) {
+                        $user = $group->first()->canceledBy;
+                        return $user ? ($user->email ?? 'N/A') : 'N/A';
+                    })
+                    ->addColumn('phone_number', function ($group) {
+                        $user = $group->first()->canceledBy;
+                        return $user ? ($user->phone_number ?? 'N/A') : 'N/A';
+                    })
+                    ->addColumn('requested_by_name', function ($group) {
+                        // Gather all unique requested-by names from the group
+                        $names = $group->map(function ($item) {
+                            return $item->requestedBy ? $item->requestedBy->first_name . ' ' . $item->requestedBy->last_name : null;
+                        })->filter()->unique();
+                        return $names->isNotEmpty() ? $names->implode(', ') : 'N/A';
+                    })
+                    ->addColumn('ban_status', function ($group) {
+                        $user = $group->first()->canceledBy;
+                        if ($user && $user->banned_until && now()->lt($user->banned_until)) {
+                            return '<span class="badge bg-danger">Banned until ' . $user->banned_until->format('Y-m-d H:i') . '</span>';
                         }
-                    }
-                    $requestedByAll = !empty($requestedNames)
-                    ? implode(', ', array_unique($requestedNames))
-                    : 'N/A';
-
-                    // Show ban status
-                    $banStatus = '<span class="badge bg-success">Not Banned</span>';
-                    if ($canceledUser->banned_until && now()->lt($canceledUser->banned_until)) {
-                        $banStatus = '<span class="badge bg-danger">Banned until '
-                        . $canceledUser->banned_until->format('Y-m-d H:i') . '</span>';
-                    }
-
-                    $comment = AdminComment::where('user_id', $canceledUser->id)
-                        ->latest()
-                        ->value('comment');
-
-                    $fullComment = $comment ?? 'N/A';
-                    $truncated   = $comment && strlen($comment) > 25 ? substr($comment, 0, 25) . '...' : ($comment ?: 'N/A');
-
-                    $action = '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
-                                <a href="javascript:void(0);" onclick="showBanModal(' . $canceledById . ')"
-                                   class="link-danger text-decoration-none" title="Ban User">
+                        return '<span class="badge bg-success">Not Banned</span>';
+                    })
+                    ->addColumn('admin_comment', function ($group) {
+                        $user    = $group->first()->canceledBy;
+                        $comment = $user ? AdminComment::where('user_id', $user->id)->latest()->value('comment') : null;
+                        if (!$comment) {
+                            return 'N/A';
+                        }
+                        return strlen($comment) > 25 ? substr($comment, 0, 25) . '...' : $comment;
+                    })
+                    ->addColumn('full_comment', function ($group) {
+                        $user    = $group->first()->canceledBy;
+                        $comment = $user ? AdminComment::where('user_id', $user->id)->latest()->value('comment') : null;
+                        return $comment ?: 'N/A';
+                    })
+                    ->addColumn('action', function ($group) {
+                        $user         = $group->first()->canceledBy;
+                        $canceledById = $user ? $user->id : 0;
+                        return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
+                                <a href="javascript:void(0);" onclick="showBanModal(' . $canceledById . ')" class="link-danger text-decoration-none" title="Ban User">
                                     <i class="ri-forbid-line" style="font-size: 24px;"></i>
                                 </a>
 
                                 <a href="javascript:void(0);" onclick="showCommentModal(' . $canceledById . ')" class="link-primary text-decoration-none" title="Comment">
                                     <i class="ri-chat-3-line" style="font-size: 24px;"></i>
                                 </a>
-                               </div>';
-
-                    $data[] = [
-                        'DT_RowIndex'       => $counter++,
-                        'id'                => $canceledById,
-                        'canceled_by_name'  => $canceledName,
-                        'email'             => $email,
-                        'phone_number'      => $phoneNumber,
-                        'requested_by_name' => $requestedByAll,
-                        'ban_status'        => $banStatus,
-                        'admin_comment'     => $truncated,
-                        'full_comment'      => $fullComment,
-                        'action'            => $action,
-                    ];
-                }
-
-                return DataTables::of(collect($data))
+                            </div>';
+                    })
                     ->rawColumns(['canceled_by_name', 'requested_by_name', 'ban_status', 'action'])
                     ->make(true);
             }
