@@ -60,6 +60,16 @@
                         </div>
 
                         <div class="form-floating">
+                            <input type="text" class="form-control" id="address" name="address"
+                                placeholder="Enter Your Address" value="{{ old('address') }}">
+                            <label for="address">Address</label>
+
+                            @error('address')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-floating">
                             <input type="password" class="form-control" id="password-input" name="password"
                                 placeholder="Please Enter Your Password">
                             <label for="password-input">Create Password</label>

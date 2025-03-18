@@ -156,6 +156,15 @@
                             <div class="tm-multi-step-summary-item">
                                 <h3>Pricing & Inclusions</h3>
                                 <div class="tm-multi-step-summary-item-component-wrapper">
+                                    <div class="tm-multi-step-summary-item-component">
+                                        <div class="tm-multi-step-summary-item-component-left">
+                                            <img src="{{ asset('frontend/images/location.svg') }}" alt="location">
+                                        </div>
+                                        <div class="tm-multi-step-summary-item-component-right">
+                                            <p class="genarel-para-new">Stylist comes to you in</p>
+                                            <p class="genarel-para-new-bold">{{ Auth::user()->address ?? '' }}</p>
+                                        </div>
+                                    </div>
                                     @foreach ($selectedServices as $service)
                                         <div class="tm-multi-step-summary-item-component">
                                             <div class="tm-multi-step-summary-item-component-left">

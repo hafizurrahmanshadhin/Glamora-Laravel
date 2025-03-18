@@ -37,6 +37,7 @@ class RegisteredUserController extends Controller {
             'last_name'    => ['required', 'string', 'max:255'],
             'email'        => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'phone_number' => ['required', 'string', 'max:255', 'unique:' . User::class],
+            'address'      => ['required', 'string'],
             'password'     => ['required', 'confirmed', Rules\Password::defaults()],
             'role'         => ['required', 'in:client,beauty_expert'],
         ]);
@@ -46,6 +47,7 @@ class RegisteredUserController extends Controller {
             'last_name'    => $request->last_name,
             'email'        => $request->email,
             'phone_number' => $request->phone_number,
+            'address'      => $request->address,
             'password'     => Hash::make($request->password),
             'role'         => $request->role,
             'status'       => $request->role === 'beauty_expert' ? 'inactive' : 'active',

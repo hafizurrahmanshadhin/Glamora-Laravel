@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Frontend;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\BookingCancellationBeforeAppointment;
@@ -11,6 +12,7 @@ use App\Notifications\BookingNotification;
 use App\Notifications\BookingStatusNotification;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,38 +25,44 @@ class BookServiceController extends Controller {
      *
      * @return View
      */
-    public function index(Request $request): View {
-        $serviceProviderId = $request->query('service_provider_id');
-        $serviceId         = $request->query('service_id');
+    public function index(Request $request): View | JsonResponse {
+        try {
+            $serviceProviderId = $request->query('service_provider_id');
+            $serviceId         = $request->query('service_id');
 
-        $serviceIdsParam = $request->query('service_ids');
-        $serviceIds      = $serviceIdsParam ? explode(',', $serviceIdsParam) : [$serviceId];
+            $serviceIdsParam = $request->query('service_ids');
+            $serviceIds      = $serviceIdsParam ? explode(',', $serviceIdsParam) : [$serviceId];
 
-        $userService = UserService::with('service')
-            ->where('user_id', $serviceProviderId)
-            ->where('service_id', $serviceId)
-            ->firstOrFail();
+            $userService = UserService::with('service')
+                ->where('user_id', $serviceProviderId)
+                ->where('service_id', $serviceId)
+                ->firstOrFail();
 
-        $price       = $userService->total_price;
-        $serviceName = $userService->service->services_name;
+            $price       = $userService->total_price;
+            $serviceName = $userService->service->services_name;
 
-        // If multiple services are selected, get them; otherwise fallback to the single service
-        $selectedServices = UserService::with('service')
-            ->where('user_id', $serviceProviderId)
-            ->whereIn('service_id', $serviceIds)
-            ->get();
+            // If multiple services are selected, get them; otherwise fallback to the single service
+            $selectedServices = UserService::with('service')
+                ->where('user_id', $serviceProviderId)
+                ->whereIn('service_id', $serviceIds)
+                ->get();
 
-        $totalPrice = $selectedServices->sum('total_price');
+            $totalPrice = $selectedServices->sum('total_price');
 
-        return view('frontend.layouts.booking.index', compact(
-            'serviceProviderId',
-            'serviceId',
-            'price',
-            'serviceName',
-            'selectedServices',
-            'totalPrice',
-            'serviceIds'
-        ));
+            return view('frontend.layouts.booking.index', compact(
+                'serviceProviderId',
+                'serviceId',
+                'price',
+                'serviceName',
+                'selectedServices',
+                'totalPrice',
+                'serviceIds'
+            ));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -115,23 +123,29 @@ class BookServiceController extends Controller {
      * @param Booking $booking
      * @return View
      */
-    public function viewNegotiate(Booking $booking): View {
-        // Convert stored service_ids to an array of integers.
-        $serviceIds = $booking->service_ids ? array_map('intval', explode(',', $booking->service_ids)) : [];
+    public function viewNegotiate(Booking $booking): View | JsonResponse {
+        try {
+            // Convert stored service_ids to an array of integers.
+            $serviceIds = $booking->service_ids ? array_map('intval', explode(',', $booking->service_ids)) : [];
 
-        // Retrieve the service provider ID from the related userService record.
-        $serviceProviderId = $booking->userService->user_id;
+            // Retrieve the service provider ID from the related userService record.
+            $serviceProviderId = $booking->userService->user_id;
 
-        // Fetch all selected UserService records with related service info.
-        $selectedServices = UserService::with('service')
-            ->where('user_id', $serviceProviderId)
-            ->whereIn('service_id', $serviceIds)
-            ->get();
+            // Fetch all selected UserService records with related service info.
+            $selectedServices = UserService::with('service')
+                ->where('user_id', $serviceProviderId)
+                ->whereIn('service_id', $serviceIds)
+                ->get();
 
-        return view('frontend.layouts.negotiated_date_and_time.index', [
-            'booking'          => $booking,
-            'selectedServices' => $selectedServices,
-        ]);
+            return view('frontend.layouts.negotiated_date_and_time.index', [
+                'booking'          => $booking,
+                'selectedServices' => $selectedServices,
+            ]);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -140,59 +154,65 @@ class BookServiceController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function respondAvailability(Request $request): RedirectResponse {
-        $booking = Booking::where('id', $request->booking_id)->firstOrFail();
-        $client  = $booking->user;
+    public function respondAvailability(Request $request): RedirectResponse | JsonResponse {
+        try {
+            $booking = Booking::where('id', $request->booking_id)->firstOrFail();
+            $client  = $booking->user;
 
-        switch ($request->action_type) {
-        case 'cancel':
-            BookingCancellationBeforeAppointment::create([
-                'booking_id'   => $booking->id,
-                'canceled_by'  => Auth::id(), // The user performing the cancel
-                'requested_by' => $client->id, // The original booking request's user
+            switch ($request->action_type) {
+            case 'cancel':
+                BookingCancellationBeforeAppointment::create([
+                    'booking_id'   => $booking->id,
+                    'canceled_by'  => Auth::id(), // The user performing the cancel
+                    'requested_by' => $client->id, // The original booking request's user
+                ]);
+
+                // Notify client that the request is declined
+                $client->notify(new BookingStatusNotification(
+                    $booking,
+                    "Declined your request!"
+                ));
+                return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Booking request declined.');
+
+            case 'yes':
+                // “I’m Available” - pass existing date/time/price
+                $formattedDate = Carbon::parse($booking->appointment_date)->format('Y-m-d');
+                $formattedTime = $booking->appointment_time
+                ? Carbon::parse($booking->appointment_time)->format('h:i A')
+                : 'No time set';
+
+                $client->notify(new BookingStatusNotification(
+                    $booking,
+                    "I’m Available with Date: {$formattedDate}, Time: {$formattedTime}, Price: {$booking->price}"
+                ));
+                return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Availability confirmed.');
+
+            case 'offer':
+                // Update booking record with new offer details
+                $booking->update([
+                    'appointment_date' => $request->new_date,
+                    'appointment_time' => $request->new_time,
+                    'price'            => $request->new_price,
+                ]);
+
+                $formattedDate = Carbon::parse($booking->appointment_date)->format('Y-m-d');
+                $formattedTime = $booking->appointment_time
+                ? Carbon::parse($booking->appointment_time)->format('h:i A')
+                : 'No time set';
+
+                $client->notify(new BookingStatusNotification(
+                    $booking,
+                    "New Offer! Date: {$formattedDate}, Time: {$formattedTime}, Price: {$booking->price}"
+                ));
+                return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Offer sent.');
+
+            default:
+                return redirect()->route('beauty-expert-dashboard')->with('t-error', 'Invalid action.');
+            }
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
             ]);
-
-            // Notify client that the request is declined
-            $client->notify(new BookingStatusNotification(
-                $booking,
-                "Declined your request!"
-            ));
-            return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Booking request declined.');
-
-        case 'yes':
-            // “I’m Available” - pass existing date/time/price
-            $formattedDate = Carbon::parse($booking->appointment_date)->format('Y-m-d');
-            $formattedTime = $booking->appointment_time
-            ? Carbon::parse($booking->appointment_time)->format('h:i A')
-            : 'No time set';
-
-            $client->notify(new BookingStatusNotification(
-                $booking,
-                "I’m Available with Date: {$formattedDate}, Time: {$formattedTime}, Price: {$booking->price}"
-            ));
-            return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Availability confirmed.');
-
-        case 'offer':
-            // Update booking record with new offer details
-            $booking->update([
-                'appointment_date' => $request->new_date,
-                'appointment_time' => $request->new_time,
-                'price'            => $request->new_price,
-            ]);
-
-            $formattedDate = Carbon::parse($booking->appointment_date)->format('Y-m-d');
-            $formattedTime = $booking->appointment_time
-            ? Carbon::parse($booking->appointment_time)->format('h:i A')
-            : 'No time set';
-
-            $client->notify(new BookingStatusNotification(
-                $booking,
-                "New Offer! Date: {$formattedDate}, Time: {$formattedTime}, Price: {$booking->price}"
-            ));
-            return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Offer sent.');
-
-        default:
-            return redirect()->route('beauty-expert-dashboard')->with('t-error', 'Invalid action.');
         }
     }
 }

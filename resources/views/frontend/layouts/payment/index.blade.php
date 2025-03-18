@@ -28,6 +28,15 @@
                         <div class="tm-multi-step-summary-item">
                             <h3>Selected Services</h3>
                             <div class="d-flex flex-column gap-3">
+                                <div class="tm-multi-step-summary-item-component">
+                                    <div class="tm-multi-step-summary-item-component-left">
+                                        <img src="{{ asset('frontend/images/location.svg') }}" alt="location">
+                                    </div>
+                                    <div class="tm-multi-step-summary-item-component-right">
+                                        <p class="genarel-para-new">Stylist comes to you in</p>
+                                        <p class="genarel-para-new-bold">{{ Auth::user()->address ?? '' }}</p>
+                                    </div>
+                                </div>
                                 @foreach ($selectedServices as $srv)
                                     <div class="tm-multi-step-summary-item-component d-flex align-items-center gap-3">
                                         <div class="tm-multi-step-summary-item-component-left">
