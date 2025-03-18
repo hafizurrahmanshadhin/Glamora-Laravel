@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Web\Auth;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\CMSImage;
 use App\Models\PasswordReset;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,12 +22,18 @@ class PhoneNumberVerificationController extends Controller {
      *
      * @return View
      */
-    public function index() {
-        $authBanner = CMSImage::where('page', 'auth')
-            ->where('status', 'active')
-            ->first();
+    public function index(): JsonResponse | View {
+        try {
+            $authBanner = CMSImage::where('page', 'auth')
+                ->where('status', 'active')
+                ->first();
 
-        return view('auth.layouts.verification-using-phone-number', compact('authBanner'));
+            return view('auth.layouts.verification-using-phone-number', compact('authBanner'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -34,7 +42,7 @@ class PhoneNumberVerificationController extends Controller {
      * @param  Request  $request
      * @return RedirectResponse
      */
-    public function sendOtpToPhone(Request $request) {
+    public function sendOtpToPhone(Request $request): RedirectResponse {
         // Validate the phone number (adjust the regex as needed)
         $request->validate([
             'phone_number' => [
@@ -89,10 +97,14 @@ class PhoneNumberVerificationController extends Controller {
      *
      * @return View
      */
-    public function otpVerificationView() {
-        // This view should show the form to enter the 4-digit OTP.
-        // The phone number is passed as a hidden field from the session.
-        return view('auth.layouts.phone-otp-verification');
+    public function otpVerificationView(): JsonResponse | View {
+        try {
+            return view('auth.layouts.phone-otp-verification');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -101,43 +113,48 @@ class PhoneNumberVerificationController extends Controller {
      * @param  Request  $request
      * @return RedirectResponse
      */
-    public function verifyOtpForPhone(Request $request) {
-        // Validate that we have a phone number (hidden) and 4 OTP digits.
-        $request->validate([
-            'phone_number' => 'required|string',
-            'otp_part'     => 'required|array|size:4',
-            'otp_part.*'   => 'required|digits:1',
-        ]);
+    public function verifyOtpForPhone(Request $request): JsonResponse | RedirectResponse {
+        try {
+            $request->validate([
+                'phone_number' => 'required|string',
+                'otp_part'     => 'required|array|size:4',
+                'otp_part.*'   => 'required|digits:1',
+            ]);
 
-        // Combine the OTP parts into a single 4-digit string.
-        $otp         = implode('', $request->input('otp_part'));
-        $phoneNumber = $request->input('phone_number');
+            // Combine the OTP parts into a single 4-digit string.
+            $otp         = implode('', $request->input('otp_part'));
+            $phoneNumber = $request->input('phone_number');
 
-        // Look up the OTP record by phone number and OTP.
-        $record = PasswordReset::where('phone_number', $phoneNumber)
-            ->where('otp', $otp)
-            ->first();
+            // Look up the OTP record by phone number and OTP.
+            $record = PasswordReset::where('phone_number', $phoneNumber)
+                ->where('otp', $otp)
+                ->first();
 
-        if (!$record) {
-            return redirect()->back()->withErrors(['otp' => 'Invalid OTP.']);
+            if (!$record) {
+                return redirect()->back()->withErrors(['otp' => 'Invalid OTP.']);
+            }
+
+            // Find the user by phone number.
+            $user = User::where('phone_number', $phoneNumber)->first();
+            if (!$user) {
+                return redirect()->back()->withErrors(['phone_number' => 'User not found.']);
+            }
+
+            // Mark the user's phone as verified.
+            $user->update([
+                'phone_number_verified_at' => Carbon::now(),
+            ]);
+
+            // Delete the OTP record since it has been used.
+            $record->delete();
+
+            // Redirect to the verification success page.
+            return redirect()->route('verification-success')
+                ->with('status', 'Phone number verified successfully.');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        // Find the user by phone number.
-        $user = User::where('phone_number', $phoneNumber)->first();
-        if (!$user) {
-            return redirect()->back()->withErrors(['phone_number' => 'User not found.']);
-        }
-
-        // Mark the user's phone as verified.
-        $user->update([
-            'phone_number_verified_at' => Carbon::now(),
-        ]);
-
-        // Delete the OTP record since it has been used.
-        $record->delete();
-
-        // Redirect to the verification success page.
-        return redirect()->route('verification-success')
-            ->with('status', 'Phone number verified successfully.');
     }
 }

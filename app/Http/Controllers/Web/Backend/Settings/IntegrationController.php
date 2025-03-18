@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Web\Backend\Settings;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -15,8 +18,14 @@ class IntegrationController extends Controller {
      *
      * @return View
      */
-    public function index(): View {
-        return view('backend.layouts.settings.integration_settings');
+    public function index(): View | JsonResponse {
+        try {
+            return view('backend.layouts.settings.integration_settings');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

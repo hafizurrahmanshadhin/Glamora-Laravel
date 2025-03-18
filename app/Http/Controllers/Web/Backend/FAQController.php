@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Backend;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\FAQ;
 use Exception;
@@ -21,44 +22,50 @@ class FAQController extends Controller {
      * @throws Exception
      */
     public function index(Request $request): View | JsonResponse {
-        if ($request->ajax()) {
-            $data = FAQ::latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('question', function ($data) {
-                    $question      = $data->question;
-                    $shortQuestion = strlen($question) > 75 ? substr($question, 0, 75) . '...' : $question;
-                    return '<span class="question-tooltip" style="cursor: pointer;" title="' . $question . '">' . $shortQuestion . '</span>';
-                })
-                ->addColumn('answer', function ($data) {
-                    $answer      = $data->answer;
-                    $shortAnswer = strlen($answer) > 75 ? substr($answer, 0, 75) . '...' : $answer;
-                    return '<span class="question-tooltip" style="cursor: pointer;" title="' . $answer . '">' . $shortAnswer . '</span>';
-                })
-                ->addColumn('status', function ($data) {
-                    $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
-                    $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $data->id . '" ' . ($data->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $data->id . ')">';
-                    $status .= '</div>';
+        try {
+            if ($request->ajax()) {
+                $data = FAQ::latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('question', function ($data) {
+                        $question      = $data->question;
+                        $shortQuestion = strlen($question) > 75 ? substr($question, 0, 75) . '...' : $question;
+                        return '<span class="question-tooltip" style="cursor: pointer;" title="' . $question . '">' . $shortQuestion . '</span>';
+                    })
+                    ->addColumn('answer', function ($data) {
+                        $answer      = $data->answer;
+                        $shortAnswer = strlen($answer) > 75 ? substr($answer, 0, 75) . '...' : $answer;
+                        return '<span class="question-tooltip" style="cursor: pointer;" title="' . $answer . '">' . $shortAnswer . '</span>';
+                    })
+                    ->addColumn('status', function ($data) {
+                        $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
+                        $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $data->id . '" ' . ($data->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $data->id . ')">';
+                        $status .= '</div>';
 
-                    return $status;
-                })
-                ->addColumn('action', function ($data) {
-                    return '
-                            <div class="hstack gap-3 fs-base">
-                                <a href="' . route('faq.edit', ['id' => $data->id]) . '" class="link-primary text-decoration-none" title="Edit">
-                                    <i class="ri-pencil-line" style="font-size: 24px;"></i>
-                                </a>
+                        return $status;
+                    })
+                    ->addColumn('action', function ($data) {
+                        return '
+                                <div class="hstack gap-3 fs-base">
+                                    <a href="' . route('faq.edit', ['id' => $data->id]) . '" class="link-primary text-decoration-none" title="Edit">
+                                        <i class="ri-pencil-line" style="font-size: 24px;"></i>
+                                    </a>
 
-                                <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $data->id . ')" class="link-danger text-decoration-none" title="Delete">
-                                    <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
-                                </a>
-                            </div>
-                        ';
-                })
-                ->rawColumns(['question', 'answer', 'status', 'action'])
-                ->make();
+                                    <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $data->id . ')" class="link-danger text-decoration-none" title="Delete">
+                                        <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
+                                    </a>
+                                </div>
+                            ';
+                    })
+                    ->rawColumns(['question', 'answer', 'status', 'action'])
+                    ->make();
+            }
+            return view('backend.layouts.faq.index');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-        return view('backend.layouts.faq.index');
     }
 
     /**
@@ -66,8 +73,14 @@ class FAQController extends Controller {
      *
      * @return View
      */
-    public function create(): View {
-        return view('backend.layouts.faq.create');
+    public function create(): View | JsonResponse {
+        try {
+            return view('backend.layouts.faq.create');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -105,9 +118,15 @@ class FAQController extends Controller {
      * @param int $id
      * @return View
      */
-    public function edit(int $id): View {
-        $faq = FAQ::findOrFail($id);
-        return view('backend.layouts.faq.edit', compact('faq'));
+    public function edit(int $id): View | JsonResponse {
+        try {
+            $faq = FAQ::findOrFail($id);
+            return view('backend.layouts.faq.edit', compact('faq'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -145,24 +164,30 @@ class FAQController extends Controller {
      * @return JsonResponse
      */
     public function status(int $id): JsonResponse {
-        $data = FAQ::findOrFail($id);
-        if ($data->status == 'active') {
-            $data->status = 'inactive';
-            $data->save();
+        try {
+            $data = FAQ::findOrFail($id);
+            if ($data->status == 'active') {
+                $data->status = 'inactive';
+                $data->save();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Unpublished Successfully.',
-                'data'    => $data,
-            ]);
-        } else {
-            $data->status = 'active';
-            $data->save();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unpublished Successfully.',
+                    'data'    => $data,
+                ]);
+            } else {
+                $data->status = 'active';
+                $data->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Published Successfully.',
-                'data'    => $data,
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Published Successfully.',
+                    'data'    => $data,
+                ]);
+            }
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -174,11 +199,17 @@ class FAQController extends Controller {
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse {
-        $faq = FAQ::findOrFail($id);
-        $faq->delete();
-        return response()->json([
-            't-success' => false,
-            'message'   => 'Deleted successfully.',
-        ]);
+        try {
+            $faq = FAQ::findOrFail($id);
+            $faq->delete();
+            return response()->json([
+                't-success' => false,
+                'message'   => 'Deleted successfully.',
+            ]);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

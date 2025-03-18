@@ -2,25 +2,32 @@
 
 namespace App\Http\Controllers\Web\Backend\Settings;
 
-use Exception;
-use App\Models\Content;
-use Illuminate\View\View;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\Content;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
-class TermsAndConditionsController extends Controller
-{
+class TermsAndConditionsController extends Controller {
     /**
      * Display the terms and conditions page.
      *
      * @return View
      */
-    public function index(): View {
-        $terms_and_conditions = Content::where('type', 'termsAndConditions')->first();
-        return view('backend.layouts.settings.terms_and_conditions', compact('terms_and_conditions'));
+    public function index(): View | JsonResponse {
+        try {
+            $terms_and_conditions = Content::where('type', 'termsAndConditions')->first();
+            return view('backend.layouts.settings.terms_and_conditions', compact('terms_and_conditions'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -43,8 +50,8 @@ class TermsAndConditionsController extends Controller
             $terms_and_conditions = Content::where('type', 'termsAndConditions')->first();
 
             if ($terms_and_conditions) {
-                $terms_and_conditions->title = $request->input('title');
-                $terms_and_conditions->slug = Str::slug($request->input('title'));
+                $terms_and_conditions->title   = $request->input('title');
+                $terms_and_conditions->slug    = Str::slug($request->input('title'));
                 $terms_and_conditions->content = $request->input('content');
                 $terms_and_conditions->save();
             } else {

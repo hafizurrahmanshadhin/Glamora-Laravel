@@ -24,40 +24,46 @@ class ServiceProviderProfileController extends Controller {
      *
      * @return View
      */
-    public function index(Request $request, $userId, $serviceId): View {
-        $user = User::with(['userServices.service', 'adminComments'])->findOrFail($userId);
+    public function index(Request $request, $userId, $serviceId): View | JsonResponse {
+        try {
+            $user = User::with(['userServices.service', 'adminComments'])->findOrFail($userId);
 
-        // Calculate this user’s average rating
-        $avg = Review::where('status', 'active')
-            ->whereHas('booking.userService', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            })
-            ->avg('rating') ?? 0;
-        $averageRating = round($avg * 2) / 2;
+            // Calculate this user’s average rating
+            $avg = Review::where('status', 'active')
+                ->whereHas('booking.userService', function ($q) use ($userId) {
+                    $q->where('user_id', $userId);
+                })
+                ->avg('rating') ?? 0;
+            $averageRating = round($avg * 2) / 2;
 
-        // Count total reviews for this user
-        $reviewCount = Review::where('status', 'active')
-            ->whereHas('booking.userService', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            })
-            ->count();
+            // Count total reviews for this user
+            $reviewCount = Review::where('status', 'active')
+                ->whereHas('booking.userService', function ($q) use ($userId) {
+                    $q->where('user_id', $userId);
+                })
+                ->count();
 
-        $reviews = Review::whereHas('booking.userService', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->with(['booking.userService'])->get();
+            $reviews = Review::whereHas('booking.userService', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->with(['booking.userService'])->get();
 
-        // Retrieve the latest admin comment for this user
-        $adminComment = $user->adminComments()->orderBy('created_at', 'desc')->first();
+            // Retrieve the latest admin comment for this user
+            $adminComment = $user->adminComments()->orderBy('created_at', 'desc')->first();
 
-        return view('frontend.layouts.service_provider_profile.index', [
-            'user'          => $user,
-            'serviceId'     => $serviceId,
-            'reviews'       => $reviews,
-            'averageRating' => $averageRating,
-            'reviewCount'   => $reviewCount,
-            'serviceIds'    => $request->query('service_ids'),
-            'adminComment'  => $adminComment,
-        ]);
+            return view('frontend.layouts.service_provider_profile.index', [
+                'user'          => $user,
+                'serviceId'     => $serviceId,
+                'reviews'       => $reviews,
+                'averageRating' => $averageRating,
+                'reviewCount'   => $reviewCount,
+                'serviceIds'    => $request->query('service_ids'),
+                'adminComment'  => $adminComment,
+            ]);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -65,39 +71,45 @@ class ServiceProviderProfileController extends Controller {
      *
      * @return View
      */
-    public function editProfile(): View {
-        $user   = Auth::user()->load('userServices.service', 'adminComments');
-        $userId = Auth::id();
+    public function editProfile(): View | JsonResponse {
+        try {
+            $user   = Auth::user()->load('userServices.service', 'adminComments');
+            $userId = Auth::id();
 
-        // Calculate this user’s average rating
-        $avg = Review::where('status', 'active')
-            ->whereHas('booking.userService', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            })
-            ->avg('rating') ?? 0;
-        $averageRating = round($avg * 2) / 2;
+            // Calculate this user’s average rating
+            $avg = Review::where('status', 'active')
+                ->whereHas('booking.userService', function ($q) use ($userId) {
+                    $q->where('user_id', $userId);
+                })
+                ->avg('rating') ?? 0;
+            $averageRating = round($avg * 2) / 2;
 
-        // Count total reviews for this user
-        $reviewCount = Review::where('status', 'active')
-            ->whereHas('booking.userService', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            })
-            ->count();
+            // Count total reviews for this user
+            $reviewCount = Review::where('status', 'active')
+                ->whereHas('booking.userService', function ($q) use ($userId) {
+                    $q->where('user_id', $userId);
+                })
+                ->count();
 
-        $reviews = Review::whereHas('booking.userService', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->with(['booking.userService'])->get();
+            $reviews = Review::whereHas('booking.userService', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->with(['booking.userService'])->get();
 
-        // Retrieve the latest admin comment for this user
-        $adminComment = $user->adminComments()->orderBy('created_at', 'desc')->first();
+            // Retrieve the latest admin comment for this user
+            $adminComment = $user->adminComments()->orderBy('created_at', 'desc')->first();
 
-        return view('frontend.layouts.beauty_expert_dashboard.profile', [
-            'user'          => $user,
-            'averageRating' => $averageRating,
-            'reviewCount'   => $reviewCount,
-            'reviews'       => $reviews,
-            'adminComment'  => $adminComment,
-        ]);
+            return view('frontend.layouts.beauty_expert_dashboard.profile', [
+                'user'          => $user,
+                'averageRating' => $averageRating,
+                'reviewCount'   => $reviewCount,
+                'reviews'       => $reviews,
+                'adminComment'  => $adminComment,
+            ]);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -107,14 +119,20 @@ class ServiceProviderProfileController extends Controller {
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse {
-        $request->validate(['tool_name' => 'required|string']);
+        try {
+            $request->validate(['tool_name' => 'required|string']);
 
-        $tool = UserTool::create([
-            'user_id'   => Auth::id(),
-            'tool_name' => $request->tool_name,
-        ]);
+            $tool = UserTool::create([
+                'user_id'   => Auth::id(),
+                'tool_name' => $request->tool_name,
+            ]);
 
-        return Helper::jsonResponse(true, 'Tool added successfully.', 201, $tool);
+            return Helper::jsonResponse(true, 'Tool added successfully.', 201, $tool);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -124,13 +142,19 @@ class ServiceProviderProfileController extends Controller {
      * @return JsonResponse
      */
     public function destroy(UserTool $tool): JsonResponse {
-        if ($tool->user_id !== Auth::id()) {
-            return Helper::jsonResponse(false, 'Unauthorized', 403);
+        try {
+            if ($tool->user_id !== Auth::id()) {
+                return Helper::jsonResponse(false, 'Unauthorized', 403);
+            }
+
+            $tool->delete();
+
+            return Helper::jsonResponse(true, 'Tool deleted successfully.', 200);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        $tool->delete();
-
-        return Helper::jsonResponse(true, 'Tool deleted successfully.', 200);
     }
 
     /**
@@ -140,25 +164,31 @@ class ServiceProviderProfileController extends Controller {
      * @return JsonResponse
      */
     public function storeGallery(Request $request): JsonResponse {
-        $request->validate([
-            'image' => 'required|image|max:10240',
-        ]);
+        try {
+            $request->validate([
+                'image' => 'required|image|max:10240',
+            ]);
 
-        $user         = auth()->user();
-        $file         = $request->file('image');
-        $uploadedPath = Helper::fileUpload($file, 'galleries', $user->name ?: 'gallery');
+            $user         = auth()->user();
+            $file         = $request->file('image');
+            $uploadedPath = Helper::fileUpload($file, 'galleries', $user->name ?: 'gallery');
 
-        if (!$uploadedPath) {
-            return Helper::jsonResponse(false, 'File upload failed.', 500);
+            if (!$uploadedPath) {
+                return Helper::jsonResponse(false, 'File upload failed.', 500);
+            }
+
+            $gallery = UserGallery::create([
+                'user_id' => $user->id,
+                'image'   => $uploadedPath,
+                'status'  => 'inactive',
+            ]);
+
+            return Helper::jsonResponse(true, 'Gallery image added successfully.', 201, $gallery);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        $gallery = UserGallery::create([
-            'user_id' => $user->id,
-            'image'   => $uploadedPath,
-            'status'  => 'inactive',
-        ]);
-
-        return Helper::jsonResponse(true, 'Gallery image added successfully.', 201, $gallery);
     }
 
     /**
@@ -168,15 +198,21 @@ class ServiceProviderProfileController extends Controller {
      * @return JsonResponse
      */
     public function destroyGallery(UserGallery $gallery): JsonResponse {
-        if ($gallery->user_id !== auth()->id()) {
-            return Helper::jsonResponse(false, 'Unauthorized', 403);
+        try {
+            if ($gallery->user_id !== auth()->id()) {
+                return Helper::jsonResponse(false, 'Unauthorized', 403);
+            }
+
+            Helper::fileDelete(public_path($gallery->image));
+
+            $gallery->delete();
+
+            return Helper::jsonResponse(true, 'Gallery image deleted successfully.', 200);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        Helper::fileDelete(public_path($gallery->image));
-
-        $gallery->delete();
-
-        return Helper::jsonResponse(true, 'Gallery image deleted successfully.', 200);
     }
 
     /**
@@ -185,28 +221,34 @@ class ServiceProviderProfileController extends Controller {
      * @param int $userId
      * @return View
      */
-    public function editServiceInformation(int $userId): View {
-        $user             = User::findOrFail($userId);
-        $businessInfo     = $user->businessInformation;
-        $services         = Service::all();
-        $selectedServices = $user->userServices->pluck('service_id')->toArray();
-        $travelRadius     = TravelRadius::where('user_id', $userId)->first();
+    public function editServiceInformation(int $userId): View | JsonResponse {
+        try {
+            $user             = User::findOrFail($userId);
+            $businessInfo     = $user->businessInformation;
+            $services         = Service::all();
+            $selectedServices = $user->userServices->pluck('service_id')->toArray();
+            $travelRadius     = TravelRadius::where('user_id', $userId)->first();
 
-        // Build an array of service data in which each element holds the service plus the user's saved info.
-        $servicesData = $services->map(function ($service) use ($user) {
-            $userService = $user->userServices->where('service_id', $service->id)->first();
-            return [
-                'service'       => $service,
-                'selected'      => $userService ? $userService->selected : false,
-                'offered_price' => $userService ? $userService->offered_price : '',
-                'total_price'   => $userService ? $userService->total_price : '',
-                'image'         => $userService ? $userService->image : '',
-            ];
-        });
+            // Build an array of service data in which each element holds the service plus the user's saved info.
+            $servicesData = $services->map(function ($service) use ($user) {
+                $userService = $user->userServices->where('service_id', $service->id)->first();
+                return [
+                    'service'       => $service,
+                    'selected'      => $userService ? $userService->selected : false,
+                    'offered_price' => $userService ? $userService->offered_price : '',
+                    'total_price'   => $userService ? $userService->total_price : '',
+                    'image'         => $userService ? $userService->image : '',
+                ];
+            });
 
-        return view('frontend.layouts.beauty_expert_dashboard.edit-service-information',
-            compact('businessInfo', 'user', 'servicesData', 'selectedServices', 'travelRadius')
-        );
+            return view('frontend.layouts.beauty_expert_dashboard.edit-service-information',
+                compact('businessInfo', 'user', 'servicesData', 'selectedServices', 'travelRadius')
+            );
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -322,25 +364,31 @@ class ServiceProviderProfileController extends Controller {
      * @param Request $request
      * @return JsonResponse
      */
-    public function updateLocation(Request $request) {
-        $data = $request->validate([
-            'latitude'  => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'address'   => 'required|string',
-        ]);
-
-        $info = auth()->user()->businessInformation;
-
-        if ($info) {
-            $info->update([
-                'latitude'  => $data['latitude'],
-                'longitude' => $data['longitude'],
-                'address'   => $data['address'],
+    public function updateLocation(Request $request): JsonResponse {
+        try {
+            $data = $request->validate([
+                'latitude'  => 'required|numeric',
+                'longitude' => 'required|numeric',
+                'address'   => 'required|string',
             ]);
-        } else {
-            auth()->user()->businessInformation()->create($data);
-        }
 
-        return response()->json(['status' => 'success']);
+            $info = auth()->user()->businessInformation;
+
+            if ($info) {
+                $info->update([
+                    'latitude'  => $data['latitude'],
+                    'longitude' => $data['longitude'],
+                    'address'   => $data['address'],
+                ]);
+            } else {
+                auth()->user()->businessInformation()->create($data);
+            }
+
+            return response()->json(['status' => 'success']);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

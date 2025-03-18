@@ -19,15 +19,21 @@ class AuthPageImageController extends Controller {
      * @return View|JsonResponse
      */
     public function index(Request $request): View | JsonResponse {
-        if ($request->ajax()) {
-            $data = CMSImage::where('page', 'auth')->latest()->get();
-            return response()->json([
-                'status' => true,
-                'data'   => $data,
+        try {
+            if ($request->ajax()) {
+                $data = CMSImage::where('page', 'auth')->latest()->get();
+                return response()->json([
+                    'status' => true,
+                    'data'   => $data,
+                ]);
+            }
+            $currentImage = CMSImage::where('page', 'auth')->latest()->first();
+            return view('backend.layouts.cms.auth-page.index', compact('currentImage'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
             ]);
         }
-        $currentImage = CMSImage::where('page', 'auth')->latest()->first();
-        return view('backend.layouts.cms.auth-page.index', compact('currentImage'));
     }
 
     /**

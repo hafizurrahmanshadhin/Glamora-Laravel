@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Web\Frontend;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\NewsletterSubscription;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,24 +18,30 @@ class NewsletterSubscriptionController extends Controller {
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:newsletter_subscriptions,email',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email|unique:newsletter_subscriptions,email',
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            NewsletterSubscription::create([
+                'email' => $request->input('email'),
+            ]);
+
             return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors(),
-            ], 422);
+                'status'  => 'success',
+                'message' => 'Subscription successful.',
+            ]);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        NewsletterSubscription::create([
-            'email' => $request->input('email'),
-        ]);
-
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Subscription successful.',
-        ]);
     }
 }

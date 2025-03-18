@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Backend\Settings;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\SocialMedia;
 use Exception;
@@ -17,9 +18,15 @@ class SocialMediaController extends Controller {
      *
      * @return View
      */
-    public function index(): View {
-        $social_link = SocialMedia::latest('id')->get();
-        return view('backend.layouts.settings.social_media', compact('social_link'));
+    public function index(): View | JsonResponse {
+        try {
+            $social_link = SocialMedia::latest('id')->get();
+            return view('backend.layouts.settings.social_media', compact('social_link'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

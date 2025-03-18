@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Frontend;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\CMSImage;
 use App\Models\Review;
@@ -9,6 +10,8 @@ use App\Models\Service;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\UserService;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
 class HomeController extends Controller {
@@ -69,55 +72,60 @@ class HomeController extends Controller {
     //     ));
     // }
 
-    public function index(): View {
-        $systemSetting = SystemSetting::first();
+    public function index(): View | JsonResponse {
+        try {
+            $systemSetting = SystemSetting::first();
 
-        // Optimized approved services query with a SQL subquery
-        $approvedServices = UserService::where('status', 'active')
-            ->with('service')
-            ->selectRaw('user_services.*, (
+            $approvedServices = UserService::where('status', 'active')
+                ->with('service')
+                ->selectRaw('user_services.*, (
                 SELECT COUNT(DISTINCT us.user_id)
                 FROM user_services as us
                 WHERE us.service_id = user_services.service_id AND us.status = "active"
             ) as styler_count')
-            ->get();
+                ->get();
 
-        // Fetch active services
-        $services = Service::where('status', 'active')->get();
+            // Fetch active services
+            $services = Service::where('status', 'active')->get();
 
-        // Combine review stats into one query
-        $reviewStats = Review::where('status', 'active')
-            ->selectRaw('AVG(rating) as average_rating, COUNT(*) as total_reviews')
-            ->first();
-        $averageRating = $reviewStats->average_rating ?? 0;
-        $totalReviews  = $reviewStats->total_reviews;
+            // Combine review stats into one query
+            $reviewStats = Review::where('status', 'active')
+                ->selectRaw('AVG(rating) as average_rating, COUNT(*) as total_reviews')
+                ->first();
+            $averageRating = $reviewStats->average_rating ?? 0;
+            $totalReviews  = $reviewStats->total_reviews;
 
-        // Fetch all reviews
-        $reviews = Review::with('user')
-            ->where('status', 'active')
-            ->latest()
-            ->get();
+            // Fetch all reviews
+            $reviews = Review::with('user')
+                ->where('status', 'active')
+                ->latest()
+                ->get();
 
-        // Fetch top beauty experts
-        $topBeautyExperts = User::where('role', 'beauty_expert')
-            ->where('status', 'active')
-            ->with('businessInformation')
-            ->get();
+            // Fetch top beauty experts
+            $topBeautyExperts = User::where('role', 'beauty_expert')
+                ->where('status', 'active')
+                ->with('businessInformation')
+                ->get();
 
-        // Fetch dynamic home page banners from the CMS images table
-        $homeBanners = CMSImage::where('page', 'home')
-            ->where('status', 'active')
-            ->get();
+            // Fetch dynamic home page banners from the CMS images table
+            $homeBanners = CMSImage::where('page', 'home')
+                ->where('status', 'active')
+                ->get();
 
-        return view('frontend.layouts.home.index', compact(
-            'systemSetting',
-            'approvedServices',
-            'services',
-            'reviews',
-            'averageRating',
-            'totalReviews',
-            'topBeautyExperts',
-            'homeBanners'
-        ));
+            return view('frontend.layouts.home.index', compact(
+                'systemSetting',
+                'approvedServices',
+                'services',
+                'reviews',
+                'averageRating',
+                'totalReviews',
+                'topBeautyExperts',
+                'homeBanners'
+            ));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

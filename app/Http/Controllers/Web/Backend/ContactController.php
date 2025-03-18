@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Web\Backend;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -17,31 +19,37 @@ class ContactController extends Controller {
      * @return View|JsonResponse
      */
     public function index(Request $request): JsonResponse | View {
-        if ($request->ajax()) {
-            $data = Contact::latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('status', function ($data) {
-                    $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
-                    $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $data->id . '" ' . ($data->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $data->id . ')">';
-                    $status .= '</div>';
+        try {
+            if ($request->ajax()) {
+                $data = Contact::latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('status', function ($data) {
+                        $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
+                        $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $data->id . '" ' . ($data->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $data->id . ')">';
+                        $status .= '</div>';
 
-                    return $status;
-                })
-                ->addColumn('action', function ($data) {
-                    return '
-                            <div class="hstack gap-3 fs-base">
-                                <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $data->id . ')" class="link-danger text-decoration-none" title="Delete">
-                                    <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
-                                </a>
-                            </div>
-                        ';
-                })
+                        return $status;
+                    })
+                    ->addColumn('action', function ($data) {
+                        return '
+                                <div class="hstack gap-3 fs-base">
+                                    <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $data->id . ')" class="link-danger text-decoration-none" title="Delete">
+                                        <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
+                                    </a>
+                                </div>
+                            ';
+                    })
 
-                ->rawColumns(['status', 'action'])
-                ->make();
+                    ->rawColumns(['status', 'action'])
+                    ->make();
+            }
+            return view('backend.layouts.contact.index');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-        return view('backend.layouts.contact.index');
     }
 
     /**
@@ -51,24 +59,30 @@ class ContactController extends Controller {
      * @return JsonResponse
      */
     public function status(int $id): JsonResponse {
-        $data = Contact::findOrFail($id);
-        if ($data->status == 'active') {
-            $data->status = 'inactive';
-            $data->save();
+        try {
+            $data = Contact::findOrFail($id);
+            if ($data->status == 'active') {
+                $data->status = 'inactive';
+                $data->save();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Unpublished Successfully.',
-                'data'    => $data,
-            ]);
-        } else {
-            $data->status = 'active';
-            $data->save();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unpublished Successfully.',
+                    'data'    => $data,
+                ]);
+            } else {
+                $data->status = 'active';
+                $data->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Published Successfully.',
-                'data'    => $data,
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Published Successfully.',
+                    'data'    => $data,
+                ]);
+            }
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -80,11 +94,17 @@ class ContactController extends Controller {
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse {
-        $data = Contact::findOrFail($id);
-        $data->delete();
-        return response()->json([
-            't-success' => true,
-            'message'   => 'Deleted successfully.',
-        ]);
+        try {
+            $data = Contact::findOrFail($id);
+            $data->delete();
+            return response()->json([
+                't-success' => true,
+                'message'   => 'Deleted successfully.',
+            ]);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

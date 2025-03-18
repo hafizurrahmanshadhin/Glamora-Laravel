@@ -13,7 +13,6 @@ use App\Http\Controllers\Web\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Web\Auth\PhoneNumberVerificationController;
 use App\Http\Controllers\Web\Auth\QuestionnairesController;
 use App\Http\Controllers\Web\Auth\RegisteredUserController;
-use App\Http\Controllers\Web\Auth\SocialiteController;
 use App\Http\Controllers\Web\Auth\VerificationSuccessController;
 use App\Http\Controllers\Web\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
@@ -77,9 +76,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
-
-Route::get('/login/google', [SocialiteController::class, 'GoogleRedirect'])->name('google-login');
-Route::get('/login/google/callback', [SocialiteController::class, 'GoogleCallback']);
 
 Route::get('/profile-submitted', function () {
     return view('auth.layouts.profile-submitted');

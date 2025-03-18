@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Web\Backend\Settings;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Content;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,9 +19,15 @@ class InclusionsCancellationController extends Controller {
      *
      * @return View
      */
-    public function index(): View {
-        $inclusions_cancellation = Content::where('type', 'inclusionsCancellation')->first();
-        return view('backend.layouts.settings.inclusions_cancellation', compact('inclusions_cancellation'));
+    public function index(): View | JsonResponse {
+        try {
+            $inclusions_cancellation = Content::where('type', 'inclusionsCancellation')->first();
+            return view('backend.layouts.settings.inclusions_cancellation', compact('inclusions_cancellation'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

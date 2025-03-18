@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Backend;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Exception;
@@ -21,37 +22,43 @@ class ServiceController extends Controller {
      * @throws Exception
      */
     public function index(Request $request): View | JsonResponse {
-        if ($request->ajax()) {
-            $data = Service::latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('platform_fee', function ($service) {
-                    return $service->platform_fee . '%';
-                })
-                ->addColumn('status', function ($service) {
-                    $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
-                    $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $service->id . '" ' . ($service->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $service->id . ')">';
-                    $status .= '</div>';
+        try {
+            if ($request->ajax()) {
+                $data = Service::latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('platform_fee', function ($service) {
+                        return $service->platform_fee . '%';
+                    })
+                    ->addColumn('status', function ($service) {
+                        $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
+                        $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $service->id . '" ' . ($service->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $service->id . ')">';
+                        $status .= '</div>';
 
-                    return $status;
-                })
-                ->addColumn('action', function ($service) {
-                    return '
-                            <div class="hstack gap-3 fs-base">
-                                <a href="' . route('service.edit', ['id' => $service->id]) . '" class="link-primary text-decoration-none" title="Edit">
-                                    <i class="ri-pencil-line" style="font-size: 24px;"></i>
-                                </a>
+                        return $status;
+                    })
+                    ->addColumn('action', function ($service) {
+                        return '
+                                <div class="hstack gap-3 fs-base">
+                                    <a href="' . route('service.edit', ['id' => $service->id]) . '" class="link-primary text-decoration-none" title="Edit">
+                                        <i class="ri-pencil-line" style="font-size: 24px;"></i>
+                                    </a>
 
-                                <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $service->id . ')" class="link-danger text-decoration-none" title="Delete">
-                                    <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
-                                </a>
-                            </div>
-                        ';
-                })
-                ->rawColumns(['platform_fee', 'status', 'action'])
-                ->make();
+                                    <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $service->id . ')" class="link-danger text-decoration-none" title="Delete">
+                                        <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
+                                    </a>
+                                </div>
+                            ';
+                    })
+                    ->rawColumns(['platform_fee', 'status', 'action'])
+                    ->make();
+            }
+            return view('backend.layouts.service.index');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-        return view('backend.layouts.service.index');
     }
 
     /**
@@ -59,8 +66,14 @@ class ServiceController extends Controller {
      *
      * @return View
      */
-    public function create(): View {
-        return view('backend.layouts.service.create');
+    public function create(): View | JsonResponse {
+        try {
+            return view('backend.layouts.service.create');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -99,9 +112,15 @@ class ServiceController extends Controller {
      * @param int $id
      * @return View
      */
-    public function edit(int $id): View {
-        $service = Service::findOrFail($id);
-        return view('backend.layouts.service.edit', compact('service'));
+    public function edit(int $id): View | JsonResponse {
+        try {
+            $service = Service::findOrFail($id);
+            return view('backend.layouts.service.edit', compact('service'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -144,24 +163,30 @@ class ServiceController extends Controller {
      * @return JsonResponse
      */
     public function status(int $id): JsonResponse {
-        $service = Service::findOrFail($id);
+        try {
+            $service = Service::findOrFail($id);
 
-        if ($service->status == 'active') {
-            $service->status = 'inactive';
-            $service->save();
+            if ($service->status == 'active') {
+                $service->status = 'inactive';
+                $service->save();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Service package unpublished successfully.',
-                'data'    => $service,
-            ]);
-        } else {
-            $service->status = 'active';
-            $service->save();
-            return response()->json([
-                'success' => true,
-                'message' => 'Service package published successfully.',
-                'data'    => $service,
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Service package unpublished successfully.',
+                    'data'    => $service,
+                ]);
+            } else {
+                $service->status = 'active';
+                $service->save();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Service package published successfully.',
+                    'data'    => $service,
+                ]);
+            }
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -173,12 +198,18 @@ class ServiceController extends Controller {
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse {
-        $service = Service::findOrFail($id);
-        $service->delete();
+        try {
+            $service = Service::findOrFail($id);
+            $service->delete();
 
-        return response()->json([
-            't-success' => true,
-            'message'   => 'Service package deleted successfully.',
-        ]);
+            return response()->json([
+                't-success' => true,
+                'message'   => 'Service package deleted successfully.',
+            ]);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

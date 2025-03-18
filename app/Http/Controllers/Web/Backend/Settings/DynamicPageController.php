@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Backend\Settings;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\DynamicPage;
 use Exception;
@@ -22,51 +23,63 @@ class DynamicPageController extends Controller {
      * @throws Exception
      */
     public function index(Request $request): View | JsonResponse {
-        if ($request->ajax()) {
-            $data = DynamicPage::latest()->get();
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('page_content', function ($data) {
-                    $page_content       = $data->page_content;
-                    $short_page_content = strlen($page_content) > 100 ? substr($page_content, 0, 100) . '...' : $page_content;
-                    return '<p>' . $short_page_content . '</p>';
-                })
+        try {
+            if ($request->ajax()) {
+                $data = DynamicPage::latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('page_content', function ($data) {
+                        $page_content       = $data->page_content;
+                        $short_page_content = strlen($page_content) > 100 ? substr($page_content, 0, 100) . '...' : $page_content;
+                        return '<p>' . $short_page_content . '</p>';
+                    })
 
-                ->addColumn('status', function ($data) {
-                    $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
-                    $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $data->id . '" ' . ($data->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $data->id . ')">';
-                    $status .= '</div>';
+                    ->addColumn('status', function ($data) {
+                        $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
+                        $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $data->id . '" ' . ($data->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $data->id . ')">';
+                        $status .= '</div>';
 
-                    return $status;
-                })
+                        return $status;
+                    })
 
-                ->addColumn('action', function ($data) {
-                    return '
-                            <div class="hstack gap-3 fs-base">
-                                <a href="' . route('settings.dynamic_page.edit', ['id' => $data->id]) . '" class="link-primary text-decoration-none" title="Edit">
-                                    <i class="ri-pencil-line" style="font-size: 24px;"></i>
-                                </a>
+                    ->addColumn('action', function ($data) {
+                        return '
+                                <div class="hstack gap-3 fs-base">
+                                    <a href="' . route('settings.dynamic_page.edit', ['id' => $data->id]) . '" class="link-primary text-decoration-none" title="Edit">
+                                        <i class="ri-pencil-line" style="font-size: 24px;"></i>
+                                    </a>
 
-                                <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $data->id . ')" class="link-danger text-decoration-none" title="Delete">
-                                    <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
-                                </a>
-                            </div>
-                        ';
-                })
+                                    <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $data->id . ')" class="link-danger text-decoration-none" title="Delete">
+                                        <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
+                                    </a>
+                                </div>
+                            ';
+                    })
 
-                ->rawColumns(['page_content', 'status', 'action'])
-                ->make();
+                    ->rawColumns(['page_content', 'status', 'action'])
+                    ->make();
+            }
+            return view('backend.layouts.settings.dynamic_page.index');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-        return view('backend.layouts.settings.dynamic_page.index');
     }
 
     /**
      * Show the form for creating a new dynamic page content.
      *
-     * @return View
+     * @return View | JsonResponse
      */
-    public function create(): View {
-        return view('backend.layouts.settings.dynamic_page.create');
+    public function create(): View | JsonResponse {
+        try {
+            return view('backend.layouts.settings.dynamic_page.create');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -104,9 +117,15 @@ class DynamicPageController extends Controller {
      * @param int $id
      * @return View
      */
-    public function edit(int $id): View {
-        $data = DynamicPage::find($id);
-        return view('backend.layouts.settings.dynamic_page.edit', compact('data'));
+    public function edit(int $id): View | JsonResponse {
+        try {
+            $data = DynamicPage::find($id);
+            return view('backend.layouts.settings.dynamic_page.edit', compact('data'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -147,24 +166,30 @@ class DynamicPageController extends Controller {
      * @return JsonResponse
      */
     public function status(int $id): JsonResponse {
-        $data = DynamicPage::findOrFail($id);
-        if ($data->status == 'active') {
-            $data->status = 'inactive';
-            $data->save();
+        try {
+            $data = DynamicPage::findOrFail($id);
+            if ($data->status == 'active') {
+                $data->status = 'inactive';
+                $data->save();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Unpublished Successfully.',
-                'data'    => $data,
-            ]);
-        } else {
-            $data->status = 'active';
-            $data->save();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unpublished Successfully.',
+                    'data'    => $data,
+                ]);
+            } else {
+                $data->status = 'active';
+                $data->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Published Successfully.',
-                'data'    => $data,
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Published Successfully.',
+                    'data'    => $data,
+                ]);
+            }
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
             ]);
         }
     }

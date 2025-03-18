@@ -12,6 +12,7 @@ Route::controller(BeautyExpertDashboardController::class)->group(function () {
         ->name('booking-cancellation-after-appointments');
 });
 
+//! Route for Service Provider Profile
 Route::controller(ServiceProviderProfileController::class)->group(function () {
     Route::get('/edit-profile', 'editProfile')->name('edit-profile');
     Route::post('/tools', 'store')->name('tools.store');

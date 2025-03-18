@@ -23,67 +23,73 @@ class BeautyExpertDashboardController extends Controller {
      *
      * @return View
      */
-    public function index(): View {
-        $user = Auth::user();
+    public function index(): View | JsonResponse {
+        try {
+            $user = Auth::user();
 
-        // Fetch upcoming bookings where the beauty expert is assigned via user_service_id and payment is completed
-        $upcomingBookings = Booking::whereHas('userService', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })
-            ->whereHas('payments', function ($query) {
-                $query->where('payment_status', 'completed');
+            // Fetch upcoming bookings where the beauty expert is assigned via user_service_id and payment is completed
+            $upcomingBookings = Booking::whereHas('userService', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
             })
-            ->whereDoesntHave('bookingCancellationAfterAppointments')
-            ->with(['user', 'userService.service', 'payments'])
-            ->orderBy('appointment_date', 'asc')
-            ->get();
+                ->whereHas('payments', function ($query) {
+                    $query->where('payment_status', 'completed');
+                })
+                ->whereDoesntHave('bookingCancellationAfterAppointments')
+                ->with(['user', 'userService.service', 'payments'])
+                ->orderBy('appointment_date', 'asc')
+                ->get();
 
-        // Convert service_ids to line-separated service names
-        foreach ($upcomingBookings as $booking) {
-            $serviceNames = [];
-            if (!empty($booking->service_ids)) {
-                $serviceIds   = explode(',', $booking->service_ids);
-                $services     = Service::whereIn('id', $serviceIds)->pluck('services_name')->toArray();
-                $serviceNames = $services;
+            // Convert service_ids to line-separated service names
+            foreach ($upcomingBookings as $booking) {
+                $serviceNames = [];
+                if (!empty($booking->service_ids)) {
+                    $serviceIds   = explode(',', $booking->service_ids);
+                    $services     = Service::whereIn('id', $serviceIds)->pluck('services_name')->toArray();
+                    $serviceNames = $services;
+                }
+                $booking->servicesText = implode('<br>', $serviceNames);
             }
-            $booking->servicesText = implode('<br>', $serviceNames);
-        }
 
-        // Fetch pending requests where payment is not completed
-        $pendingRequests = Booking::whereHas('userService', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })
-            ->whereDoesntHave('payments', function ($query) {
-                $query->where('payment_status', 'completed');
+            // Fetch pending requests where payment is not completed
+            $pendingRequests = Booking::whereHas('userService', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
             })
-            ->with(['user', 'userService.service', 'payments'])
-            ->orderBy('appointment_date', 'asc')
-            ->get();
+                ->whereDoesntHave('payments', function ($query) {
+                    $query->where('payment_status', 'completed');
+                })
+                ->with(['user', 'userService.service', 'payments'])
+                ->orderBy('appointment_date', 'asc')
+                ->get();
 
-        // Calculate average rating from reviews
-        $averageRating = Review::whereHas('booking.userService', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })
-            ->where('status', 'active') // Ensure only active reviews are considered
-            ->avg('rating');
+            // Calculate average rating from reviews
+            $averageRating = Review::whereHas('booking.userService', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+                ->where('status', 'active') // Ensure only active reviews are considered
+                ->avg('rating');
 
-        // Count total number of reviews
-        $reviewCount = Review::whereHas('booking.userService', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })
-            ->where('status', 'active')
-            ->count();
+            // Count total number of reviews
+            $reviewCount = Review::whereHas('booking.userService', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+                ->where('status', 'active')
+                ->count();
 
-        // Pass availability status to the view
-        $availability = $user->availability;
+            // Pass availability status to the view
+            $availability = $user->availability;
 
-        return view('frontend.layouts.beauty_expert_dashboard.index', compact(
-            'upcomingBookings',
-            'pendingRequests',
-            'averageRating',
-            'reviewCount',
-            'availability'
-        ));
+            return view('frontend.layouts.beauty_expert_dashboard.index', compact(
+                'upcomingBookings',
+                'pendingRequests',
+                'averageRating',
+                'reviewCount',
+                'availability'
+            ));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -94,23 +100,29 @@ class BeautyExpertDashboardController extends Controller {
      *
      */
     public function toggleAvailability(Request $request): JsonResponse {
-        $user   = Auth::user();
-        $status = $request->input('status') === 'available' ? 'available' : 'unavailable';
+        try {
+            $user   = Auth::user();
+            $status = $request->input('status') === 'available' ? 'available' : 'unavailable';
 
-        // Update user's availability status
-        $user->availability = $status;
-        $user->save();
+            // Update user's availability status
+            $user->availability = $status;
+            $user->save();
 
-        // Update BusinessInformation
-        BusinessInformation::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
+            // Update BusinessInformation
+            BusinessInformation::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
 
-        // Update TravelRadius
-        TravelRadius::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
+            // Update TravelRadius
+            TravelRadius::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
 
-        // Update UserService
-        UserService::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
+            // Update UserService
+            UserService::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
 
-        return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'success']);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

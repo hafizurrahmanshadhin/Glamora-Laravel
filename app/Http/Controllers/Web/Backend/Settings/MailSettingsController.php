@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Web\Backend\Settings;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -17,19 +19,25 @@ class MailSettingsController extends Controller {
      *
      * @return View|RedirectResponse
      */
-    public function index() {
-        // Load current mail settings from the environment
-        $settings = [
-            'mail_mailer'       => env('MAIL_MAILER', ''),
-            'mail_host'         => env('MAIL_HOST', ''),
-            'mail_port'         => env('MAIL_PORT', ''),
-            'mail_username'     => env('MAIL_USERNAME', ''),
-            'mail_password'     => env('MAIL_PASSWORD', ''),
-            'mail_encryption'   => env('MAIL_ENCRYPTION', ''),
-            'mail_from_address' => env('MAIL_FROM_ADDRESS', ''),
-        ];
+    public function index(): JsonResponse | View {
+        try {
+            // Load current mail settings from the environment
+            $settings = [
+                'mail_mailer'       => env('MAIL_MAILER', ''),
+                'mail_host'         => env('MAIL_HOST', ''),
+                'mail_port'         => env('MAIL_PORT', ''),
+                'mail_username'     => env('MAIL_USERNAME', ''),
+                'mail_password'     => env('MAIL_PASSWORD', ''),
+                'mail_encryption'   => env('MAIL_ENCRYPTION', ''),
+                'mail_from_address' => env('MAIL_FROM_ADDRESS', ''),
+            ];
 
-        return view('backend.layouts.settings.mail_settings', compact('settings'));
+            return view('backend.layouts.settings.mail_settings', compact('settings'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

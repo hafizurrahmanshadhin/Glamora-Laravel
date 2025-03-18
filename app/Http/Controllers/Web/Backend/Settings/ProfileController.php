@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +21,15 @@ class ProfileController extends Controller {
      * @param Request $request
      * @return View
      */
-    public function index(Request $request) {
-        $user = User::find($request->id);
-        return view('backend.layouts.settings.profile_settings', compact('user'));
+    public function index(Request $request): JsonResponse | View {
+        try {
+            $user = User::find($request->id);
+            return view('backend.layouts.settings.profile_settings', compact('user'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

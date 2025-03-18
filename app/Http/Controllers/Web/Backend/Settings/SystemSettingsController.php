@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\SystemSetting;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,9 +18,15 @@ class SystemSettingsController extends Controller {
      *
      * @return View
      */
-    public function index(): View {
-        $setting = SystemSetting::latest('id')->first();
-        return view('backend.layouts.settings.system_settings', compact('setting'));
+    public function index(): View | JsonResponse {
+        try {
+            $setting = SystemSetting::latest('id')->first();
+            return view('backend.layouts.settings.system_settings', compact('setting'));
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
