@@ -266,7 +266,7 @@
                 <div class="modal-body tm-modal-body tm-modal-body-armie-review">
                     <form action="{{ route('client-dashboard.review') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="booking_id" value="{{ $booking->id ?? '' }}">
+                        <input type="hidden" name="booking_id" value="">
                         <div class="tm-modal-review-div">
                             <h2>Share your experience of Appointment session</h2>
                             <div class="tm-modal-review-star-wrapper">
@@ -425,5 +425,20 @@
                     toastr.error('Error occurred while canceling appointment.');
                 });
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.appointment-done').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    const bookingId = this.getAttribute('data-booking-id');
+                    const reviewModalBookingIdField = document.querySelector(
+                        '#appointmentReview input[name="booking_id"]');
+                    if (reviewModalBookingIdField) {
+                        reviewModalBookingIdField.value = bookingId;
+                    }
+                });
+            });
+        });
     </script>
 @endpush

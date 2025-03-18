@@ -97,7 +97,20 @@ class ClientDashboardController extends Controller {
             ]);
 
             // After review is stored, delete the booking
-            $booking = Booking::find($request->booking_id);
+            $booking = Booking::where('id', $request->booking_id)
+                ->where('user_id', Auth::id())
+                ->whereHas('payments', function ($q) {
+                    $q->where('payment_status', 'completed');
+                })
+                ->whereDoesntHave('bookingCancellationAfterAppointments')
+                ->first();
+
+            // If not found under “Upcoming,” skip deletion
+            if (!$booking) {
+                return redirect()->back()
+                    ->with('t-error', 'This booking is not in Upcoming Appointments (cannot remove).');
+            }
+
             $booking->delete();
 
             return redirect()->back()->with('t-success', 'Thank you! Review submitted successfully and Booking Removed.');
