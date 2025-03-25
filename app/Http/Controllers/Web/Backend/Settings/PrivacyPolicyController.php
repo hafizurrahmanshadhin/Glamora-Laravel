@@ -17,7 +17,7 @@ class PrivacyPolicyController extends Controller {
     /**
      * Display the privacy policy page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

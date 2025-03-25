@@ -16,11 +16,11 @@ class Helper {
      *
      * @param UploadedFile $file The file to be uploaded.
      * @param string $folder The folder where the file should be uploaded.
-     * @param string $name The name to be given to the uploaded file.
+     * @param string|null $name The name to be given to the uploaded file.
      * @return string|null The path to the uploaded file or null if the upload fails.
      */
-    public static function fileUpload($file, string $folder, string $name = null): ?string {
-        if (!$file || !$file->isValid()) {
+    public static function fileUpload(UploadedFile $file, string $folder, string $name = null): ?string {
+        if (!$file->isValid()) {
             return null;
         }
 
@@ -37,7 +37,7 @@ class Helper {
         try {
             $file->move($path, $imageName);
             return 'uploads/' . $folder . '/' . $imageName;
-        } catch (Exception $e) {
+        } catch (Exception) {
             return null;
         }
     }
@@ -65,15 +65,21 @@ class Helper {
      *
      * @param Model $model The model to check for existing slugs.
      * @param string $title The title to generate the slug from.
-     * @return string The unique slug.
+     * @return string|JsonResponse The generated slug or a JSON response if an error occurs.
      */
-    public static function makeSlug($model, string $title): string {
-        $slug = Str::slug($title);
-        while ($model::where('slug', $slug)->exists()) {
-            $randomString = Str::random(5);
-            $slug         = Str::slug($title) . '-' . $randomString;
+    public static function makeSlug(Model $model, string $title): string | JsonResponse {
+        try {
+            $slug = Str::slug($title);
+            while ($model::where('slug', $slug)->exists()) {
+                $randomString = Str::random(5);
+                $slug         = Str::slug($title) . '-' . $randomString;
+            }
+            return $slug;
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-        return $slug;
     }
 
     /**
@@ -82,43 +88,55 @@ class Helper {
      * @param bool $status The status of the response (true for success, false for failure).
      * @param string $message The message to include in the response.
      * @param int $code The HTTP status code for the response.
-     * @param mixed $data Optional additional data to include in the response.
+     * @param mixed|null $data Optional additional data to include in the response.
      * @return JsonResponse The JSON response.
      */
-    public static function jsonResponse(bool $status, string $message, int $code, $data = null, $errors = null): JsonResponse {
-        $response = [
-            'status'  => $status,
-            'message' => $message,
-            'code'    => $code,
-        ];
+    public static function jsonResponse(bool $status, string $message, int $code, mixed $data = null, $errors = null): JsonResponse {
+        try {
+            $response = [
+                'status'  => $status,
+                'message' => $message,
+                'code'    => $code,
+            ];
 
-        if ($data !== null) {
-            $response['data'] = $data;
+            if ($data !== null) {
+                $response['data'] = $data;
+            }
+
+            if ($errors !== null) {
+                $response['errors'] = $errors;
+            }
+
+            return response()->json($response, $code);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        if ($errors !== null) {
-            $response['errors'] = $errors;
-        }
-
-        return response()->json($response, $code);
     }
 
     /**
      * Check if the current route should show the footer.
      *
-     * @return bool
+     * @return bool|JsonResponse True if the footer should be shown, false otherwise. A JSON response if an error occurs.
      */
-    public static function shouldShowFooter(): bool {
-        $routesWithFooter = [
-            'index',
-            'available-services',
-            'service-category',
-            'service-provider-profile',
-            'faq',
-            'contact',
-            'contact.store',
-        ];
+    public static function shouldShowFooter(): bool | JsonResponse {
+        try {
+            $routesWithFooter = [
+                'index',
+                'available-services',
+                'service-category',
+                'service-provider-profile',
+                'faq',
+                'contact',
+                'contact.store',
+            ];
 
-        return in_array(Route::currentRouteName(), $routesWithFooter);
+            return in_array(Route::currentRouteName(), $routesWithFooter);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

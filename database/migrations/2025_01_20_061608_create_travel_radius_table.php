@@ -19,10 +19,10 @@ return new class extends Migration {
 
             $table->integer('free_radius')->default(0);
             $table->integer('travel_radius')->default(0);
-            $table->decimal('travel_charge', 10, 2)->default(0);
+            $table->decimal('travel_charge', 10)->default(0);
             $table->integer('max_radius')->default(0);
-            $table->decimal('max_charge', 10, 2)->default(0);
-            $table->decimal('min_booking_value', 10, 2)->nullable();
+            $table->decimal('max_charge', 10)->default(0);
+            $table->decimal('min_booking_value', 10)->nullable();
 
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamp('created_at')->useCurrent();

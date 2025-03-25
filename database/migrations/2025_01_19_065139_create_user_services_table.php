@@ -23,8 +23,8 @@ return new class extends Migration {
                 ->onUpdate('cascade');
 
             $table->boolean('selected')->default(false);
-            $table->decimal('offered_price', 10, 2)->nullable(false);
-            $table->decimal('total_price', 10, 2)->nullable(false);
+            $table->decimal('offered_price', 10)->nullable(false);
+            $table->decimal('total_price', 10)->nullable(false);
             $table->string('image')->nullable();
 
             $table->enum('status', ['active', 'inactive'])->default('inactive');

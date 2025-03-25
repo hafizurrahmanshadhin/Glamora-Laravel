@@ -16,7 +16,7 @@ class SystemSettingsController extends Controller {
     /**
      * Display the system settings page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

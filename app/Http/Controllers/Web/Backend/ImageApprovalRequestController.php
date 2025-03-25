@@ -81,7 +81,7 @@ class ImageApprovalRequestController extends Controller {
             }
 
             return Helper::jsonResponse(false, 'Invalid status value.', 400);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return Helper::jsonResponse(false, 'Could not update status.', 500);
         }
     }

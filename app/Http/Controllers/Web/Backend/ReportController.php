@@ -22,7 +22,6 @@ class ReportController extends Controller {
     public function index(Request $request): View | JsonResponse {
         try {
             if ($request->ajax()) {
-                // $data = Report::with('user')->latest()->get();
                 $data = Report::with(['user', 'booking.userService.user'])->latest()->get();
                 return DataTables::of($data)
                     ->addIndexColumn()
@@ -34,12 +33,9 @@ class ReportController extends Controller {
                         // Step 1: Check if there is a booking
                         // Step 2: booking has a userService
                         // Step 3: The userService has a user
-                        if (
-                            $data->booking &&
-                            $data->booking->userService &&
-                            $data->booking->userService->user
-                        ) {
+                        if ($data->booking && $data->booking->userService && $data->booking->userService->user) {
                             $reportedUser = $data->booking->userService->user;
+
                             return $reportedUser->first_name . ' ' . $reportedUser->last_name;
                         }
                         return 'N/A';

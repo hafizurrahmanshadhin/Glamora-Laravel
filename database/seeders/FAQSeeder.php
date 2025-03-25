@@ -45,8 +45,5 @@ class FAQSeeder extends Seeder {
                 'deleted_at' => null,
             ],
         ]);
-
-        //* Optionally reset AUTO_INCREMENT value
-        DB::statement('ALTER TABLE f_a_q_s AUTO_INCREMENT = 4;');
     }
 }

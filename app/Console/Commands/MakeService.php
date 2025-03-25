@@ -20,7 +20,7 @@ class MakeService extends Command {
      */
     protected $description = 'Create a new service class';
 
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     public function __construct(Filesystem $filesystem) {
         parent::__construct();
@@ -30,14 +30,14 @@ class MakeService extends Command {
     /**
      * Execute the console command.
      */
-    public function handle() {
+    public function handle(): void {
         $name         = $this->argument('name');
         $namespace    = str_replace('/', '\\', dirname($name)); // Get the namespace without the class name
         $className    = basename($name); // Get the class name (e.g., 'SocialLoginService')
         $serviceClass = $this->generateServiceClass($name);
 
         // Define the full path to the services directory
-        $directory = app_path("Services/{$namespace}");
+        $directory = app_path("Services/$namespace");
 
         // Ensure the directory exists (create it if it doesn't)
         if (!$this->filesystem->exists($directory)) {
@@ -45,18 +45,18 @@ class MakeService extends Command {
         }
 
         // Define the path for the new service class file
-        $path = $directory . DIRECTORY_SEPARATOR . "{$className}.php";
+        $path = $directory . DIRECTORY_SEPARATOR . "$className.php";
 
         // Check if the service class already exists
         if ($this->filesystem->exists($path)) {
-            $this->error("Service class {$name} already exists!");
+            $this->error("Service class $name already exists!");
             return;
         }
 
         // Create the service class file
         $this->filesystem->put($path, $serviceClass);
 
-        $this->info("Service class {$name} created successfully!");
+        $this->info("Service class $name created successfully!");
     }
 
     /**
@@ -74,7 +74,7 @@ class MakeService extends Command {
      * @return string The generated PHP code for the service class, including the proper namespace
      *                and class declaration.
      */
-    private function generateServiceClass($name) {
+    private function generateServiceClass(string $name): string {
         // Split the input string into parts based on '/'
         $parts = explode('/', $name);
 
@@ -87,13 +87,11 @@ class MakeService extends Command {
 
         return "<?php
 
-namespace App\\Services{$namespace};
+namespace App\\Services$namespace;
 
-class {$className}
-{
+class $className {
     // Your service logic goes here
 }
 ";
     }
-
 }

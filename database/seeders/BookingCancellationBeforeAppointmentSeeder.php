@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class BookingCancellationBeforeAppointmentSeeder extends Seeder {
-    public function run() {
+    public function run(): void {
         DB::table('booking_cancellation_before_appointments')->insert([
             [
                 'id'           => 1,

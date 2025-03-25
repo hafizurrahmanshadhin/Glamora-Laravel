@@ -22,7 +22,7 @@ return new class extends Migration {
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->decimal('total_amount', 10, 2);
+            $table->decimal('total_amount', 10);
 
             $table->string('status');
             $table->timestamp('created_at')->useCurrent();

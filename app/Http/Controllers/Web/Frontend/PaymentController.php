@@ -22,7 +22,7 @@ class PaymentController extends Controller {
      * Display the payment form page.
      *
      * @param Booking $booking
-     * @return View|RedirectResponse
+     * @return RedirectResponse|View|JsonResponse
      */
     public function makePayment(Booking $booking): RedirectResponse | View | JsonResponse {
         try {

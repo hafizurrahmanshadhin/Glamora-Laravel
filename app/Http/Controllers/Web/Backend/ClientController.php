@@ -153,7 +153,7 @@ class ClientController extends Controller {
                 't-success' => true,
                 'message'   => 'User and related information deleted successfully.',
             ]);
-        } catch (Exception $e) {
+        } catch (Exception) {
             DB::rollBack();
             return response()->json([
                 't-success' => false,

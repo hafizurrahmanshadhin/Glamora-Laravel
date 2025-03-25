@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class BookingSeeder extends Seeder {
-    public function run() {
+    public function run(): void {
         DB::table('bookings')->insert([
             [
                 'id'               => 1,

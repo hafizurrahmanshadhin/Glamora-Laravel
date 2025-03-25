@@ -16,7 +16,7 @@ class SocialMediaController extends Controller {
     /**
      * Display the social media settings page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

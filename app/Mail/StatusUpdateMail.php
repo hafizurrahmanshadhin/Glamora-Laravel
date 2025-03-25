@@ -16,7 +16,7 @@ class StatusUpdateMail extends Mailable {
         $this->user = $user;
     }
 
-    public function build() {
+    public function build(): StatusUpdateMail {
         return $this
             ->subject('Your Status Has Changed')
             ->view('emails.status-changed');

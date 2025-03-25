@@ -17,6 +17,7 @@ use App\Models\UserService;
 use App\Models\UserTool;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -129,7 +130,7 @@ class User extends Authenticatable implements JWTSubject {
     /**
      * Get all reviews received by the user as a beauty expert.
      */
-    public function receivedReviews() {
+    public function receivedReviews(): HasManyThrough {
         return $this->hasManyThrough(
             Review::class,
             Booking::class,

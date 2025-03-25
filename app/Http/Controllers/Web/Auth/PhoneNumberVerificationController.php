@@ -20,7 +20,7 @@ class PhoneNumberVerificationController extends Controller {
     /**
      * Display the phone number verification view.
      *
-     * @return View
+     * @return JsonResponse|View
      */
     public function index(): JsonResponse | View {
         try {
@@ -70,7 +70,7 @@ class PhoneNumberVerificationController extends Controller {
         try {
             $client = new Client($sid, $token);
             $client->messages->create($phoneNumber, [
-                'body' => "Your OTP is: {$otp}",
+                'body' => "Your OTP is: $otp",
                 'from' => $from,
             ]);
         } catch (Exception $e) {
@@ -95,7 +95,7 @@ class PhoneNumberVerificationController extends Controller {
     /**
      * Display the OTP verification view for phone number.
      *
-     * @return View
+     * @return JsonResponse|View
      */
     public function otpVerificationView(): JsonResponse | View {
         try {
@@ -110,8 +110,8 @@ class PhoneNumberVerificationController extends Controller {
     /**
      * Verify the OTP and update the user's phone_number_verified_at field.
      *
-     * @param  Request  $request
-     * @return RedirectResponse
+     * @param Request $request
+     * @return JsonResponse|RedirectResponse
      */
     public function verifyOtpForPhone(Request $request): JsonResponse | RedirectResponse {
         try {

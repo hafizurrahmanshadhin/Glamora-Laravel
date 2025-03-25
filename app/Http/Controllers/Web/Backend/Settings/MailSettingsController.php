@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Web\Backend\Settings;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -46,7 +45,7 @@ class MailSettingsController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(Request $request) {
+    public function update(Request $request): RedirectResponse {
         $request->validate([
             'mail_mailer'       => ['nullable', 'string', 'regex:/^\S*$/'],
             'mail_host'         => ['nullable', 'string', 'regex:/^\S*$/'],
@@ -84,7 +83,7 @@ class MailSettingsController extends Controller {
             Artisan::call('optimize:clear');
 
             return back()->with('t-success', 'Updated successfully');
-        } catch (Exception $e) {
+        } catch (Exception) {
             return back()->with('t-error', 'Failed to update');
         }
     }

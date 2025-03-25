@@ -5,6 +5,7 @@ use App\Console\Commands\ProcessQueue;
 use App\Console\Commands\ReactivateBannedUsers;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());

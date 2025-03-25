@@ -15,7 +15,7 @@ class ContactController extends Controller {
     /**
      * Display the contact page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

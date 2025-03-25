@@ -13,7 +13,7 @@ class ServiceCategoryController extends Controller {
     /**
      * Display the service category page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

@@ -17,7 +17,7 @@ class InclusionsCancellationController extends Controller {
     /**
      * Display the inclusions & cancellation page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

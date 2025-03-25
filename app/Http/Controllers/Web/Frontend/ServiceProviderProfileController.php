@@ -22,7 +22,10 @@ class ServiceProviderProfileController extends Controller {
     /**
      * Display the service provider profile page.
      *
-     * @return View
+     * @param Request $request
+     * @param $userId
+     * @param $serviceId
+     * @return View|JsonResponse
      */
     public function index(Request $request, $userId, $serviceId): View | JsonResponse {
         try {
@@ -69,7 +72,7 @@ class ServiceProviderProfileController extends Controller {
     /**
      * Display the service provider profile edit page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function editProfile(): View | JsonResponse {
         try {
@@ -219,7 +222,7 @@ class ServiceProviderProfileController extends Controller {
      * Display the service provider edit service information page.
      *
      * @param int $userId
-     * @return View
+     * @return View|JsonResponse
      */
     public function editServiceInformation(int $userId): View | JsonResponse {
         try {
@@ -318,7 +321,7 @@ class ServiceProviderProfileController extends Controller {
                         'service_id' => $data['service_id'],
                     ])->first();
 
-                    if (empty($data['selected']) || !$data['selected']) {
+                    if (empty($data['selected'])) {
                         // If unselected and the record exists, soft-delete it.
                         if ($existingService) {
                             $existingService->delete();
@@ -353,7 +356,7 @@ class ServiceProviderProfileController extends Controller {
             }
 
             return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Service information updated successfully.');
-        } catch (Exception $e) {
+        } catch (Exception) {
             return redirect()->back()->with('t-error', 'An error occurred while updating service information.');
         }
     }

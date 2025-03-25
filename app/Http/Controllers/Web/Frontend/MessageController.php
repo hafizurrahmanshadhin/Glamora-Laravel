@@ -18,7 +18,7 @@ class MessageController extends Controller {
      * Show the chat page.
      *
      * @param int $id
-     * @return View
+     * @return JsonResponse|View
      */
     public function show(int $id): JsonResponse | View {
         try {

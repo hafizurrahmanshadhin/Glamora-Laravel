@@ -20,7 +20,7 @@ class EmailVerificationController extends Controller {
     /**
      * Display the email verification view.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {
@@ -62,7 +62,7 @@ class EmailVerificationController extends Controller {
             );
 
             // Send the OTP via email
-            Mail::raw("Your verification code is: {$otp}", function ($message) use ($request) {
+            Mail::raw("Your verification code is: $otp", function ($message) use ($request) {
                 $message->to($request->email)
                     ->subject('Email Verification OTP');
             });
@@ -81,7 +81,7 @@ class EmailVerificationController extends Controller {
     /**
      * Display the email verification view.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function otpVerificationView(): View | JsonResponse {
         try {
@@ -99,6 +99,9 @@ class EmailVerificationController extends Controller {
 
     /**
      * Verify the OTP and update the user’s email_verified_at.
+     *
+     * @param Request $request
+     * @return JsonResponse|RedirectResponse
      */
     public function verifyOTP(Request $request): JsonResponse | RedirectResponse {
         try {

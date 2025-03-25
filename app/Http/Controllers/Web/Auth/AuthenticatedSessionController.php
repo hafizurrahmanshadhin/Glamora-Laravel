@@ -67,7 +67,7 @@ class AuthenticatedSessionController extends Controller {
 
             // If a redirect_to parameter exists and user is a client, redirect back to the intended page
             if ($user->role === 'client' && $request->filled('redirect_to')) {
-                return redirect($request->input('redirect_to'));
+                return redirect()->to($request->input('redirect_to'));
             }
 
             if ($user->role === 'admin') {

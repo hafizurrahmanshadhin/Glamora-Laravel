@@ -13,7 +13,7 @@ class LegalPageController extends Controller {
     /**
      * Display the terms and conditions page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function termsAndConditions(): View | JsonResponse {
         try {
@@ -29,7 +29,7 @@ class LegalPageController extends Controller {
     /**
      * Display the privacy policy page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function privacyPolicy(): View | JsonResponse {
         try {
@@ -45,7 +45,7 @@ class LegalPageController extends Controller {
     /**
      * Display the refund policy page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function inclusionsCancellation(): View | JsonResponse {
         try {

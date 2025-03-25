@@ -25,7 +25,7 @@ class ProcessQueue extends Command {
      *
      * @return int
      */
-    public function handle() {
+    public function handle(): int {
         // Run the queue worker
         Artisan::call('queue:work', ['--stop-when-empty' => true]);
 

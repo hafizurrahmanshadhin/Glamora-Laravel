@@ -14,7 +14,7 @@ class DynamicPageController extends Controller {
      * Display the specified resource.
      *
      * @param string $page_slug
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(string $page_slug): View | JsonResponse {
         try {

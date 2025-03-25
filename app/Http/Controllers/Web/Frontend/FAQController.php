@@ -13,7 +13,7 @@ class FAQController extends Controller {
     /**
      * Display the faq page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

@@ -12,8 +12,7 @@ class VerificationSuccessController extends Controller {
     /**
      * Display the email verification view.
      *
-     * @return View
-     *
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

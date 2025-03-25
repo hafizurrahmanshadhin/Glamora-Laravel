@@ -92,7 +92,7 @@ class AfterPaymentController extends Controller {
                             </div>';
                     })
                     ->rawColumns(['canceled_by_name', 'requested_by_name', 'ban_status', 'action'])
-                    ->make(true);
+                    ->make();
             }
 
             return view('backend.layouts.booking-cancellation.after-payment.index');
@@ -109,7 +109,7 @@ class AfterPaymentController extends Controller {
      * @param Request $request
      * @return JsonResponse
      */
-    public function banUser(Request $request) {
+    public function banUser(Request $request): JsonResponse {
         $request->validate([
             'user_id'  => 'required|exists:users,id',
             'duration' => 'required|in:1,3,5,7,10,15,30',
@@ -136,7 +136,7 @@ class AfterPaymentController extends Controller {
             UserService::where('user_id', $user->id)->update(['status' => $status]);
 
             DB::commit();
-            return Helper::jsonResponse(true, "User has been banned successfully for {$request->duration} day(s).", 200);
+            return Helper::jsonResponse(true, "User has been banned successfully for $request->duration day(s).", 200);
         } catch (Exception $e) {
             DB::rollBack();
 

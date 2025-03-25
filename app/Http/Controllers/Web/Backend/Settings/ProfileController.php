@@ -19,7 +19,7 @@ class ProfileController extends Controller {
      * Display the user's profile settings page.
      *
      * @param Request $request
-     * @return View
+     * @return JsonResponse|View
      */
     public function index(Request $request): JsonResponse | View {
         try {
@@ -38,7 +38,7 @@ class ProfileController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function UpdateProfile(Request $request) {
+    public function UpdateProfile(Request $request): RedirectResponse {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:200|min:2',
             'last_name'  => 'required|string|max:200|min:2',
@@ -67,7 +67,7 @@ class ProfileController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function UpdatePassword(Request $request) {
+    public function UpdatePassword(Request $request): RedirectResponse {
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'password'     => 'required|confirmed|min:8',
@@ -95,9 +95,9 @@ class ProfileController extends Controller {
      * Update the user's profile picture.
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function UpdateProfilePicture(Request $request) {
+    public function UpdateProfilePicture(Request $request): JsonResponse {
         $request->validate([
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
@@ -139,9 +139,9 @@ class ProfileController extends Controller {
      * Update the user's cover photo.
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function UpdateCoverPhoto(Request $request) {
+    public function UpdateCoverPhoto(Request $request): JsonResponse {
         $request->validate([
             'cover_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);

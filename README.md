@@ -127,12 +127,12 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
     php artisan serve
     ```
 
-11. Start job processing:
+11. Start corn job:
 
     ```bash
-    php artisan queue:work
+    php artisan schedule:work
 
-    #/usr/local/bin/php /home/qfe9ow4285wl/public_html/artisan queue:work
+    * * * * * /usr/local/bin/php /home/qfe9ow4285wl/public_html/artisan schedule:work > /dev/null 2>&1
     ```
 
 12. Start reverb websocket server:

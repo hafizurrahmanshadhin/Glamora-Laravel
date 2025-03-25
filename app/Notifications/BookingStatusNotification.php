@@ -8,8 +8,8 @@ use Illuminate\Notifications\Notification;
 
 class BookingStatusNotification extends Notification {
     use Queueable;
-    public $booking;
-    public $message;
+    public Booking $booking;
+    public string $message;
 
     /**
      * Create a new notification instance.
@@ -28,7 +28,7 @@ class BookingStatusNotification extends Notification {
      * @param mixed $notifiable
      * @return array
      */
-    public function via($notifiable) {
+    public function via(mixed $notifiable): array {
         return ['database'];
     }
 
@@ -38,7 +38,7 @@ class BookingStatusNotification extends Notification {
      * @param mixed $notifiable
      * @return array
      */
-    public function toArray($notifiable) {
+    public function toArray(mixed $notifiable): array {
         return [
             'message'    => $this->message,
             'booking_id' => $this->booking->id,

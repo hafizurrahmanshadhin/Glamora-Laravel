@@ -15,10 +15,10 @@ class AvailableServicesController extends Controller {
     /**
      * Display the available beauty services page.
      *
-     * @param mixed $serviceId Optional serviceId from the route.
-     * @return View
+     * @param mixed|null $serviceId Optional serviceId from the route.
+     * @return View|JsonResponse
      */
-    public function index($serviceId = null): View | JsonResponse {
+    public function index(mixed $serviceId = null): View | JsonResponse {
         try {
             $rating     = request('rating');
             $priceRange = request('price_range');

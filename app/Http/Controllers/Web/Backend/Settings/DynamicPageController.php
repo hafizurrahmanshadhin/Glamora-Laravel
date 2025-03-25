@@ -115,7 +115,7 @@ class DynamicPageController extends Controller {
      * Show the form for editing the specified dynamic page content.
      *
      * @param int $id
-     * @return View
+     * @return View|JsonResponse
      */
     public function edit(int $id): View | JsonResponse {
         try {

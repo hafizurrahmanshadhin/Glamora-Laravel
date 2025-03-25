@@ -71,7 +71,7 @@ class FAQController extends Controller {
     /**
      * Show the form for creating a new resource.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function create(): View | JsonResponse {
         try {
@@ -116,7 +116,7 @@ class FAQController extends Controller {
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return View
+     * @return View|JsonResponse
      */
     public function edit(int $id): View | JsonResponse {
         try {

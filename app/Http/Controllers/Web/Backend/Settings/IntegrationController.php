@@ -16,7 +16,7 @@ class IntegrationController extends Controller {
     /**
      * Display integration settings page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

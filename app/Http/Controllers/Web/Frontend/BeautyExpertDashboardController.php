@@ -21,7 +21,7 @@ class BeautyExpertDashboardController extends Controller {
     /**
      * Display the beauty expert dashboard index page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

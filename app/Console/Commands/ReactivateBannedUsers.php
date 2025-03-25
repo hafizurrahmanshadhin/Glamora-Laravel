@@ -28,7 +28,7 @@ class ReactivateBannedUsers extends Command {
      *
      * @return int
      */
-    public function handle() {
+    public function handle(): int {
         $users = User::whereNotNull('banned_until')
             ->where('banned_until', '<=', now())
             ->get();
@@ -41,7 +41,7 @@ class ReactivateBannedUsers extends Command {
             TravelRadius::where('user_id', $user->id)->update(['status' => 'active']);
             UserService::where('user_id', $user->id)->update(['status' => 'active']);
 
-            $this->info("Reactivated user ID: {$user->id}");
+            $this->info("Reactivated user ID: $user->id");
         }
 
         return 0;

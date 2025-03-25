@@ -13,6 +13,7 @@ class NotificationController extends Controller {
     /**
      * Display the notifications page.
      *
+     * @param $id
      * @return JsonResponse | RedirectResponse
      */
     public function markAsRead($id): JsonResponse | RedirectResponse {

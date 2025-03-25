@@ -22,7 +22,7 @@ return new class extends Migration {
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 10);
             $table->string('currency');
             $table->string('payment_status')->default('pending');
             $table->string('stripe_payment_id')->nullable();

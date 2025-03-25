@@ -19,7 +19,7 @@ class ClientDashboardController extends Controller {
     /**
      * Display the client dashboard index page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {
@@ -78,8 +78,8 @@ class ClientDashboardController extends Controller {
     /**
      * Store a newly created review in storage.
      *
-     * @param  Request  $request
-     * @return RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse|JsonResponse
      */
     public function storeReview(Request $request): RedirectResponse | JsonResponse {
         try {
@@ -124,8 +124,8 @@ class ClientDashboardController extends Controller {
     /**
      * Store a newly created report in storage.
      *
-     * @param  Request  $request
-     * @return RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse|JsonResponse
      */
     public function storeReport(Request $request): RedirectResponse | JsonResponse {
         try {

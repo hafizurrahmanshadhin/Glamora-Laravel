@@ -17,7 +17,7 @@ class TermsAndConditionsController extends Controller {
     /**
      * Display the terms and conditions page.
      *
-     * @return View
+     * @return View|JsonResponse
      */
     public function index(): View | JsonResponse {
         try {

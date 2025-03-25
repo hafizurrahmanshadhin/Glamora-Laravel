@@ -23,7 +23,8 @@ class BookServiceController extends Controller {
     /**
      * Display the booking form page.
      *
-     * @return View
+     * @param Request $request
+     * @return View|JsonResponse
      */
     public function index(Request $request): View | JsonResponse {
         try {
@@ -112,7 +113,7 @@ class BookServiceController extends Controller {
             }
 
             return redirect()->back()->with('t-success', 'Booking created successfully.');
-        } catch (Exception $e) {
+        } catch (Exception) {
             return redirect()->back()->with('t-error', 'Failed to create booking.');
         }
     }
@@ -121,7 +122,7 @@ class BookServiceController extends Controller {
      * Display the negotiated date and time page.
      *
      * @param Booking $booking
-     * @return View
+     * @return View|JsonResponse
      */
     public function viewNegotiate(Booking $booking): View | JsonResponse {
         try {
@@ -152,7 +153,7 @@ class BookServiceController extends Controller {
      * Respond to the availability request.
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     public function respondAvailability(Request $request): RedirectResponse | JsonResponse {
         try {
@@ -183,7 +184,7 @@ class BookServiceController extends Controller {
 
                 $client->notify(new BookingStatusNotification(
                     $booking,
-                    "I’m Available with Date: {$formattedDate}, Time: {$formattedTime}, Price: {$booking->price}"
+                    "I’m Available with Date: $formattedDate, Time: $formattedTime, Price: $booking->price"
                 ));
                 return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Availability confirmed.');
 
@@ -202,7 +203,7 @@ class BookServiceController extends Controller {
 
                 $client->notify(new BookingStatusNotification(
                     $booking,
-                    "New Offer! Date: {$formattedDate}, Time: {$formattedTime}, Price: {$booking->price}"
+                    "New Offer! Date: $formattedDate, Time: $formattedTime, Price: $booking->price"
                 ));
                 return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Offer sent.');
 
