@@ -36,52 +36,47 @@ class AuthenticatedSessionController extends Controller {
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse | JsonResponse {
-        try {
-            $request->authenticate();
+        $request->authenticate();
 
-            $request->session()->regenerate();
+        $request->session()->regenerate();
 
-            $user = Auth::user();
+        $user = Auth::user();
 
-            // Check if the user is still banned
-            if ($user->banned_until && now()->lt($user->banned_until)) {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
+        // Check if the user is still banned
+        if ($user->banned_until && now()->lt($user->banned_until)) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-                // Show a ban error similar to failed login
-                return redirect()->route('login')
-                    ->withErrors([
-                        'email' => 'Your account is banned until ' . $user->banned_until->format('Y-m-d H:i') . '.',
-                    ]);
-            }
-
-            if ($user->role === 'beauty_expert' && $user->status === 'inactive') {
-                Auth::guard('web')->logout();
-
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-
-                return redirect()->route('profile-submitted')->with('status', 'Your profile is under review. Please wait for approval.');
-            }
-
-            // If a redirect_to parameter exists and user is a client, redirect back to the intended page
-            if ($user->role === 'client' && $request->filled('redirect_to')) {
-                return redirect()->to($request->input('redirect_to'));
-            }
-
-            if ($user->role === 'admin') {
-                return redirect()->route('dashboard');
-            } elseif ($user->role === 'client') {
-                return redirect()->route('client-dashboard');
-            } else {
-                return redirect()->route('beauty-expert-dashboard');
-            }
-        } catch (Exception $e) {
-            return Helper::jsonResponse(false, 'An error occurred', 500, [
-                'error' => $e->getMessage(),
-            ]);
+            // Show a ban error similar to failed login
+            return redirect()->route('login')
+                ->withErrors([
+                    'email' => 'Your account is banned until ' . $user->banned_until->format('Y-m-d H:i') . '.',
+                ]);
         }
+
+        if ($user->role === 'beauty_expert' && $user->status === 'inactive') {
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('profile-submitted')->with('status', 'Your profile is under review. Please wait for approval.');
+        }
+
+        // If a redirect_to parameter exists and user is a client, redirect back to the intended page
+        if ($user->role === 'client' && $request->filled('redirect_to')) {
+            return redirect()->to($request->input('redirect_to'));
+        }
+
+        if ($user->role === 'admin') {
+            return redirect()->route('dashboard');
+        } elseif ($user->role === 'client') {
+            return redirect()->route('client-dashboard');
+        } else {
+            return redirect()->route('beauty-expert-dashboard');
+        }
+
     }
 
     /**
