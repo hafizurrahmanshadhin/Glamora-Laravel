@@ -81,7 +81,7 @@
                                 </div>
 
                                 <div class="mt-3">
-                                    <h3>{{ ucfirst(Auth::user()->firstName) . ' ' . ucfirst(Auth::user()->lastName) ?? '' }}<i
+                                    <h3>{{ ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) ?? '' }}<i
                                             class="bi bi-patch-check-fill align-baseline text-info ms-1"></i></h3>
                                     <h6 class="text-muted">{{ Auth::user()->email ?? '' }}</h6>
                                 </div>

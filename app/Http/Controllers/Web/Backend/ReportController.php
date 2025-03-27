@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web\Backend;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\Report;
+use App\Models\ReportsView;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,24 +22,9 @@ class ReportController extends Controller {
     public function index(Request $request): View | JsonResponse {
         try {
             if ($request->ajax()) {
-                $data = Report::with(['user', 'booking.userService.user'])->latest()->get();
+                $data = ReportsView::latest()->get();
                 return DataTables::of($data)
                     ->addIndexColumn()
-                    ->addColumn('report_from', function ($data) {
-                        return $data->user->first_name . ' ' . $data->user->last_name;
-                    })
-                    ->addColumn('report_to', function ($data) {
-                        // The user who got reported
-                        // Step 1: Check if there is a booking
-                        // Step 2: booking has a userService
-                        // Step 3: The userService has a user
-                        if ($data->booking && $data->booking->userService && $data->booking->userService->user) {
-                            $reportedUser = $data->booking->userService->user;
-
-                            return $reportedUser->first_name . ' ' . $reportedUser->last_name;
-                        }
-                        return 'N/A';
-                    })
                     ->addColumn('message', function ($data) {
                         $message       = $data->message;
                         $short_message = strlen($message) > 100 ? substr($message, 0, 100) . '...' : $message;
@@ -52,7 +37,7 @@ class ReportController extends Controller {
                                     </a>
                                 </div>';
                     })
-                    ->rawColumns(['report_from', 'report_to', 'message', 'action'])
+                    ->rawColumns(['message', 'action'])
                     ->make();
             }
             return view('backend.layouts.reports.index');
@@ -71,27 +56,8 @@ class ReportController extends Controller {
      */
     public function show(int $id): JsonResponse {
         try {
-            $report = Report::with(['user', 'booking.userService.user'])->findOrFail($id);
-
-            // Report from
-            $reportFrom = $report->user
-            ? $report->user->first_name . ' ' . $report->user->last_name
-            : 'N/A';
-
-            // Report to
-            $reportTo = 'N/A';
-            if ($report->booking && $report->booking->userService && $report->booking->userService->user) {
-                $reportTo = $report->booking->userService->user->first_name
-                . ' '
-                . $report->booking->userService->user->last_name;
-            }
-
-            return response()->json([
-                'id'          => $report->id,
-                'report_from' => $reportFrom,
-                'report_to'   => $reportTo,
-                'message'     => $report->message,
-            ]);
+            $data = ReportsView::findOrFail($id);
+            return Helper::jsonResponse(true, 'Data fetch successfully', 200, $data);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),
