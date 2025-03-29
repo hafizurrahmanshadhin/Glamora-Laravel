@@ -68,6 +68,61 @@
             box-shadow: none;
         }
     </style>
+
+    <style>
+        .armie-message {
+            position: relative;
+        }
+
+        /* Tooltip container */
+        .armie-message::after {
+            content: "Send Message";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+
+        /* Show tooltip on hover */
+        .armie-message:hover::after {
+            opacity: 1;
+        }
+
+        /* Appointment done tooltip */
+        .appointment-done {
+            position: relative;
+        }
+
+        .appointment-done::after {
+            content: "Cancel this appointment";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+
+        .appointment-done:hover::after {
+            opacity: 1;
+        }
+    </style>
 @endpush
 
 @section('content')

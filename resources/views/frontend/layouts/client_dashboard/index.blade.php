@@ -28,6 +28,87 @@
             stroke: #FFCC47;
         }
     </style>
+
+    <style>
+        .armie-message {
+            position: relative;
+        }
+
+        /* Tooltip container */
+        .armie-message::after {
+            content: "Send Message";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+
+        /* Show tooltip on hover */
+        .armie-message:hover::after {
+            opacity: 1;
+        }
+
+        /* Appointment done tooltip */
+        .appointment-done {
+            position: relative;
+        }
+
+        .appointment-done::after {
+            content: "Complete Appointment and give review";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+
+        .appointment-done:hover::after {
+            opacity: 1;
+        }
+
+        /* Appointment cancel tooltip */
+        .appointment-cancel {
+            position: relative;
+        }
+
+        .appointment-cancel::after {
+            content: "Cancel the Booking and send report";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+
+        .appointment-cancel:hover::after {
+            opacity: 1;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -113,7 +194,7 @@
                                                     fill="#222222" />
                                             </svg>
                                         </a>
-                                        <!-- Add data-booking-id attribute below -->
+
                                         <a class="appointment-done" data-booking-id="{{ $booking->id }}"
                                             data-bs-toggle="modal" data-bs-target="#appointmentDone">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
@@ -121,6 +202,17 @@
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                     d="M16 3C8.82 3 3 8.82 3 16C3 23.18 8.82 29 16 29C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM16 27C9.93 27 5 22.07 5 16C5 9.93 9.93 5 16 5C22.07 5 27 9.93 27 16C27 22.07 22.07 27 16 27ZM14.59 20.59L10.59 16.59L9.17 18L14.59 23.41L22.83 15.17L21.41 13.76L14.59 20.59Z"
                                                     fill="#222222" />
+                                            </svg>
+                                        </a>
+
+                                        <a class="appointment-cancel ms-3" data-booking-id="{{ $booking->id }}"
+                                            data-bs-toggle="modal" data-bs-target="#refundConfirmationModal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                                fill="none" viewBox="0 0 32 32">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 3C8.82 3 3 8.82 3 16C3 23.18 8.82 29 16 29
+                                                                     C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM11 11
+                                                                     L21 21M21 11L11 21" stroke="#222" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </a>
                                     </div>
@@ -219,9 +311,6 @@
                     <h2>Is your appointment Completed?</h2>
                     <p class="modal-para">Help us to let know your experience.</p>
                     <div class="tm-multistep-btn-wrapper">
-                        <a class="tm-appointment-done-btn" type="button" onclick="openRefundConfirmationModal()">
-                            No
-                        </a>
                         <button class="tm-multi-step-submit-form" type="button" data-bs-toggle="modal"
                             data-bs-target="#appointmentReview">
                             Yes, Done
@@ -401,10 +490,12 @@
             });
         });
 
-        function openRefundConfirmationModal() {
-            $('#appointmentDone').modal('hide');
-            $('#refundConfirmationModal').modal('show');
-        }
+        document.querySelectorAll('.appointment-cancel').forEach(function(element) {
+            element.addEventListener('click', function() {
+                bookingIdForCancellation = this.getAttribute('data-booking-id');
+                console.log("Selected booking ID for cancel:", bookingIdForCancellation);
+            });
+        });
 
         function confirmRefundNotProvided() {
             axios.delete("{{ route('client-dashboard.cancel-booking') }}", {
