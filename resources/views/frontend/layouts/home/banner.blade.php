@@ -78,17 +78,21 @@
                     <div class="select-service-dropdown">
                         <div class="select-service-dropdown-options d-flex flex-column gap-3 ">
                             <div class="item d-flex flex-column gap-2">
-                                <div class="title">Select who would like the service</div>
+                                <div class="title">What type of styling service are you looking for?</div>
                                 <select id="service-selector" class="form-select" aria-label="Default select example">
                                     <option selected>Select</option>
-                                    <option value="Non Bridal">Non Bridal (Party, Special Occasion)</option>
-                                    <option value="Bride">Bride</option>
-                                    <option value="Flower Girl">Flower Girl</option>
+                                    <option value="Non Bridal">Glam/Hairstyling for Special Events/Party</option>
+                                    <option value="Bride">Bridal Glam & Hairstyling</option>
+                                    <option value="Flower Girl">Bridal Party (Bridesmaids, Mother of Bride/Groom)
+                                    </option>
+                                    <option value="Flower Girl">Flower Girl (aged 10 and under only)</option>
+                                    <option value="Flower Girl">Character & Themed Events (Costume Party, Dress Ups)
+                                    </option>
                                 </select>
                             </div>
 
                             <div class="item d-flex flex-column gap-2">
-                                <div class="title">What service would you like?</div>
+                                <div class="title">Please select a service</div>
                                 <select name="serviceId" class="form-select" id="sub-service-selector">
                                     <option value="" selected disabled>Select</option>
                                     @foreach ($services as $service)
