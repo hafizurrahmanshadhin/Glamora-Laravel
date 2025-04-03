@@ -53,6 +53,7 @@ Route::controller(ImageApprovalRequestController::class)->group(function () {
 //! Route for FAQ Page
 Route::controller(FAQController::class)->group(function () {
     Route::get('/faq', 'index')->name('faq.index');
+    Route::get('/faq/show/{id}', 'show')->name('faq.show');
     Route::get('/faq/create', 'create')->name('faq.create');
     Route::post('/faq/store', 'store')->name('faq.store');
     Route::get('/faq/edit/{id}', 'edit')->name('faq.edit');
@@ -64,6 +65,7 @@ Route::controller(FAQController::class)->group(function () {
 //! Route for Contacts Page
 Route::controller(ContactController::class)->group(function () {
     Route::get('/contacts', 'index')->name('contacts.index');
+    Route::get('/contacts/show/{id}', 'show')->name('contacts.show');
     Route::get('/contacts/status/{id}', 'status')->name('contacts.status');
     Route::delete('/contacts/destroy/{id}', 'destroy')->name('contacts.destroy');
 });

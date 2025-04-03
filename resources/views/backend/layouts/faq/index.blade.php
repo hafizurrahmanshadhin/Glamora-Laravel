@@ -53,6 +53,25 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal for viewing FAQ details start --}}
+    <div class="modal fade" id="viewFAQModal" tabindex="-1" aria-labelledby="FAQModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="FAQModalLabel" class="modal-title">FAQ Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- Dynamic data filled by JS --}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal for viewing FAQ details end --}}
 @endsection
 
 @push('scripts')
@@ -144,6 +163,29 @@
             }
         });
 
+        // Fetch and display FAQ details in the modal
+        async function showFAQDetails(id) {
+            let url = '{{ route('faq.show', ['id' => ':id']) }}';
+            url = url.replace(':id', id);
+
+            try {
+                let response = await axios.get(url);
+                if (response.data && response.data.data) {
+                    let data = response.data.data;
+                    let modalBody = document.querySelector('#viewFAQModal .modal-body');
+                    modalBody.innerHTML = `
+                    <p><strong>Question:</strong> ${data.question}</p>
+                    <p><strong>Answer:</strong> ${data.answer}</p>
+                `;
+                } else {
+                    toastr.error('No data returned from the server.');
+                }
+            } catch (error) {
+                console.error(error);
+                toastr.error('Could not fetch FAQ details.');
+            }
+        }
+
         // Status Change Confirm Alert
         function showStatusChangeAlert(id) {
             event.preventDefault();
@@ -164,7 +206,7 @@
 
         // Status Change
         function statusChange(id) {
-            let url = '{{ route('faq.status', ':id') }}';
+            let url = '{{ route('faq.status', ['id' => ':id']) }}'.replace(':id', id);
             $.ajax({
                 type: "GET",
                 url: url.replace(':id', id),
@@ -205,7 +247,7 @@
 
         // Delete Button
         function deleteItem(id) {
-            let url = '{{ route('faq.destroy', ':id') }}';
+            let url = '{{ route('faq.destroy', ['id' => ':id']) }}'.replace(':id', id);
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",

@@ -192,7 +192,7 @@
 
         // Status Change
         function changeStatus(id, status) {
-            let url = '{{ route('user.beauty-expert.status', ':id') }}';
+            let url = '{{ route('user.beauty-expert.status', ['id' => ':id']) }}'.replace(':id', id);
             url = url.replace(':id', id);
 
             axios.post(url, {
@@ -237,7 +237,7 @@
 
         // Delete Button
         function deleteItem(id) {
-            let url = '{{ route('user.beauty-expert.destroy', ':id') }}';
+            let url = '{{ route('user.beauty-expert.destroy', ['id' => '__id__']) }}'.replace('__id__', id);
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",
@@ -261,7 +261,7 @@
 
         // Fetch and display user details
         function showUserDetails(id) {
-            let url = '{{ route('user.beauty-expert.show', ':id') }}';
+            let url = '{{ route('user.beauty-expert.show', ['id' => '__id__']) }}'.replace('__id__', id);
             url = url.replace(':id', id);
 
             axios.get(url)
@@ -321,8 +321,8 @@
                                 ${
                                     service.image
                                         ? `<a href="${service.image}" target="_blank">
-                                                                                                           <img src="${service.image}" class="img-thumbnail mt-1" width="80">
-                                                                                                       </a>`
+                                                <img src="${service.image}" class="img-thumbnail mt-1" width="80">
+                                            </a>`
                                         : ''
                                 }
                             </li>

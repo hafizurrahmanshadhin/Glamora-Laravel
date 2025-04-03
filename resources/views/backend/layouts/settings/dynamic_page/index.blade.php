@@ -55,6 +55,25 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal for viewing dynamic page details --}}
+    <div class="modal fade" id="viewDynamicPageModal" tabindex="-1" aria-labelledby="DynamicPageModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="DynamicPageLabel" class="modal-title">Dynamic Page Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- Dynamic Data --}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -146,6 +165,31 @@
             }
         });
 
+        // Fetch and display dynamic page details
+        async function showDynamicPageDetails(id) {
+            let url = '{{ route('settings.dynamic_page.show', ['id' => ':id']) }}';
+            url = url.replace(':id', id);
+
+            try {
+                let response = await axios.get(url);
+
+                // Check if data exists
+                if (response.data && response.data.data) {
+                    let data = response.data.data;
+                    let modalBody = document.querySelector('#viewDynamicPageModal .modal-body');
+                    modalBody.innerHTML = `
+                    <p><strong>Page Title:</strong> ${data.page_title}</p>
+                    <p><strong>Page Content:</strong> ${data.page_content}</p>
+                `;
+                } else {
+                    toastr.error('No data returned from the server.');
+                }
+            } catch (error) {
+                console.error(error);
+                toastr.error('Could not fetch report details.');
+            }
+        }
+
         // Status Change Confirm Alert
         function showStatusChangeAlert(id) {
             event.preventDefault();
@@ -166,7 +210,7 @@
 
         // Status Change
         function statusChange(id) {
-            let url = '{{ route('settings.dynamic_page.status', ':id') }}';
+            let url = '{{ route('settings.dynamic_page.status', ['id' => '__id__']) }}'.replace('__id__', id);
             $.ajax({
                 type: "GET",
                 url: url.replace(':id', id),
@@ -207,7 +251,7 @@
 
         // Delete Button
         function deleteItem(id) {
-            let url = '{{ route('settings.dynamic_page.destroy', ':id') }}';
+            let url = '{{ route('settings.dynamic_page.destroy', ['id' => '__id__']) }}'.replace('__id__', id);
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",

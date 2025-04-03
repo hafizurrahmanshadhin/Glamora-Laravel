@@ -13,6 +13,12 @@ use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class ServiceController extends Controller {
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return View|JsonResponse
+     */
     public function index(Request $request): View | JsonResponse {
         try {
             if ($request->ajax()) {
@@ -51,6 +57,12 @@ class ServiceController extends Controller {
         }
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
             'services_name' => 'required|string|max:255|unique:services,services_name',
@@ -73,6 +85,13 @@ class ServiceController extends Controller {
         }
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     public function update(Request $request, int $id): JsonResponse {
         $validator = Validator::make($request->all(), [
             'services_name' => 'required|string|max:255|unique:services,services_name,' . $id,
@@ -97,6 +116,12 @@ class ServiceController extends Controller {
         }
     }
 
+    /**
+     * Change the status of the specified resource.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     public function status(int $id): JsonResponse {
         try {
             $service = Service::findOrFail($id);
@@ -126,6 +151,12 @@ class ServiceController extends Controller {
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     public function destroy(int $id): JsonResponse {
         try {
             $service = Service::findOrFail($id);

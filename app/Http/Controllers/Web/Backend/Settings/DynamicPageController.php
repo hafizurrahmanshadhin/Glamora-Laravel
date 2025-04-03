@@ -30,7 +30,7 @@ class DynamicPageController extends Controller {
                     ->addIndexColumn()
                     ->addColumn('page_content', function ($data) {
                         $page_content       = $data->page_content;
-                        $short_page_content = strlen($page_content) > 100 ? substr($page_content, 0, 100) . '...' : $page_content;
+                        $short_page_content = strlen($page_content) > 40 ? substr($page_content, 0, 40) . '...' : $page_content;
                         return '<p>' . $short_page_content . '</p>';
                     })
 
@@ -49,6 +49,10 @@ class DynamicPageController extends Controller {
                                         <i class="ri-pencil-line" style="font-size: 24px;"></i>
                                     </a>
 
+                                    <a href="javascript:void(0);" onclick="showDynamicPageDetails(' . $data->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewDynamicPageModal">
+                                        <i class="ri-eye-line" style="font-size: 24px;"></i>
+                                    </a>
+
                                     <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $data->id . ')" class="link-danger text-decoration-none" title="Delete">
                                         <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
                                     </a>
@@ -60,6 +64,23 @@ class DynamicPageController extends Controller {
                     ->make();
             }
             return view('backend.layouts.settings.dynamic_page.index');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Display the specified report details.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse {
+        try {
+            $data = DynamicPage::findOrFail($id);
+            return Helper::jsonResponse(true, 'Data fetch successfully', 200, $data);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),

@@ -157,7 +157,7 @@
 
         // Status Change
         function statusChange(id) {
-            let url = '{{ route('newsletter-subscription.status', ':id') }}';
+            let url = '{{ route('newsletter-subscription.status', ['id' => ':id']) }}';
             $.ajax({
                 type: "GET",
                 url: url.replace(':id', id),
@@ -198,7 +198,7 @@
 
         // Delete Button
         function deleteItem(id) {
-            let url = '{{ route('newsletter-subscription.destroy', ':id') }}';
+            let url = '{{ route('newsletter-subscription.destroy', ['id' => '__id__']) }}'.replace('__id__', id);
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",

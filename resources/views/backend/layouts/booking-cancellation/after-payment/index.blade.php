@@ -37,7 +37,7 @@
                                             <th class="column-content">Name</th>
                                             <th class="column-content">Email</th>
                                             <th class="column-content">Phone Number</th>
-                                            <th class="column-content text-center">Comment</th>
+                                            <th class="column-content">Comment</th>
                                             <th class="column-content text-center">Ban Status</th>
                                             <th class="column-content text-center">Action</th>
                                         </tr>
@@ -199,21 +199,18 @@
                             name: 'canceled_by_name',
                             orderable: true,
                             searchable: true,
-                            className: 'text-center'
                         },
                         {
                             data: 'email',
                             name: 'email',
                             orderable: true,
                             searchable: true,
-                            className: 'text-center'
                         },
                         {
                             data: 'phone_number',
                             name: 'phone_number',
                             orderable: true,
                             searchable: true,
-                            className: 'text-center'
                         },
                         {
                             data: null,
@@ -225,7 +222,6 @@
                             },
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
                         },
                         {
                             data: 'ban_status',

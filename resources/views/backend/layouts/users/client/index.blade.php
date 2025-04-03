@@ -176,7 +176,7 @@
 
         // Status Change
         function changeStatus(id, status) {
-            let url = '{{ route('user.client.status', ':id') }}';
+            let url = '{{ route('user.client.status', ['id' => ':id']) }}'.replace(':id', id);
             url = url.replace(':id', id);
 
             axios.post(url, {
@@ -221,7 +221,7 @@
 
         // Delete Button
         function deleteItem(id) {
-            let url = '{{ route('user.client.destroy', ':id') }}';
+            let url = '{{ route('user.client.destroy', ['id' => ':id']) }}'.replace(':id', id);
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",
@@ -245,7 +245,7 @@
 
         // Fetch and display user details
         function showUserDetails(id) {
-            let url = '{{ route('user.client.show', ':id') }}';
+            let url = '{{ route('user.client.show', ['id' => ':id']) }}'.replace(':id', id);
             url = url.replace(':id', id);
 
             axios.get(url)

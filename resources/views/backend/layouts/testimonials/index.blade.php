@@ -138,21 +138,21 @@
                             name: 'rating',
                             orderable: true,
                             searchable: true,
-                            className: 'text-center'
+                            className: 'text-center w-sm-25',
                         },
                         {
                             data: 'status',
                             name: 'status',
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
+                            className: 'text-center w-sm-25',
                         },
                         {
                             data: 'action',
                             name: 'action',
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
+                            className: 'text-center w-sm-25',
                         },
                     ],
                 });
@@ -174,7 +174,7 @@
 
         // Fetch and display testimonial details
         function showTestimonialDetails(id) {
-            let url = '{{ route('testimonial.show', ':id') }}';
+            let url = '{{ route('testimonial.show', ['id' => ':id']) }}';
             url = url.replace(':id', id);
 
             axios.get(url)
@@ -193,7 +193,7 @@
 
         // Status Change
         function changeStatus(id, status) {
-            let url = '{{ route('testimonial.status', ':id') }}';
+            let url = '{{ route('testimonial.status', ['id' => ':id']) }}'.replace(':id', id);
             url = url.replace(':id', id);
 
             axios.post(url, {

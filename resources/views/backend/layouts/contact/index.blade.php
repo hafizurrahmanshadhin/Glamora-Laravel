@@ -38,7 +38,6 @@
                                             <th class="column-content">Name</th>
                                             <th class="column-content">Email</th>
                                             <th class="column-content">Phone Number</th>
-                                            <th class="column-content">Message</th>
                                             <th class="column-status">Status</th>
                                             <th class="column-action">Action</th>
                                         </tr>
@@ -54,6 +53,25 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal for viewing Contact details start --}}
+    <div class="modal fade" id="viewContactModal" tabindex="-1" aria-labelledby="ContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="ContactModalLabel" class="modal-title">Contact Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- Dynamic data filled by JS --}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal for viewing Contact details end --}}
 @endsection
 
 @push('scripts')
@@ -120,12 +138,6 @@
                             searchable: true
                         },
                         {
-                            data: 'message',
-                            name: 'message',
-                            orderable: true,
-                            searchable: true
-                        },
-                        {
                             data: 'status',
                             name: 'status',
                             orderable: false,
@@ -157,6 +169,31 @@
             }
         });
 
+        // Fetch and display Contact details in the modal
+        async function showContactDetails(id) {
+            let url = '{{ route('contacts.show', ['id' => ':id']) }}';
+            url = url.replace(':id', id);
+
+            try {
+                let response = await axios.get(url);
+                if (response.data && response.data.data) {
+                    let data = response.data.data;
+                    let modalBody = document.querySelector('#viewContactModal .modal-body');
+                    modalBody.innerHTML = `
+                    <p><strong>Name:</strong> ${data.name}</p>
+                    <p><strong>Email:</strong> ${data.email}</p>
+                    <p><strong>Phone Number:</strong> ${data.phone_number}</p>
+                    <p><strong>Message:</strong> ${data.message}</p>
+                `;
+                } else {
+                    toastr.error('No data returned from the server.');
+                }
+            } catch (error) {
+                console.error(error);
+                toastr.error('Could not fetch FAQ details.');
+            }
+        }
+
         // Status Change Confirm Alert
         function showStatusChangeAlert(id) {
             event.preventDefault();
@@ -177,7 +214,7 @@
 
         // Status Change
         function statusChange(id) {
-            let url = '{{ route('contacts.status', ':id') }}';
+            let url = '{{ route('contacts.status', ['id' => ':id']) }}'.replace(':id', id);
             $.ajax({
                 type: "GET",
                 url: url.replace(':id', id),
@@ -218,7 +255,7 @@
 
         // Delete Button
         function deleteItem(id) {
-            let url = '{{ route('contacts.destroy', ':id') }}';
+            let url = '{{ route('contacts.destroy', ['id' => '__id__']) }}'.replace('__id__', id);
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",

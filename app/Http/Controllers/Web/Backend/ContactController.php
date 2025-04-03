@@ -34,6 +34,10 @@ class ContactController extends Controller {
                     ->addColumn('action', function ($data) {
                         return '
                                 <div class="hstack gap-3 fs-base">
+                                    <a href="javascript:void(0);" onclick="showContactDetails(' . $data->id . ')" class="link-primary text-decoration-none" data-bs-toggle="modal" data-bs-target="#viewContactModal" title="View">
+                                        <i class="ri-eye-line" style="font-size: 24px;"></i>
+                                    </a>
+
                                     <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $data->id . ')" class="link-danger text-decoration-none" title="Delete">
                                         <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
                                     </a>
@@ -45,6 +49,23 @@ class ContactController extends Controller {
                     ->make();
             }
             return view('backend.layouts.contact.index');
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse {
+        try {
+            $data = Contact::findOrFail($id);
+            return Helper::jsonResponse(true, 'Data fetched successfully', 200, $data);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),

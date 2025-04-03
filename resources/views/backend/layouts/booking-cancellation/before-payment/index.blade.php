@@ -121,14 +121,12 @@
                             name: 'canceled_by_name',
                             orderable: true,
                             searchable: true,
-                            className: 'text-center'
                         },
                         {
                             data: 'requested_by_name',
                             name: 'requested_by_name',
                             orderable: true,
                             searchable: true,
-                            className: 'text-center'
                         },
                         {
                             data: 'action',
@@ -158,7 +156,7 @@
 
     <script>
         function showUserDetails(id) {
-            let url = '{{ route('before-payment.show', ':id') }}'.replace(':id', id);
+            let url = '{{ route('before-payment.show', ['id' => ':id']) }}'.replace(':id', id);
 
             axios.get(url)
                 .then(function(response) {

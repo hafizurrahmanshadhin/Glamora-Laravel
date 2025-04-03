@@ -30,7 +30,7 @@ class TestimonialController extends Controller {
                     })
                     ->addColumn('review', function ($data) {
                         $review       = $data->review;
-                        $short_review = strlen($review) > 100 ? substr($review, 0, 100) . '...' : $review;
+                        $short_review = strlen($review) > 50 ? substr($review, 0, 50) . '...' : $review;
                         return '<p>' . $short_review . '</p>';
                     })
                     ->addColumn('status', function ($testimonial) {
