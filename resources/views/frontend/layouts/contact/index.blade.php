@@ -3,10 +3,6 @@
 @section('title', 'Contact')
 
 @push('styles')
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/owl.theme.default.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/magnific-popup.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/fontawesome.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
@@ -67,47 +63,74 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('frontend/js/owl.carousel.min.js') }}"></script>
-
     <script>
-        document.getElementById('contactForm').addEventListener('submit', function(event) {
-            // Prevent duplicate events
-            event.preventDefault();
-            event.stopImmediatePropagation();
+        // Convert the Blade $systemSettings object to JSON
+        let bladeSystemSettings = @json($systemSettings);
 
-            // Clear previous error messages
-            document.getElementById('nameError').innerText = '';
-            document.getElementById('emailError').innerText = '';
-            document.getElementById('phoneNumberError').innerText = '';
-            document.getElementById('messageError').innerText = '';
+        // Check if SystemSetting model has an 'updated_at' field; if not, use something like Date.now()
+        let lastUpdatedBlade = "{{ $systemSettings->updated_at ?? now() }}";
 
-            const formData = new FormData(this);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check existing local storage
+            let storedSettings = localStorage.getItem('systemSettings');
+            let storedTimestamp = localStorage.getItem('systemSettingsLastUpdated');
 
-            axios.post('{{ route('contact.store') }}', formData)
-                .then(response => {
-                    toastr.success('Your message has been sent successfully!');
-                    document.getElementById('contactForm').reset();
-                })
-                .catch(error => {
-                    if (error.response && error.response.data.errors) {
-                        const errors = error.response.data.errors;
-                        if (errors.name) {
-                            document.getElementById('nameError').innerText = errors.name[0];
+            // Decide whether to use local storage data or Blade data
+            if (!storedSettings || storedTimestamp !== lastUpdatedBlade) {
+                // Store fresh data in local storage
+                localStorage.setItem('systemSettings', JSON.stringify(bladeSystemSettings));
+                localStorage.setItem('systemSettingsLastUpdated', lastUpdatedBlade);
+            } else {
+                // If stored data matches, use local storage
+                bladeSystemSettings = JSON.parse(storedSettings);
+
+                // Example: update the email address from local storage
+                let contactEmailLink = document.getElementById('contactEmail');
+                if (contactEmailLink && bladeSystemSettings.email) {
+                    contactEmailLink.textContent = bladeSystemSettings.email;
+                }
+            }
+
+            // AJAX form submission logic
+            document.getElementById('contactForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                // Clear previous error messages
+                document.getElementById('nameError').innerText = '';
+                document.getElementById('emailError').innerText = '';
+                document.getElementById('phoneNumberError').innerText = '';
+                document.getElementById('messageError').innerText = '';
+
+                const formData = new FormData(this);
+
+                axios.post('{{ route('contact.store') }}', formData)
+                    .then(response => {
+                        toastr.success('Your message has been sent successfully!');
+                        this.reset();
+                    })
+                    .catch(error => {
+                        if (error.response && error.response.data.errors) {
+                            const errors = error.response.data.errors;
+                            if (errors.name) {
+                                document.getElementById('nameError').innerText = errors.name[0];
+                            }
+                            if (errors.email) {
+                                document.getElementById('emailError').innerText = errors.email[0];
+                            }
+                            if (errors.phone_number) {
+                                document.getElementById('phoneNumberError').innerText = errors
+                                    .phone_number[0];
+                            }
+                            if (errors.message) {
+                                document.getElementById('messageError').innerText = errors.message[0];
+                            }
+                            toastr.error('Please fix the errors and try again.');
+                        } else {
+                            toastr.error('An unexpected error occurred. Please try again later.');
                         }
-                        if (errors.email) {
-                            document.getElementById('emailError').innerText = errors.email[0];
-                        }
-                        if (errors.phone_number) {
-                            document.getElementById('phoneNumberError').innerText = errors.phone_number[0];
-                        }
-                        if (errors.message) { // Ensure field name matches validation rules
-                            document.getElementById('messageError').innerText = errors.message[0];
-                        }
-                        toastr.error('Please fix the errors and try again.');
-                    } else {
-                        toastr.error('An unexpected error occurred. Please try again later.');
-                    }
-                });
+                    });
+            });
         });
     </script>
 @endpush

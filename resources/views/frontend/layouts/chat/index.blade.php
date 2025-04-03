@@ -228,10 +228,10 @@
             wrapper.classList.add('single-message', isMine ? 'my-message' : 'opposite-message');
             wrapper.innerHTML = `
             ${!isMine ? `
-                                                        <div class="user-profile">
-                                                            <img src="${senderAvatar}" alt="user" />
-                                                        </div>
-                                                    ` : ''}
+                    <div class="user-profile">
+                        <img src="${senderAvatar}" alt="user" />
+                    </div>
+                ` : ''}
             <div class="right-content">
                 <div class="user-name">${senderName}</div>
                 <div class="user-text">
@@ -240,10 +240,10 @@
                 </div>
             </div>
             ${isMine ? `
-                                                        <div class="user-profile">
-                                                            <img src="${senderAvatar}" alt="user" />
-                                                        </div>
-                                                    ` : ''}
+                    <div class="user-profile">
+                        <img src="${senderAvatar}" alt="user" />
+                    </div>
+                ` : ''}
         `;
             chatContainer.appendChild(wrapper);
             // Auto-scroll to the bottom of the messages area

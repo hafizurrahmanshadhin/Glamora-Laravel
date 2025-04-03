@@ -3,10 +3,6 @@
 @section('title', 'Available Beauty Services')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/fontawesome.min.css') }}">
-
-    {{-- All custom CSS Links --}}
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />

@@ -3,12 +3,6 @@
 @section('title', 'Service Category')
 
 @push('styles')
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/owl.theme.default.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/magnific-popup.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/fontawesome.min.css') }}">
-
-    {{-- All custom CSS Links --}}
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
@@ -132,17 +126,6 @@
                         <div class="categories-tax-single-card">
                             <div class="catagories-tax-card-hover d-none"></div>
                             <h3>{{ $service->services_name ?? '' }}</h3>
-                            {{-- <div class="categories-text-wrapper">
-                                <p>
-                                    <img src="{{ asset('frontend/images/people-tick.svg') }}" alt>
-                                    {{ $service->user_services_count ?? '' }} expert
-                                </p>
-                                <div class="line-between-div"></div>
-                                <p>
-                                    <img src="{{ asset('frontend/images/tick-Icon.svg') }}" alt>
-                                    40 works in progress
-                                </p>
-                            </div> --}}
                             <a href="{{ route('available-services', ['serviceId' => $service->id]) }}">Explore
                                 <img src="{{ asset('frontend/images/arrow-right.svg') }}" alt>
                             </a>
@@ -158,7 +141,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('frontend/js/owl.carousel.min.js') }}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Array to hold the selected services.

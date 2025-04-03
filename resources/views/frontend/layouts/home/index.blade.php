@@ -9,6 +9,5 @@
     @include('frontend.layouts.home.user-type-container')
     @include('frontend.layouts.home.testimonial')
     @include('frontend.layouts.home.top-rated-beauty-experts')
-    {{-- @include('frontend.layouts.home.find-experts-near-you') --}}
     @include('frontend.partials.join-us')
 @endsection

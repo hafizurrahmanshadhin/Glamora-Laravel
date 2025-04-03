@@ -3,13 +3,6 @@
 @section('title', 'FAQ')
 
 @push('styles')
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/owl.theme.default.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/magnific-popup.min.css') }}" />
-
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins/fontawesome.min.css') }}">
-
-    {{-- All custom CSS Links --}}
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
@@ -46,7 +39,6 @@
         </section>
         {{-- faq section end --}}
 
-        {{-- Dummy elements to satisfy main.js (if needed) --}}
         <div class="header-profile-container" style="display:none;"></div>
         <div class="tm-profiledropdown" style="display:none;"></div>
 
@@ -56,15 +48,53 @@
 
 @push('scripts')
     <script>
-        // Override FAQ accordion click handling by using a capturing listener
+        // Convert the Blade $faqs collection to JSON
+        let bladeFaqs = @json($faqs);
+
+        // If your FAQ model has an 'updated_at' column, get the max updated time
+        // Otherwise, you can use something like Date.now() to track local changes
+        let lastUpdatedBlade = "{{ $faqs->max('updated_at') }}"; // or just Date.now()
+
         document.addEventListener('DOMContentLoaded', () => {
+            // 1) Check existing local storage
+            let storedFaqData = localStorage.getItem('faqData');
+            let storedTimestamp = localStorage.getItem('faqLastUpdated');
+
+            // 2) Decide whether to use local storage data or Blade data
+            if (!storedFaqData || storedTimestamp !== lastUpdatedBlade) {
+                // Store fresh data in local storage
+                localStorage.setItem('faqData', JSON.stringify(bladeFaqs));
+                localStorage.setItem('faqLastUpdated', lastUpdatedBlade);
+            } else {
+                // If stored data matches the server’s last updated, use local storage
+                bladeFaqs = JSON.parse(storedFaqData);
+
+                // Re-render the FAQ HTML from local storage
+                const accordionContainer = document.getElementById('faqAccordion');
+                if (accordionContainer && bladeFaqs.length) {
+                    accordionContainer.innerHTML = '';
+                    bladeFaqs.forEach((faq, index) => {
+                        accordionContainer.innerHTML += `
+                        <div class="accordion__item">
+                            <div class="accordion__header" data-toggle="#or-faq${index}">
+                                <div class="square"></div>
+                                <h2 class="accordion-header-title">${faq.question ?? ''}</h2>
+                            </div>
+                            <div class="accordion__content" id="or-faq${index}">
+                                <p>${faq.answer ?? ''}</p>
+                            </div>
+                        </div>
+                    `;
+                    });
+                }
+            }
+
+            // Handle the existing accordion toggling logic
             const togglers = document.querySelectorAll('[data-toggle]');
             togglers.forEach((btn) => {
                 btn.addEventListener('click', (e) => {
-                    // Stop other click handlers (like those in main.js) from executing
                     e.stopImmediatePropagation();
 
-                    // Close all other accordions first (optional behavior)
                     togglers.forEach((otherBtn) => {
                         if (otherBtn !== e.currentTarget && otherBtn.classList.contains(
                                 'active')) {
@@ -87,7 +117,7 @@
                         }
                     }
                     e.currentTarget.classList.toggle('active');
-                }, true); // Use capture phase to override main.js
+                }, true);
             });
         });
     </script>
