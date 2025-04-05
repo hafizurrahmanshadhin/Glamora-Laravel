@@ -81,12 +81,12 @@
                                 <div class="title">What type of styling service are you looking for?</div>
                                 <select id="service-selector" class="form-select" aria-label="Default select example">
                                     <option selected>Select</option>
-                                    <option value="Non Bridal">Glam/Hairstyling for Special Events/Party</option>
-                                    <option value="Bride">Bridal Glam & Hairstyling</option>
-                                    <option value="Flower Girl">Bridal Party (Bridesmaids, Mother of Bride/Groom)
+                                    <option value="special-events">Glam/Hairstyling for Special Events/Party</option>
+                                    <option value="bridal-glam-Hairstyling">Bridal Glam & Hairstyling</option>
+                                    <option value="bridal-party">Bridal Party (Bridesmaids, Mother of Bride/Groom)
                                     </option>
-                                    <option value="Flower Girl">Flower Girl (aged 10 and under only)</option>
-                                    <option value="Flower Girl">Character & Themed Events (Costume Party, Dress Ups)
+                                    <option value="flower-girl">Flower Girl (aged 10 and under only)</option>
+                                    <option value="themed-events">Character & Themed Events (Costume Party, Dress Ups)
                                     </option>
                                 </select>
                             </div>
@@ -95,12 +95,9 @@
                                 <div class="title">Please select a service</div>
                                 <select name="serviceId" class="form-select" id="sub-service-selector">
                                     <option value="" selected disabled>Select</option>
-                                    @foreach ($services as $service)
-                                        <option value="{{ $service->id }}">{{ $service->services_name }}</option>
-                                    @endforeach
+                                    {{-- The options will be replaced dynamically by JavaScript --}}
                                 </select>
                             </div>
-
                         </div>
 
                         <div class="d-flex gap-4 align-items-center ">
@@ -169,6 +166,98 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Collect all services from backend as a JavaScript array of objects
+        // Each object has { id, services_name }.
+        const allServices = @json($services);
+
+        // Mapping: main category value -→ relevant sub-service names
+        const servicesMap = {
+            "special-events": [
+                "Natural or Full Glam Only",
+                "Hair Up Only",
+                "Hair Down Only",
+                "Hair half up, half down only",
+                "Glam with Hair Up",
+                "Glam with Hair Down",
+                "Glam with hair half up, half down"
+            ],
+            "bridal-glam-Hairstyling": [
+                "Natural or Full Glam Only",
+                "Hair Up Only",
+                "Hair Down Only",
+                "Hair half up, half down only",
+                "Glam with Hair Up",
+                "Glam with Hair Down",
+                "Glam with hair half up, half down"
+            ],
+            "bridal-party": [
+                "Natural or Full Glam Only",
+                "Hair Up Only",
+                "Hair Down Only",
+                "Hair half up, half down only",
+                "Glam with Hair Up",
+                "Glam with Hair Down",
+                "Glam with hair half up, half down"
+            ],
+            "flower-girl": [
+                "Natural Glam with simple hairstyling"
+            ],
+            "themed-events": "all"
+        };
+
+        const serviceSelector = document.getElementById("service-selector");
+        const subServiceSelector = document.getElementById("sub-service-selector");
+        const addButton = document.querySelector(".select-service-dropdown-add-btn");
+
+        // When user picks a main category, dynamically build the sub-service <option> list
+        serviceSelector.addEventListener("change", function() {
+            const chosenCategory = serviceSelector.value;
+            // First, clear out the sub-service options
+            subServiceSelector.innerHTML = `<option value="" disabled selected>Select</option>`;
+
+            if (chosenCategory === "Select") {
+                addButton.style.display = "none";
+                return;
+            }
+
+            let filtered;
+            if (servicesMap[chosenCategory] === "all") {
+                // "themed-events": show all from database
+                filtered = allServices;
+            } else {
+                // Filter services so only matching names are shown
+                filtered = allServices.filter(svc =>
+                    servicesMap[chosenCategory].includes(svc.services_name)
+                );
+            }
+
+            // Rebuild the sub-service options
+            filtered.forEach(svc => {
+                const opt = document.createElement("option");
+                opt.value = svc.id;
+                opt.textContent = svc.services_name;
+                subServiceSelector.appendChild(opt);
+            });
+
+            // After building, decide if "Add" button should show or hide
+            const validSelection = (chosenCategory !== "Select" &&
+                subServiceSelector.value !== "");
+            addButton.style.display = validSelection ? "block" : "none";
+        });
+
+        // Also watch for changes in subServiceSelector to toggle "Add" button
+        subServiceSelector.addEventListener("change", function() {
+            addButton.style.display = (serviceSelector.value !== "Select" &&
+                    subServiceSelector.value !== "") ?
+                "block" :
+                "none";
+        });
+    });
+</script>
 
 
 <script>
