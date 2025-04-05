@@ -12,6 +12,7 @@ use Database\Seeders\ContactSeeder;
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\DynamicPageSeeder;
 use Database\Seeders\FAQSeeder;
+use Database\Seeders\MessageSeeder;
 use Database\Seeders\NewsletterSubscriptionSeeder;
 use Database\Seeders\NotificationsSeeder;
 use Database\Seeders\OrderSeeder;
@@ -55,6 +56,7 @@ class DatabaseSeeder extends Seeder {
             BookingCancellationBeforeAppointmentSeeder::class,
             BookingCancellationAfterAppointmentSeeder::class,
             AdminCommentSeeder::class,
+            MessageSeeder::class,
         ]);
     }
 }

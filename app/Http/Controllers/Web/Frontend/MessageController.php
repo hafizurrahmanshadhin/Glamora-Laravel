@@ -77,7 +77,9 @@ class MessageController extends Controller {
             return response()->json([
                 'id'         => $message->id,
                 'message'    => $message->message,
-                'created_at' => $message->created_at->format('H:i'),
+                // 'created_at' => $message->created_at->format('H:i'),
+                // Use 12-hour format with AM/PM
+                'created_at' => $message->created_at->format('h:i A'),
                 'sender'     => [
                     'id'         => $message->sender->id,
                     'first_name' => $message->sender->first_name,
