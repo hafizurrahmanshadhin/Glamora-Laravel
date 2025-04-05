@@ -305,12 +305,13 @@
                 $('#serviceType').val(type);
             });
 
-            // Datepicker
+            // datepicker initialization
             $("#appointment-date").datepicker({
                 dateFormat: "yy-mm-dd",
                 changeMonth: true,
                 changeYear: true,
                 showButtonPanel: true,
+                minDate: 0,
                 onSelect: function(dateText) {
                     $('#appointmentDate').val(dateText);
                 }
