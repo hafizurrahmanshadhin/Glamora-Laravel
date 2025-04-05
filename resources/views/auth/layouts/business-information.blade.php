@@ -10,6 +10,105 @@
     <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/flatpickr.min.css') }}" />
     <script src="{{ asset('frontend/custom-downloaded-cdn/flatpickr.js') }}"></script>
     <link href="{{ asset('frontend/custom-downloaded-cdn/aos.css') }}" rel="stylesheet" />
+
+    <style>
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent background */
+            display: none;
+            /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            /* Make sure it's on top of other content */
+            backdrop-filter: blur(5px);
+            /* Apply blur to the whole page */
+        }
+
+        /* Loader styling */
+        .loader {
+            transform: rotateZ(45deg);
+            perspective: 1000px;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            color: #fff;
+            position: relative;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .loader:before,
+        .loader:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: inherit;
+            height: inherit;
+            border-radius: 50%;
+            transform: rotateX(70deg);
+            animation: 1s spin linear infinite;
+        }
+
+        .loader:after {
+            color: #FF3D00;
+            transform: rotateY(70deg);
+            animation-delay: .4s;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: translate(-50%, -50%) rotateZ(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotateZ(360deg);
+            }
+        }
+
+        @keyframes spin {
+
+            0%,
+            100% {
+                box-shadow: .2em 0px 0 0px currentcolor;
+            }
+
+            12% {
+                box-shadow: .2em .2em 0 0 currentcolor;
+            }
+
+            25% {
+                box-shadow: 0 .2em 0 0px currentcolor;
+            }
+
+            37% {
+                box-shadow: -.2em .2em 0 0 currentcolor;
+            }
+
+            50% {
+                box-shadow: -.2em 0 0 0 currentcolor;
+            }
+
+            62% {
+                box-shadow: -.2em -.2em 0 0 currentcolor;
+            }
+
+            75% {
+                box-shadow: 0px -.2em 0 0 currentcolor;
+            }
+
+            87% {
+                box-shadow: .2em -.2em 0 0 currentcolor;
+            }
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -405,6 +504,10 @@
             {{-- step progress end --}}
         </div>
         {{-- step 3 end --}}
+    </div>
+
+    <div id="overlay" class="overlay">
+        <span class="loader"></span>
     </div>
 @endsection
 
@@ -965,6 +1068,14 @@
         step1NextBtn.addEventListener('click', (event) => {
             event.preventDefault(); // Prevent the default form submission
 
+            // Get references to the overlay and button
+            const nextButton = document.getElementById('step-1-next-btn');
+            const overlay = document.getElementById('overlay');
+
+            // Disable the button and show loader
+            nextButton.disabled = true;
+            overlay.style.display = 'flex'; // Show the loader and blur the page
+
             const formData = new FormData();
             formData.append('avatar', document.getElementById('upload-profile-input').files[0]);
             formData.append('name', document.querySelector('input[placeholder="Enter Your Full Name"]').value);
@@ -995,6 +1106,11 @@
                 .catch(error => {
                     // Handle error response
                     console.error(error);
+                })
+                .finally(() => {
+                    // Re-enable the button and reset the text
+                    nextButton.disabled = false;
+                    overlay.style.display = 'none'; // Hide the loader and unblur the page
                 });
         });
 
@@ -1035,6 +1151,15 @@
 
         document.getElementById('step-3-next-btn').addEventListener('click', async (event) => {
             event.preventDefault();
+
+            // Get references to the overlay and button
+            const nextButton = document.getElementById('step-3-next-btn');
+            const overlay = document.getElementById('overlay');
+
+            // Disable the button and show loader
+            nextButton.disabled = true;
+            overlay.style.display = 'flex'; // Show the loader and blur the page
+
             const servicesData = [];
             document.querySelectorAll('table tbody tr').forEach((row) => {
                 const serviceId = row.querySelector('input[type="radio"]').name.replace('option', '');
@@ -1071,6 +1196,10 @@
             } catch (err) {
                 console.error(err);
                 alert('Failed to save services');
+            } finally {
+                // Re-enable the button and reset the text
+                nextButton.disabled = false;
+                overlay.style.display = 'none'; // Hide the loader and unblur the page
             }
         });
     </script>

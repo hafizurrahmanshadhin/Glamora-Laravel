@@ -10,8 +10,6 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/bootstrap.min.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/aos.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/nice-select.min.css') }}" />
-<link rel="stylesheet" href="{{ asset('frontend/css/plugins/all.min.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/css/plugins/fontawesome.min.css') }}">
 
 {{-- All custom CSS Links --}}
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
