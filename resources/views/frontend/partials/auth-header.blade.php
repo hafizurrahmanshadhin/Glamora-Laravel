@@ -147,6 +147,8 @@
 {{ route('login') }}
                 @endif
             ">Profile</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal"
+                        class="tm-profile-dropdown-item">Edit Profile</a>
                     <a class="tm-profile-dropdown-item" href="javascript:void(0);"
                         onclick="event.preventDefault(); document.getElementById('logoutForm').submit()">Log Out</a>
                     <form action="{{ route('logout') }}" method="post" id="logoutForm">
@@ -157,3 +159,140 @@
         </div>
     </div>
 </div>
+
+<style>
+    .modal-dialog {
+        max-width: 900px;
+    }
+
+    .modal-content {
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-tabs .nav-link {
+        color: #555;
+        font-weight: 500;
+        border: none;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #222;
+        border-bottom: 2px solid #27AE60;
+    }
+
+    .form-control {
+        border-radius: 4px;
+        padding: 0.75rem;
+    }
+
+    .btn {
+        border-radius: 4px;
+        padding: 0.75rem 1.25rem;
+    }
+</style>
+
+{{-- Edit Profile Modal Start --}}
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs mb-4" id="editProfileTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="basic-info-tab" data-bs-toggle="tab"
+                            data-bs-target="#basic-info" type="button" role="tab" aria-controls="basic-info"
+                            aria-selected="true">
+                            Basic Information
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password"
+                            type="button" role="tab" aria-controls="password" aria-selected="false">
+                            Change Password
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="editProfileTabContent">
+                    {{-- Basic Information Tab Start --}}
+                    <div class="tab-pane fade show active" id="basic-info" role="tabpanel"
+                        aria-labelledby="basic-info-tab">
+                        <form action="{{ route('update-profile') }}" method="POST" enctype="multipart/form-data"
+                            id="editProfileForm">
+                            @csrf
+                            @method('PATCH')
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" name="first_name" id="first_name" class="form-control"
+                                    value="{{ old('first_name', Auth::user()->first_name) }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" name="last_name" id="last_name" class="form-control"
+                                    value="{{ old('last_name', Auth::user()->last_name) }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone_number" class="form-label">Phone Number</label>
+                                <input type="text" name="phone_number" id="phone_number" class="form-control"
+                                    value="{{ old('phone_number', Auth::user()->phone_number) }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea name="address" id="address" class="form-control" required>{{ old('address', Auth::user()->address) }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="avatar" class="form-label">Profile Picture</label>
+                                <input type="file" name="avatar" id="avatar" class="form-control">
+                                @if (Auth::user()->avatar)
+                                    <div class="mt-2">
+                                        <img src="{{ asset(Auth::user()->avatar) }}" alt="Current Avatar"
+                                            class="img-thumbnail" style="max-width: 150px;">
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                    {{-- Basic Information Tab End --}}
+
+                    {{-- Change Password Tab Start --}}
+                    <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+                        <form action="{{ route('update-password') }}" method="POST" id="changePasswordForm">
+                            @csrf
+                            @method('PATCH')
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">Current Password</label>
+                                <input type="password" name="current_password" id="current_password"
+                                    class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label">New Password</label>
+                                <input type="password" name="new_password" id="new_password" class="form-control"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
+                                <input type="password" name="new_password_confirmation"
+                                    id="new_password_confirmation" class="form-control" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Update Password</button>
+                            </div>
+                        </form>
+                    </div>
+                    {{-- Change Password Tab End --}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Edit Profile Modal End --}}

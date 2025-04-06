@@ -12,6 +12,7 @@ use App\Http\Controllers\Web\Frontend\MessageController;
 use App\Http\Controllers\Web\Frontend\NewsletterSubscriptionController;
 use App\Http\Controllers\Web\Frontend\NotificationController;
 use App\Http\Controllers\Web\Frontend\PaymentController;
+use App\Http\Controllers\Web\Frontend\ProfileController;
 use App\Http\Controllers\Web\Frontend\ServiceCategoryController;
 use App\Http\Controllers\Web\Frontend\ServiceProviderProfileController;
 use Illuminate\Support\Facades\Route;
@@ -67,3 +68,7 @@ Route::controller(MessageController::class)->middleware(['auth', 'verified'])->g
     Route::get('/chat/{id}', 'show')->name('chat');
     Route::post('/chat/send', 'sendMessage')->name('chat.send');
 });
+
+// For updating basic information and password
+Route::patch('/profile/update', [ProfileController::class, 'updateProfile'])->name('update-profile');
+Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('update-password');
