@@ -186,6 +186,10 @@
                 .listen('MessageSendEvent', (e) => {
                     addChatMessage(e, false);
                 });
+
+            // Scroll to bottom after messages are loaded
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         });
 
         // Get CSRF token once
@@ -214,6 +218,17 @@
                 .catch(err => console.error(err));
         });
 
+        // Listen for Enter key (without Shift) in the textarea to submit the form
+        const messageTextarea = document.querySelector('textarea[name="message"]');
+        messageTextarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('chatForm').dispatchEvent(new Event('submit', {
+                    cancelable: true
+                }));
+            }
+        });
+
         function addChatMessage(msg, isMine) {
             const chatContainer = document.getElementById('chatContainer');
             // If it's me, show my local user avatar, else use msg.sender.avatar
@@ -228,10 +243,10 @@
             wrapper.classList.add('single-message', isMine ? 'my-message' : 'opposite-message');
             wrapper.innerHTML = `
             ${!isMine ? `
-                    <div class="user-profile">
-                        <img src="${senderAvatar}" alt="user" />
-                    </div>
-                ` : ''}
+                            <div class="user-profile">
+                                <img src="${senderAvatar}" alt="user" />
+                            </div>
+                        ` : ''}
             <div class="right-content">
                 <div class="user-name">${senderName}</div>
                 <div class="user-text">
@@ -240,10 +255,10 @@
                 </div>
             </div>
             ${isMine ? `
-                    <div class="user-profile">
-                        <img src="${senderAvatar}" alt="user" />
-                    </div>
-                ` : ''}
+                            <div class="user-profile">
+                                <img src="${senderAvatar}" alt="user" />
+                            </div>
+                        ` : ''}
         `;
             chatContainer.appendChild(wrapper);
             // Auto-scroll to the bottom of the messages area
