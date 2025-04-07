@@ -123,13 +123,8 @@
 
         <div class="header-profile-container">
             <div class="header-profile-btn">
-                @if (Auth::check() && Auth::user()->role == 'beauty_expert')
-                    <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
-                        alt="Profile Image">
-                @else
-                    <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
-                        alt="Profile Image">
-                @endif
+                <img src="{{ asset(Auth::user()->avatar ?? 'backend/images/default_images/user_1.jpg') }}"
+                    alt="Profile Image">
             </div>
             <div class="tm-profiledropdown">
                 <div class="tm-profile-dropdown-menu-wrapper">
@@ -160,6 +155,7 @@
     </div>
 </div>
 
+{{-- Profile edit modal CSS start --}}
 <style>
     .modal-dialog {
         max-width: 900px;
@@ -193,6 +189,7 @@
         padding: 0.75rem 1.25rem;
     }
 </style>
+{{-- Profile edit modal CSS end --}}
 
 {{-- Edit Profile Modal Start --}}
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
@@ -224,39 +221,59 @@
                     {{-- Basic Information Tab Start --}}
                     <div class="tab-pane fade show active" id="basic-info" role="tabpanel"
                         aria-labelledby="basic-info-tab">
-                        <form action="{{ route('update-profile') }}" method="POST" enctype="multipart/form-data"
-                            id="editProfileForm">
+                        <form action="{{ route('update-profile') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
-                            <div class="mb-3">
-                                <label for="first_name" class="form-label">First Name</label>
-                                <input type="text" name="first_name" id="first_name" class="form-control"
-                                    value="{{ old('first_name', Auth::user()->first_name) }}" required>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="first_name" class="form-label">First Name</label>
+                                        <input type="text" name="first_name" id="first_name" class="form-control"
+                                            value="{{ old('first_name', Auth::user()->first_name) }}" required>
+                                        @error('first_name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="last_name" class="form-label">Last Name</label>
+                                        <input type="text" name="last_name" id="last_name" class="form-control"
+                                            value="{{ old('last_name', Auth::user()->last_name) }}" required>
+                                        @error('last_name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="last_name" class="form-label">Last Name</label>
-                                <input type="text" name="last_name" id="last_name" class="form-control"
-                                    value="{{ old('last_name', Auth::user()->last_name) }}" required>
-                            </div>
+
                             <div class="mb-3">
                                 <label for="phone_number" class="form-label">Phone Number</label>
                                 <input type="text" name="phone_number" id="phone_number" class="form-control"
                                     value="{{ old('phone_number', Auth::user()->phone_number) }}" required>
+                                @error('phone_number')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
+
                             <div class="mb-3">
                                 <label for="address" class="form-label">Address</label>
                                 <textarea name="address" id="address" class="form-control" required>{{ old('address', Auth::user()->address) }}</textarea>
+                                @error('address')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
+
                             <div class="mb-3">
                                 <label for="avatar" class="form-label">Profile Picture</label>
-                                <input type="file" name="avatar" id="avatar" class="form-control">
-                                @if (Auth::user()->avatar)
-                                    <div class="mt-2">
-                                        <img src="{{ asset(Auth::user()->avatar) }}" alt="Current Avatar"
-                                            class="img-thumbnail" style="max-width: 150px;">
-                                    </div>
-                                @endif
+                                <input type="hidden" name="remove_avatar" id="remove_avatar" value="0">
+                                <input type="file" name="avatar" id="avatar" class="form-control dropify"
+                                    data-default-file="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : '' }}" />
+                                @error('avatar')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
+
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">Update Profile</button>
                             </div>
@@ -266,24 +283,37 @@
 
                     {{-- Change Password Tab Start --}}
                     <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
-                        <form action="{{ route('update-password') }}" method="POST" id="changePasswordForm">
+                        <form action="{{ route('update-password') }}" method="POST">
                             @csrf
                             @method('PATCH')
                             <div class="mb-3">
                                 <label for="current_password" class="form-label">Current Password</label>
                                 <input type="password" name="current_password" id="current_password"
-                                    class="form-control" required>
+                                    class="form-control" placeholder="Please Enter Your Current Password" required>
+                                @error('current_password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
+
                             <div class="mb-3">
                                 <label for="new_password" class="form-label">New Password</label>
                                 <input type="password" name="new_password" id="new_password" class="form-control"
-                                    required>
+                                    placeholder="Please Enter Your New Password" required>
+                                @error('new_password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
+
                             <div class="mb-3">
                                 <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
                                 <input type="password" name="new_password_confirmation"
-                                    id="new_password_confirmation" class="form-control" required>
+                                    id="new_password_confirmation" class="form-control"
+                                    placeholder="Please Enter Your Confirmation Password" required>
+                                @error('new_password_confirmation')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
+
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">Update Password</button>
                             </div>

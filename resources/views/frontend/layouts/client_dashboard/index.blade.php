@@ -117,7 +117,7 @@
             <div class="dashboard-profile-container" style="min-height: 300px;">
                 <div class="top">
                     <div class="img-content">
-                        <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
+                        <img src="{{ asset(Auth::user()->avatar ?? 'backend/images/default_images/user_1.jpg') }}"
                             alt="">
                         <div class="active-status"></div>
                     </div>
@@ -125,7 +125,7 @@
                         <div class="profile-title">
                             {{ ucfirst(Auth::user()->first_name ?? '') . ' ' . ucfirst(Auth::user()->last_name ?? '') ?? '' }}
                         </div>
-                        <div class="profile-text">{{ Auth::user()->email ?? '' }}</div>
+                        <div class="profile-text">{{ Auth::user()->address ?? '' }}</div>
                     </div>
                 </div>
                 <div class="bottom">
@@ -210,9 +210,9 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 fill="none" viewBox="0 0 32 32">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 3C8.82 3 3 8.82 3 16C3 23.18 8.82 29 16 29
-                                                                     C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM11 11
-                                                                     L21 21M21 11L11 21" stroke="#222" stroke-width="2"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                                             C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM11 11
+                                                                             L21 21M21 11L11 21" stroke="#222"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </a>
                                     </div>

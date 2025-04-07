@@ -12,7 +12,7 @@ class UserSeeder extends Seeder {
             [
                 'id'                       => 1,
                 'first_name'               => 'admin',
-                'last_name'                => 'admin',
+                'last_name'                => 'user',
                 'email'                    => 'admin@admin.com',
                 'phone_number'             => '1234567890',
                 'address'                  => 'Australia',
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder {
             [
                 'id'                       => 2,
                 'first_name'               => 'client',
-                'last_name'                => 'client',
+                'last_name'                => 'user',
                 'email'                    => 'client@client.com',
                 'phone_number'             => '0123456789',
                 'address'                  => 'Bronx, New York, United States',
@@ -45,8 +45,8 @@ class UserSeeder extends Seeder {
             ],
             [
                 'id'                       => 3,
-                'first_name'               => 'beauty-expert',
-                'last_name'                => 'beauty-expert',
+                'first_name'               => 'beauty',
+                'last_name'                => 'expert',
                 'email'                    => 'beauty-expert@beauty-expert.com',
                 'phone_number'             => '1234567891',
                 'address'                  => 'Sydney, New South Wales, Australia',
@@ -62,7 +62,7 @@ class UserSeeder extends Seeder {
             ],
             [
                 'id'                       => 4,
-                'first_name'               => 'user',
+                'first_name'               => 'glamora',
                 'last_name'                => 'user',
                 'email'                    => 'user@user.com',
                 'phone_number'             => '1234567892',
@@ -80,7 +80,7 @@ class UserSeeder extends Seeder {
             [
                 'id'                       => 5,
                 'first_name'               => 'test',
-                'last_name'                => 'test',
+                'last_name'                => 'user',
                 'email'                    => 'test@test.com',
                 'phone_number'             => '1234567893',
                 'address'                  => 'Perth, Western Australia, Australia',

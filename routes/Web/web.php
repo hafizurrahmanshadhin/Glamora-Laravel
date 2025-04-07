@@ -70,5 +70,7 @@ Route::controller(MessageController::class)->middleware(['auth', 'verified'])->g
 });
 
 // For updating basic information and password
-Route::patch('/profile/update', [ProfileController::class, 'updateProfile'])->name('update-profile');
-Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('update-password');
+Route::controller(ProfileController::class)->middleware(['auth', 'verified'])->group(function () {
+    Route::patch('/profile/update', 'updateProfile')->name('update-profile');
+    Route::patch('/profile/password', 'updatePassword')->name('update-password');
+});

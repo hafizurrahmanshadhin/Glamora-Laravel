@@ -132,7 +132,7 @@
                 <div class="">
                     <div style=" padding-bottom: 0 !important; border-bottom: 0 !important; " class="top">
                         <div class="img-content">
-                            <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
+                            <img src="{{ asset(Auth::user()->avatar ?? 'backend/images/default_images/user_1.jpg') }}"
                                 alt="">
                             <div class="active-status"></div>
                         </div>
@@ -140,7 +140,7 @@
                             <div class="profile-title">
                                 {{ ucfirst(Auth::user()->first_name ?? '') . ' ' . ucfirst(Auth::user()->last_name ?? '') ?? '' }}
                             </div>
-                            <div class="profile-text">{{ Auth::user()->businessInformation?->business_address ?? '' }}</div>
+                            <div class="profile-text">{{ Auth::user()->address ?? '' }}</div>
                         </div>
                     </div>
                     <div class="profile-availability">

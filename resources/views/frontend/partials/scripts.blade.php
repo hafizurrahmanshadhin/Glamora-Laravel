@@ -155,4 +155,18 @@
 </script>
 {{-- toastr end --}}
 
+{{-- dropify js --}}
+<script src="{{ asset('backend/js/dropify.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize Dropify
+        var drEvent = $('.dropify').dropify();
+
+        // When the file is cleared, set the hidden field's value to 1.
+        drEvent.on('dropify.afterClear', function(event, element) {
+            $('#remove_avatar').val(1);
+        });
+    });
+</script>
+
 @stack('scripts')
