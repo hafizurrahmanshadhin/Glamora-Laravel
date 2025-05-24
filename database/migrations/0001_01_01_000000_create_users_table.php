@@ -21,8 +21,11 @@ return new class extends Migration {
             $table->string('cover_photo')->nullable();
             $table->string('google_id')->nullable()->unique();
 
-            $table->enum('role', ['admin', 'client', 'beauty_expert'])->nullable(false);
             $table->enum('availability', ['available', 'unavailable'])->default('available');
+            $table->dateTime('unavailable_from')->nullable();
+            $table->dateTime('unavailable_to')->nullable();
+
+            $table->enum('role', ['admin', 'client', 'beauty_expert'])->nullable(false);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamp('banned_until')->nullable();
 

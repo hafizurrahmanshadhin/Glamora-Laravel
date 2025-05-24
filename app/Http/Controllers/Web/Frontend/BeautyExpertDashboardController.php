@@ -11,6 +11,7 @@ use App\Models\Review;
 use App\Models\Service;
 use App\Models\TravelRadius;
 use App\Models\UserService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -97,25 +98,36 @@ class BeautyExpertDashboardController extends Controller {
      *
      * @param Request $request
      * @return JsonResponse
-     *
      */
     public function toggleAvailability(Request $request): JsonResponse {
         try {
             $user   = Auth::user();
             $status = $request->input('status') === 'available' ? 'available' : 'unavailable';
 
-            // Update user's availability status
+            // always set availability
             $user->availability = $status;
+
+            // if going unavailable, record the date window
+            if ($status === 'unavailable'
+                && $request->filled('from_date')
+                && $request->filled('to_date')) {
+                // parse your d/m/y format
+                $user->unavailable_from = Carbon::createFromFormat('d/m/y', $request->input('from_date'))
+                    ->startOfDay();
+                $user->unavailable_to = Carbon::createFromFormat('d/m/y', $request->input('to_date'))
+                    ->endOfDay();
+            } else {
+                // clear any prior window
+                $user->unavailable_from = null;
+                $user->unavailable_to   = null;
+            }
+
             $user->save();
 
-            // Update BusinessInformation
-            BusinessInformation::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
-
-            // Update TravelRadius
-            TravelRadius::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
-
-            // Update UserService
-            UserService::where('user_id', $user->id)->update(['status' => $status === 'available' ? 'active' : 'inactive']);
+            $relatedStatus = $status === 'available' ? 'active' : 'inactive';
+            BusinessInformation::where('user_id', $user->id)->update(['status' => $relatedStatus]);
+            TravelRadius::where('user_id', $user->id)->update(['status' => $relatedStatus]);
+            UserService::where('user_id', $user->id)->update(['status' => $relatedStatus]);
 
             return response()->json(['status' => 'success']);
         } catch (Exception $e) {

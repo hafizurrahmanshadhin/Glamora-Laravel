@@ -123,6 +123,77 @@
             opacity: 1;
         }
     </style>
+
+    <style>
+        /* ========== Calendar Styles ========== */
+        /* hide the inline input until Flatpickr replaces it */
+        #calendar {
+            display: none;
+        }
+
+        /* for the inline calendar days */
+        .flatpickr-day.selected {
+            background-color: green;
+            color: white;
+            border-radius: 50% !important;
+        }
+
+        .flatpickr-day.highlighted-day {
+            background-color: #ccc;
+            color: black;
+            border-radius: 50%;
+        }
+
+        /* newly added: truly gray-out disabled days */
+        .flatpickr-day.disabled {
+            background-color: #eee !important;
+            color: #999 !important;
+            cursor: not-allowed;
+        }
+
+        .flatpickr-day.disabled:hover {
+            background-color: #eee !important;
+        }
+
+        /* ========== Unavailable-range Pickers ========== */
+        .unavailable-container {
+            display: none;
+            margin-top: 16px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            align-items: end;
+        }
+
+        .unavailable-container h6 {
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .date-picker-container-from,
+        .date-picker-container-to {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .date-picker-container-from input,
+        .date-picker-container-to input {
+            width: 100%;
+            padding: 8px 36px 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .date-picker-container-from svg,
+        .date-picker-container-to svg {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -143,20 +214,49 @@
                             <div class="profile-text">{{ Auth::user()->address ?? '' }}</div>
                         </div>
                     </div>
+
                     <div class="profile-availability">
                         <div class="profile-availability-left">
                             <h4>Availability</h4>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
                                     {{ $availability === 'available' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="flexSwitchCheckChecked"></label>
                             </div>
                         </div>
                         <div class="profile-availability-right">
                             <h4 class="availability-status">
-                                {{ $availability === 'available' ? 'Available' : 'Unavailable' }}</h4>
+                                {{ $availability === 'available' ? 'Available' : 'Unavailable' }}
+                            </h4>
                             <div class="point {{ $availability === 'available' ? 'available' : '' }}"></div>
                         </div>
+                    </div>
+
+                    {{-- NEW: date-range + Save --}}
+                    <div class="unavailable-container">
+                        <div>
+                            <h6>From</h6>
+                            <div class="date-picker-container-from">
+                                <input id="date-input-from" placeholder="DD/MM/YY" readonly>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20"
+                                    fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…" fill="#767676" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div>
+                            <h6>To</h6>
+                            <div class="date-picker-container-to">
+                                <input id="date-input-to" placeholder="DD/MM/YY" readonly>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20"
+                                    fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…" fill="#767676" />
+                                </svg>
+                            </div>
+                        </div>
+                        <button id="save-unavailability" class="common-btn">
+                            Save
+                        </button>
                     </div>
                 </div>
 
@@ -210,6 +310,10 @@
                 <div class="img-content">
                     <img src="{{ asset('frontend/images/dashboard-banner-right.png') }}" alt="">
                 </div>
+
+                <div class="img-content d-flex align-items-center justify-content-center ps-4">
+                    <input type="text" id="calendar" />
+                </div>
             </div>
 
             <section class="armie-appointment-wrapper">
@@ -246,8 +350,9 @@
                                             </svg>
                                         </a>
 
-                                        <a class="appointment-done" data-bs-toggle="modal" data-bs-target="#appointmentDone"
-                                            data-booking-id="{{ $booking->id }}" style="cursor: pointer;">
+                                        <a class="appointment-done" data-bs-toggle="modal"
+                                            data-bs-target="#appointmentDone" data-booking-id="{{ $booking->id }}"
+                                            style="cursor: pointer;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 fill="none" viewBox="0 0 32 32">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -306,31 +411,89 @@
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // ========== Inline Calendar in Banner ==========
+            flatpickr("#calendar", {
+                inline: true,
+                defaultDate: "2024-02-17",
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    const day = dayElem.dateObj.getDate();
+                    if ([22, 23, 24, 25].includes(day)) {
+                        dayElem.classList.add("highlighted-day");
+                    }
+                }
+            });
+
+            // ========== Search-container Date Picker ==========
+            flatpickr("#date-input", {
+                dateFormat: "d/m/y",
+                minDate: "today"
+            });
+
+            // ========== Availability Toggle & Unavailability Save ==========
             const checkbox = document.getElementById("flexSwitchCheckChecked");
             const statusText = document.querySelector(".availability-status");
             const point = document.querySelector(".point");
+            const unavailableContainer = document.querySelector('.unavailable-container');
+            const saveBtn = document.getElementById('save-unavailability');
+            const fromInput = document.getElementById('date-input-from');
+            const toInput = document.getElementById('date-input-to');
 
-            function updateAvailability() {
-                const status = checkbox.checked ? 'available' : 'unavailable';
-                statusText.textContent = checkbox.checked ? "Available" : "Unavailable";
-                point.classList.toggle("available", checkbox.checked);
+            const fpFrom = flatpickr(fromInput, {
+                dateFormat: "d/m/y",
+                minDate: "today"
+            });
+            const fpTo = flatpickr(toInput, {
+                dateFormat: "d/m/y",
+                minDate: "today"
+            });
+            document.querySelector('.date-picker-container-from')
+                .addEventListener('click', () => fpFrom.open());
+            document.querySelector('.date-picker-container-to')
+                .addEventListener('click', () => fpTo.open());
 
-                // Send AJAX request to update status
+            function setAvailable() {
+                statusText.textContent = "Available";
+                point.classList.add("available");
+                unavailableContainer.style.display = 'none';
+                fromInput.value = toInput.value = "";
                 axios.post("{{ route('toggle-availability') }}", {
-                        status: status
+                        status: 'available'
                     })
-                    .then(response => {
-                        if (response.data.status !== 'success') {
-                            alert('Failed to update availability status.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert('An error occurred while updating availability status.');
-                    });
+                    .catch(() => alert('Error updating availability'));
             }
 
-            checkbox.addEventListener("change", updateAvailability);
+            function promptUnavailable() {
+                statusText.textContent = "Unavailable";
+                point.classList.remove("available");
+                unavailableContainer.style.display = 'grid';
+            }
+
+            checkbox.addEventListener("change", () => {
+                checkbox.checked ? setAvailable() : promptUnavailable();
+            });
+
+            saveBtn.addEventListener("click", () => {
+                if (!fromInput.value || !toInput.value) {
+                    return alert('Please select both From and To dates.');
+                }
+                axios.post("{{ route('toggle-availability') }}", {
+                        status: 'unavailable',
+                        from_date: fromInput.value,
+                        to_date: toInput.value
+                    })
+                    .then(r => {
+                        if (r.data.status === 'success') {
+                            unavailableContainer.style.display = 'none';
+                        } else {
+                            alert('Save failed: ' + (r.data.message || 'Unknown'));
+                        }
+                    })
+                    .catch(() => alert('Error saving unavailability'));
+            });
+
+            if (!checkbox.checked) {
+                statusText.textContent = "Unavailable";
+            }
         });
     </script>
 
