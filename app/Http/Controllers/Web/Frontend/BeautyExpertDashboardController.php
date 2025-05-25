@@ -88,6 +88,11 @@ class BeautyExpertDashboardController extends Controller {
                 ];
             }
 
+            $highlightDates = $upcomingBookings->map(function ($booking) {
+                return Carbon::parse($booking->appointment_date)->format('Y-m-d');
+            })->unique()->values()->all();
+            // dd($highlightDates);
+
             return view('frontend.layouts.beauty_expert_dashboard.index', compact(
                 'user',
                 'upcomingBookings',
@@ -95,7 +100,8 @@ class BeautyExpertDashboardController extends Controller {
                 'averageRating',
                 'reviewCount',
                 'availability',
-                'unavailableRanges'
+                'unavailableRanges',
+                'highlightDates'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [

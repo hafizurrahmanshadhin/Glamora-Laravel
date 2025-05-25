@@ -166,6 +166,13 @@
             transform: translateY(-50%);
             pointer-events: none;
         }
+
+        /* Add a style to highlight the green days */
+        .green-highlight {
+            background-color: #70e862 !important;
+            color: #fff !important;
+            border-radius: 50%;
+        }
     </style>
 @endpush
 
@@ -387,12 +394,27 @@
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            flatpickr("#calendar", {
+            // Convert PHP array of booking dates to a JavaScript array
+            const highlightDates = @json($highlightDates);
+
+            // Capture initial unavailable ranges
+            let disableDates = @json($unavailableRanges);
+
+            // Initialize Flatpickr for the main calendar
+            const calendar = flatpickr("#calendar", {
                 inline: true,
                 defaultDate: "today",
-                disable: @json($unavailableRanges),
+                disable: disableDates,
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    const dateString = fp.formatDate(dayElem.dateObj, "Y-m-d");
+                    // If that date exists in highlightDates, add a CSS class
+                    if (highlightDates.includes(dateString)) {
+                        dayElem.classList.add("green-highlight");
+                    }
+                },
             });
 
+            // Retrieve any stored success message for cancellations
             const storedMessage = localStorage.getItem('cancellationMessage');
             if (storedMessage) {
                 toastr.success(storedMessage);
@@ -407,6 +429,7 @@
             const fromInput = document.getElementById("date-input-from");
             const toInput = document.getElementById("date-input-to");
 
+            // Initialize Flatpickr for both "From" and "To" inputs
             flatpickr(fromInput, {
                 dateFormat: "d/m/Y",
                 minDate: "today",
@@ -418,6 +441,7 @@
                 defaultDate: toInput.value || null
             });
 
+            // Toggle to "Available" mode
             function showAvailable() {
                 statusText.textContent = "Available";
                 point.classList.add("available");
@@ -429,22 +453,35 @@
                     })
                     .then(() => {
                         toastr.success("You are now Available");
+                        // Clear any ranges from Flatpickr
+                        disableDates = [];
+                        calendar.set("disable", disableDates);
+                        calendar.redraw();
                     })
                     .catch(err => {
                         toastr.error(err.response?.data?.message || "Error updating availability");
                     });
             }
 
+            // Toggle to "Unavailable" mode
             function showUnavailable() {
                 statusText.textContent = "Unavailable";
                 point.classList.remove("available");
                 unavailableContainer.style.display = "grid";
             }
 
+            // Listen for changes in the checkbox
             checkbox.onchange = function() {
                 this.checked ? showAvailable() : showUnavailable();
             };
 
+            // Helper function to convert dd/mm/yyyy to yyyy-mm-dd
+            function convertToYYYYMMDD(dateStr) {
+                const [day, month, year] = dateStr.split("/");
+                return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+            }
+
+            // Handle saving the unavailability range
             saveBtn.onclick = function() {
                 if (!fromInput.value || !toInput.value) {
                     return toastr.error("Please select both From and To dates.");
@@ -457,6 +494,15 @@
                     .then(r => {
                         if (r.data.status === "success") {
                             toastr.success("Unavailability dates saved");
+
+                            // Update disable array
+                            disableDates = [{
+                                from: convertToYYYYMMDD(fromInput.value),
+                                to: convertToYYYYMMDD(toInput.value)
+                            }];
+                            // Reconfigure Flatpickr
+                            calendar.set("disable", disableDates);
+                            calendar.redraw();
                         } else {
                             toastr.error(r.data.message || "Save failed");
                         }
@@ -466,6 +512,7 @@
                     });
             };
 
+            // If already unavailable, show the correct UI
             @if ($availability === 'unavailable')
                 showUnavailable();
             @endif
