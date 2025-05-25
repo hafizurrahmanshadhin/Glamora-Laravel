@@ -79,13 +79,23 @@ class BeautyExpertDashboardController extends Controller {
             // Pass availability status to the view
             $availability = $user->availability;
 
+            // Fetch unavailable date ranges
+            $unavailableRanges = [];
+            if ($user->unavailable_from && $user->unavailable_to) {
+                $unavailableRanges[] = [
+                    'from' => Carbon::parse($user->unavailable_from)->format('Y-m-d'),
+                    'to'   => Carbon::parse($user->unavailable_to)->format('Y-m-d'),
+                ];
+            }
+
             return view('frontend.layouts.beauty_expert_dashboard.index', compact(
                 'user',
                 'upcomingBookings',
                 'pendingRequests',
                 'averageRating',
                 'reviewCount',
-                'availability'
+                'availability',
+                'unavailableRanges'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
@@ -104,26 +114,16 @@ class BeautyExpertDashboardController extends Controller {
         try {
             $user = Auth::user();
 
-            // 1) Save or clear the date window
-            if ($request->input('status') === 'unavailable'
-                && $request->filled('from_date')
-                && $request->filled('to_date')
-            ) {
-                $user->unavailable_from = Carbon::createFromFormat('d/m/Y', $request->input('from_date'))
-                    ->startOfDay();
-                $user->unavailable_to = Carbon::createFromFormat('d/m/Y', $request->input('to_date'))
-                    ->endOfDay();
+            if ($request->input('status') === 'unavailable' && $request->filled('from_date') && $request->filled('to_date')) {
+                $user->unavailable_from = Carbon::createFromFormat('d/m/Y', $request->input('from_date'))->startOfDay();
+                $user->unavailable_to   = Carbon::createFromFormat('d/m/Y', $request->input('to_date'))->endOfDay();
             } else {
                 $user->unavailable_from = null;
                 $user->unavailable_to   = null;
             }
 
-            // 2) Compute availability *right now*
             $now = Carbon::now();
-            if ($user->unavailable_from
-                && $user->unavailable_to
-                && $now->between($user->unavailable_from, $user->unavailable_to)
-            ) {
+            if ($user->unavailable_from && $user->unavailable_to && $now->between($user->unavailable_from, $user->unavailable_to)) {
                 $user->availability = 'unavailable';
                 $relatedStatus      = 'inactive';
             } else {
@@ -133,7 +133,6 @@ class BeautyExpertDashboardController extends Controller {
 
             $user->save();
 
-            // 3) Sync related tables
             BusinessInformation::where('user_id', $user->id)->update(['status' => $relatedStatus]);
             TravelRadius::where('user_id', $user->id)->update(['status' => $relatedStatus]);
             UserService::where('user_id', $user->id)->update(['status' => $relatedStatus]);

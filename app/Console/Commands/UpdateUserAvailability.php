@@ -16,9 +16,6 @@ class UpdateUserAvailability extends Command {
     public function handle() {
         $now = Carbon::now();
 
-        //
-        // 1) Mark users as unavailable if now is within their window
-        //
         $unavailableUsers = User::whereNotNull('unavailable_from')
             ->whereNotNull('unavailable_to')
             ->where('unavailable_from', '<=', $now)
@@ -28,19 +25,13 @@ class UpdateUserAvailability extends Command {
         if ($unavailableUsers->isNotEmpty()) {
             $ids = $unavailableUsers->pluck('id')->all();
 
-            // Flip their availability
-            User::whereIn('id', $ids)
-                ->update(['availability' => 'unavailable']);
+            User::whereIn('id', $ids)->update(['availability' => 'unavailable']);
 
-            // Related tables → inactive
             BusinessInformation::whereIn('user_id', $ids)->update(['status' => 'inactive']);
             TravelRadius::whereIn('user_id', $ids)->update(['status' => 'inactive']);
             UserService::whereIn('user_id', $ids)->update(['status' => 'inactive']);
         }
 
-        //
-        // 2) Mark users available once their window has passed
-        //
         $expiredUsers = User::whereNotNull('unavailable_to')
             ->where('unavailable_to', '<', $now)
             ->get(['id']);
@@ -55,7 +46,6 @@ class UpdateUserAvailability extends Command {
                     'unavailable_to'   => null,
                 ]);
 
-            // Related tables → active
             BusinessInformation::whereIn('user_id', $ids)->update(['status' => 'active']);
             TravelRadius::whereIn('user_id', $ids)->update(['status' => 'active']);
             UserService::whereIn('user_id', $ids)->update(['status' => 'active']);

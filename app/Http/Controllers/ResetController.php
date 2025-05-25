@@ -15,7 +15,7 @@ class ResetController extends Controller {
      */
     public function Reset(): JsonResponse {
         try {
-            Artisan::call('migrate:fresh --seed');
+            // Artisan::call('migrate:fresh --seed');
             Artisan::call('optimize:clear');
 
             return Helper::jsonResponse(true, 'System Reset Successfully', 200);

@@ -125,37 +125,10 @@
     </style>
 
     <style>
-        /* ========== Calendar Styles ========== */
-        /* hide the inline input until Flatpickr replaces it */
         #calendar {
             display: none;
         }
 
-        /* for the inline calendar days */
-        .flatpickr-day.selected {
-            background-color: green;
-            color: white;
-            border-radius: 50% !important;
-        }
-
-        .flatpickr-day.highlighted-day {
-            background-color: #ccc;
-            color: black;
-            border-radius: 50%;
-        }
-
-        /* newly added: truly gray-out disabled days */
-        .flatpickr-day.disabled {
-            background-color: #eee !important;
-            color: #999 !important;
-            cursor: not-allowed;
-        }
-
-        .flatpickr-day.disabled:hover {
-            background-color: #eee !important;
-        }
-
-        /* ========== Unavailable-range Pickers ========== */
         .unavailable-container {
             display: none;
             margin-top: 16px;
@@ -414,26 +387,18 @@
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // ========== Inline Calendar in Banner ==========
             flatpickr("#calendar", {
                 inline: true,
-                defaultDate: "2024-02-17",
-                onDayCreate: function(dObj, dStr, fp, dayElem) {
-                    const day = dayElem.dateObj.getDate();
-                    if ([22, 23, 24, 25].includes(day)) {
-                        dayElem.classList.add("highlighted-day");
-                    }
-                }
+                defaultDate: "today",
+                disable: @json($unavailableRanges),
             });
 
-            // —— Cancellation toast ——
             const storedMessage = localStorage.getItem('cancellationMessage');
             if (storedMessage) {
                 toastr.success(storedMessage);
                 localStorage.removeItem('cancellationMessage');
             }
 
-            // —— DOM refs ——
             const checkbox = document.getElementById("flexSwitchCheckChecked");
             const statusText = document.querySelector(".availability-status");
             const point = document.querySelector(".point");
@@ -442,7 +407,6 @@
             const fromInput = document.getElementById("date-input-from");
             const toInput = document.getElementById("date-input-to");
 
-            // —— Flatpickr init ——
             flatpickr(fromInput, {
                 dateFormat: "d/m/Y",
                 minDate: "today",
@@ -454,7 +418,6 @@
                 defaultDate: toInput.value || null
             });
 
-            // —— State helpers ——
             function showAvailable() {
                 statusText.textContent = "Available";
                 point.classList.add("available");
@@ -478,7 +441,6 @@
                 unavailableContainer.style.display = "grid";
             }
 
-            // —— Single binding ——
             checkbox.onchange = function() {
                 this.checked ? showAvailable() : showUnavailable();
             };
@@ -504,7 +466,6 @@
                     });
             };
 
-            // —— On-load if unavailable ——
             @if ($availability === 'unavailable')
                 showUnavailable();
             @endif
