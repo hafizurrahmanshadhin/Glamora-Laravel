@@ -42,13 +42,22 @@ class BookServiceController extends Controller {
             $price       = $userService->total_price;
             $serviceName = $userService->service->services_name;
 
-            // If multiple services are selected, get them; otherwise fallback to the single service
             $selectedServices = UserService::with('service')
                 ->where('user_id', $serviceProviderId)
                 ->whereIn('service_id', $serviceIds)
                 ->get();
 
             $totalPrice = $selectedServices->sum('total_price');
+
+            $user = User::find($serviceProviderId);
+
+            $unavailableRanges = [];
+            if ($user && $user->unavailable_from && $user->unavailable_to) {
+                $unavailableRanges[] = [
+                    'from' => Carbon::parse($user->unavailable_from)->format('Y-m-d'),
+                    'to'   => Carbon::parse($user->unavailable_to)->format('Y-m-d'),
+                ];
+            }
 
             return view('frontend.layouts.booking.index', compact(
                 'serviceProviderId',
@@ -57,7 +66,8 @@ class BookServiceController extends Controller {
                 'serviceName',
                 'selectedServices',
                 'totalPrice',
-                'serviceIds'
+                'serviceIds',
+                'unavailableRanges'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [

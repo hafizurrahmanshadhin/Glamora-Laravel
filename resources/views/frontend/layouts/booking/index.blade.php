@@ -305,13 +305,31 @@
                 $('#serviceType').val(type);
             });
 
-            // datepicker initialization
+            const ranges = @json($unavailableRanges) || [];
+
             $("#appointment-date").datepicker({
                 dateFormat: "yy-mm-dd",
-                changeMonth: true,
-                changeYear: true,
-                showButtonPanel: true,
                 minDate: 0,
+                beforeShowDay: function(date) {
+                    // Zero out hours so we compare calendar days rather than local times
+                    let currentDate = new Date(date);
+                    currentDate.setHours(0, 0, 0, 0);
+
+                    for (let i = 0; i < ranges.length; i++) {
+                        const rangeStart = new Date(ranges[i].from);
+                        const rangeEnd = new Date(ranges[i].to);
+
+                        // Force rangeStart to 00:00:00 of that day
+                        rangeStart.setHours(0, 0, 0, 0);
+                        // Force rangeEnd to 23:59:59 of that day
+                        rangeEnd.setHours(23, 59, 59, 999);
+
+                        if (currentDate >= rangeStart && currentDate <= rangeEnd) {
+                            return [false]; // Disable date
+                        }
+                    }
+                    return [true];
+                },
                 onSelect: function(dateText) {
                     $('#appointmentDate').val(dateText);
                 }
