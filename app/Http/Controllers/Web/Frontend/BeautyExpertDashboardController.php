@@ -80,6 +80,7 @@ class BeautyExpertDashboardController extends Controller {
             $availability = $user->availability;
 
             return view('frontend.layouts.beauty_expert_dashboard.index', compact(
+                'user',
                 'upcomingBookings',
                 'pendingRequests',
                 'averageRating',
@@ -101,30 +102,38 @@ class BeautyExpertDashboardController extends Controller {
      */
     public function toggleAvailability(Request $request): JsonResponse {
         try {
-            $user   = Auth::user();
-            $status = $request->input('status') === 'available' ? 'available' : 'unavailable';
+            $user = Auth::user();
 
-            // always set availability
-            $user->availability = $status;
-
-            // if going unavailable, record the date window
-            if ($status === 'unavailable'
+            // 1) Save or clear the date window
+            if ($request->input('status') === 'unavailable'
                 && $request->filled('from_date')
-                && $request->filled('to_date')) {
-                // parse your d/m/y format
-                $user->unavailable_from = Carbon::createFromFormat('d/m/y', $request->input('from_date'))
+                && $request->filled('to_date')
+            ) {
+                $user->unavailable_from = Carbon::createFromFormat('d/m/Y', $request->input('from_date'))
                     ->startOfDay();
-                $user->unavailable_to = Carbon::createFromFormat('d/m/y', $request->input('to_date'))
+                $user->unavailable_to = Carbon::createFromFormat('d/m/Y', $request->input('to_date'))
                     ->endOfDay();
             } else {
-                // clear any prior window
                 $user->unavailable_from = null;
                 $user->unavailable_to   = null;
             }
 
+            // 2) Compute availability *right now*
+            $now = Carbon::now();
+            if ($user->unavailable_from
+                && $user->unavailable_to
+                && $now->between($user->unavailable_from, $user->unavailable_to)
+            ) {
+                $user->availability = 'unavailable';
+                $relatedStatus      = 'inactive';
+            } else {
+                $user->availability = 'available';
+                $relatedStatus      = 'active';
+            }
+
             $user->save();
 
-            $relatedStatus = $status === 'available' ? 'active' : 'inactive';
+            // 3) Sync related tables
             BusinessInformation::where('user_id', $user->id)->update(['status' => $relatedStatus]);
             TravelRadius::where('user_id', $user->id)->update(['status' => $relatedStatus]);
             UserService::where('user_id', $user->id)->update(['status' => $relatedStatus]);

@@ -3,6 +3,7 @@
 use App\Console\Commands\MakeService;
 use App\Console\Commands\ProcessQueue;
 use App\Console\Commands\ReactivateBannedUsers;
+use App\Console\Commands\UpdateUserAvailability;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -18,3 +19,4 @@ Artisan::command('make:service {name}', function ($name) {
 
 Schedule::command(ReactivateBannedUsers::class)->everyMinute();
 Schedule::command(ProcessQueue::class)->everyMinute();
+Schedule::command(UpdateUserAvailability::class)->everySecond();

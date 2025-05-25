@@ -232,12 +232,16 @@
                         </div>
                     </div>
 
-                    {{-- NEW: date-range + Save --}}
-                    <div class="unavailable-container">
+                    {{-- Date-range + Save --}}
+                    @php
+                        $hasWindow = !is_null($user->unavailable_from) && !is_null($user->unavailable_to);
+                    @endphp
+                    <div class="unavailable-container" style="{{ $hasWindow ? 'display: grid;' : 'display: none;' }}">
                         <div>
                             <h6>From</h6>
                             <div class="date-picker-container-from">
-                                <input id="date-input-from" placeholder="DD/MM/YY" readonly>
+                                <input id="date-input-from" placeholder="DD/MM/YY" readonly
+                                    value="{{ $user->unavailable_from ? \Carbon\Carbon::parse($user->unavailable_from)->format('d/m/Y') : '' }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20"
                                     fill="none">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…" fill="#767676" />
@@ -247,16 +251,15 @@
                         <div>
                             <h6>To</h6>
                             <div class="date-picker-container-to">
-                                <input id="date-input-to" placeholder="DD/MM/YY" readonly>
+                                <input id="date-input-to" placeholder="DD/MM/YY" readonly
+                                    value="{{ $user->unavailable_to ? \Carbon\Carbon::parse($user->unavailable_to)->format('d/m/Y') : '' }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20"
                                     fill="none">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…" fill="#767676" />
                                 </svg>
                             </div>
                         </div>
-                        <button id="save-unavailability" class="common-btn">
-                            Save
-                        </button>
+                        <button id="save-unavailability" class="common-btn">Save</button>
                     </div>
                 </div>
 
@@ -423,77 +426,88 @@
                 }
             });
 
-            // ========== Search-container Date Picker ==========
-            flatpickr("#date-input", {
-                dateFormat: "d/m/y",
-                minDate: "today"
-            });
+            // —— Cancellation toast ——
+            const storedMessage = localStorage.getItem('cancellationMessage');
+            if (storedMessage) {
+                toastr.success(storedMessage);
+                localStorage.removeItem('cancellationMessage');
+            }
 
-            // ========== Availability Toggle & Unavailability Save ==========
+            // —— DOM refs ——
             const checkbox = document.getElementById("flexSwitchCheckChecked");
             const statusText = document.querySelector(".availability-status");
             const point = document.querySelector(".point");
-            const unavailableContainer = document.querySelector('.unavailable-container');
-            const saveBtn = document.getElementById('save-unavailability');
-            const fromInput = document.getElementById('date-input-from');
-            const toInput = document.getElementById('date-input-to');
+            const unavailableContainer = document.querySelector(".unavailable-container");
+            const saveBtn = document.getElementById("save-unavailability");
+            const fromInput = document.getElementById("date-input-from");
+            const toInput = document.getElementById("date-input-to");
 
-            const fpFrom = flatpickr(fromInput, {
-                dateFormat: "d/m/y",
-                minDate: "today"
+            // —— Flatpickr init ——
+            flatpickr(fromInput, {
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                defaultDate: fromInput.value || null
             });
-            const fpTo = flatpickr(toInput, {
-                dateFormat: "d/m/y",
-                minDate: "today"
+            flatpickr(toInput, {
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                defaultDate: toInput.value || null
             });
-            document.querySelector('.date-picker-container-from')
-                .addEventListener('click', () => fpFrom.open());
-            document.querySelector('.date-picker-container-to')
-                .addEventListener('click', () => fpTo.open());
 
-            function setAvailable() {
+            // —— State helpers ——
+            function showAvailable() {
                 statusText.textContent = "Available";
                 point.classList.add("available");
-                unavailableContainer.style.display = 'none';
+                unavailableContainer.style.display = "none";
                 fromInput.value = toInput.value = "";
+
                 axios.post("{{ route('toggle-availability') }}", {
-                        status: 'available'
+                        status: "available"
                     })
-                    .catch(() => alert('Error updating availability'));
+                    .then(() => {
+                        toastr.success("You are now Available");
+                    })
+                    .catch(err => {
+                        toastr.error(err.response?.data?.message || "Error updating availability");
+                    });
             }
 
-            function promptUnavailable() {
+            function showUnavailable() {
                 statusText.textContent = "Unavailable";
                 point.classList.remove("available");
-                unavailableContainer.style.display = 'grid';
+                unavailableContainer.style.display = "grid";
             }
 
-            checkbox.addEventListener("change", () => {
-                checkbox.checked ? setAvailable() : promptUnavailable();
-            });
+            // —— Single binding ——
+            checkbox.onchange = function() {
+                this.checked ? showAvailable() : showUnavailable();
+            };
 
-            saveBtn.addEventListener("click", () => {
+            saveBtn.onclick = function() {
                 if (!fromInput.value || !toInput.value) {
-                    return alert('Please select both From and To dates.');
+                    return toastr.error("Please select both From and To dates.");
                 }
                 axios.post("{{ route('toggle-availability') }}", {
-                        status: 'unavailable',
+                        status: "unavailable",
                         from_date: fromInput.value,
                         to_date: toInput.value
                     })
                     .then(r => {
-                        if (r.data.status === 'success') {
-                            unavailableContainer.style.display = 'none';
+                        if (r.data.status === "success") {
+                            toastr.success("Unavailability dates saved");
                         } else {
-                            alert('Save failed: ' + (r.data.message || 'Unknown'));
+                            toastr.error(r.data.message || "Save failed");
                         }
                     })
-                    .catch(() => alert('Error saving unavailability'));
-            });
+                    .catch(err => {
+                        toastr.error(err.response?.data?.message || "Error saving unavailability");
+                    });
+            };
 
-            if (!checkbox.checked) {
-                statusText.textContent = "Unavailable";
-            }
+            // —— On-load if unavailable ——
+            @if ($availability === 'unavailable')
+                showUnavailable();
+            @endif
         });
     </script>
 
