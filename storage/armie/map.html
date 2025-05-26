@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+        }
+        .locate-btn {
+            background: white;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            text-align: center;
+        }
+        .locate-btn:hover {
+            background: lightgray;
+        }
+        .map-controls {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Location Selector</h2>
+    <div class="map-controls">
+        <button onclick="zoomIn()">➕ Zoom In</button>
+        <button onclick="zoomOut()">➖ Zoom Out</button>
+        <button onclick="locateUser()">📍 Find My Location</button>
+    </div>
+
+    <div id="map"></div>
+
+    <p><strong>Selected Latitude:</strong> <input type="text" id="latitude" readonly></p>
+    <p><strong>Selected Longitude:</strong> <input type="text" id="longitude" readonly></p>
+    <p><strong>Address:</strong> <input type="text" id="address" readonly></p>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        let currentMarker;
+        const defaultLat = 34.0522;  // Default to Los Angeles
+        const defaultLng = -118.2437;
+        
+        const map = L.map('map', {
+            center: [defaultLat, defaultLng],
+            zoom: 13,
+            zoomControl: false,  // Custom buttons added instead
+            scrollWheelZoom: true
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        function updateMarker(lat, lng) {
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+
+            if (currentMarker) {
+                currentMarker.setLatLng([lat, lng]);
+            } else {
+                currentMarker = L.marker([lat, lng], { draggable: true }).addTo(map)
+                    .bindPopup('You are here!')
+                    .openPopup();
+                currentMarker.on('dragend', function (e) {
+                    let { lat, lng } = e.target.getLatLng();
+                    updateMarker(lat, lng);
+                });
+            }
+
+            // Center the map on the marker
+            map.setView([lat, lng], 13, { animate: true });
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('address').value = data.display_name || 'Unknown';
+                })
+                .catch(() => {
+                    document.getElementById('address').value = 'Location not found';
+                });
+        }
+
+        function locateUser() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        updateMarker(lat, lng);
+                    },
+                    (error) => {
+                        alert("Location access denied! Using default location.");
+                        updateMarker(defaultLat, defaultLng);
+                    },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Add Relocation Button to Map
+        const locateButton = L.control({ position: 'topright' });
+        locateButton.onAdd = function () {
+            const div = L.DomUtil.create('div', 'locate-btn');
+            div.innerHTML = '📍 Find Me';
+            div.onclick = locateUser;
+            return div;
+        };
+        locateButton.addTo(map);
+
+        // Zoom Functions
+        function zoomIn() {
+            map.zoomIn();
+        }
+        function zoomOut() {
+            map.zoomOut();
+        }
+
+        locateUser(); // Auto-locate on load
+    </script>
+
+</body>
+</html>
