@@ -152,6 +152,25 @@ class BeautyExpertDashboardController extends Controller {
     }
 
     /**
+     * Store the weekend data for the beauty expert.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function storeWeekendData(Request $request): JsonResponse {
+        try {
+            $user               = Auth::user();
+            $weekendData        = $request->input('weekend_data'); // array of { day, time_from, time_to }
+            $user->weekend_data = $weekendData;
+            $user->save();
+
+            return response()->json(['status' => 'success', 'message' => 'Weekend data updated']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Cancel a booking after appointments have been made.
      *
      * @param Request $request

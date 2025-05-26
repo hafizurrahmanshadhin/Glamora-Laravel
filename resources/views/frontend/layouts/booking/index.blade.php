@@ -92,7 +92,7 @@
 
 
                 {{-- Step - 2: What time do you need to be ready by? START --}}
-                <div class="tm-multi-step-form-step">
+                {{-- <div class="tm-multi-step-form-step">
                     <h2 class="tm-multistep-form-heading">What time do you need to be ready by?</h2>
                     <div class="second-step-wrapper">
                         <div class="multistep-date-label">
@@ -139,8 +139,36 @@
                         <button type="button" class="tm-multi-step-prev-step">Back</button>
                         <button type="button" class="tm-multi-step-next-step">Continue</button>
                     </div>
-                </div>
+                </div> --}}
                 {{-- Step - 2: What time do you need to be ready by? END --}}
+
+                {{-- Step - 2: What time do you need to be ready by? START --}}
+                <div class="tm-multi-step-form-step">
+                    <h2 class="tm-multistep-form-heading">What time do you need to be ready by?</h2>
+                    <div class="second-step-wrapper">
+                        <div class="multistep-date-label">
+                            <label>Select Date</label>
+                            <div class="date-input-wrapper">
+                                <input type="text" id="appointment-date" class="date-input">
+                                <img src="{{ asset('frontend/images/Calendar.svg') }}" alt="Calendar Icon"
+                                    class="custom-calendar-icon">
+                            </div>
+                        </div>
+
+                        <div class="time-option-wrapper">
+                            <label>Time</label>
+                            <div class="tm-multi-step-time-options" id="timeOptions">
+                                {{-- buttons injected here --}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tm-multistep-btn-wrapper">
+                        <button type="button" class="tm-multi-step-prev-step">Back</button>
+                        <button type="button" class="tm-multi-step-next-step">Continue</button>
+                    </div>
+                </div>
+                {{-- Step - 2 END --}}
 
 
                 {{-- Step - 3: Booking Summary START --}}
@@ -305,33 +333,67 @@
                 $('#serviceType').val(type);
             });
 
-            const ranges = @json($unavailableRanges) || [];
+
+            const weekendData = @json($weekendData);
+            const ranges = @json($unavailableRanges);
+
+            function parseTime(str) {
+                let [t, ampm] = str.split(' ');
+                let [h, m] = t.split(':').map(Number);
+                if (ampm === 'PM' && h < 12) h += 12;
+                if (ampm === 'AM' && h === 12) h = 0;
+                return h * 60 + m;
+            }
+
+            function formatTime(mins) {
+                let h = Math.floor(mins / 60) % 24,
+                    m = mins % 60,
+                    ampm = h >= 12 ? 'PM' : 'AM',
+                    hh = h % 12 || 12,
+                    mm = m < 10 ? '0' + m : m;
+                return `${hh}:${mm} ${ampm}`;
+            }
 
             $("#appointment-date").datepicker({
-                dateFormat: "yy-mm-dd",
+                dateFormat: 'yy-mm-dd',
                 minDate: 0,
-                beforeShowDay: function(date) {
-                    // Zero out hours so we compare calendar days rather than local times
-                    let currentDate = new Date(date);
-                    currentDate.setHours(0, 0, 0, 0);
-
-                    for (let i = 0; i < ranges.length; i++) {
-                        const rangeStart = new Date(ranges[i].from);
-                        const rangeEnd = new Date(ranges[i].to);
-
-                        // Force rangeStart to 00:00:00 of that day
-                        rangeStart.setHours(0, 0, 0, 0);
-                        // Force rangeEnd to 23:59:59 of that day
-                        rangeEnd.setHours(23, 59, 59, 999);
-
-                        if (currentDate >= rangeStart && currentDate <= rangeEnd) {
-                            return [false]; // Disable date
-                        }
+                maxDate: "+1Y", // allow next 12 months
+                changeMonth: true, // always show month dropdown
+                changeYear: true, // always show year dropdown
+                beforeShowDay(date) {
+                    let day = date.getDay();
+                    if (!weekendData.some(d => d.day === day)) return [false];
+                    for (let r of ranges) {
+                        let from = new Date(r.from),
+                            to = new Date(r.to);
+                        from.setHours(0, 0, 0, 0);
+                        to.setHours(23, 59, 59, 999);
+                        if (date >= from && date <= to) return [false];
                     }
                     return [true];
                 },
-                onSelect: function(dateText) {
+                onSelect(dateText) {
                     $('#appointmentDate').val(dateText);
+                    let day = new Date(dateText).getDay();
+                    let avail = weekendData.find(d => d.day === day);
+                    let $opts = $('#timeOptions').empty();
+
+                    if (!avail) {
+                        $opts.html('<p>No availability</p>');
+                        return;
+                    }
+
+                    let start = parseTime(avail.time_from),
+                        end = parseTime(avail.time_to);
+
+                    for (let t = start; t <= end; t += 60) {
+                        $opts.append(`<button type="button">${formatTime(t)}</button>`);
+                    }
+                    $opts.find('button').click(function() {
+                        $opts.find('button').removeClass('active');
+                        $(this).addClass('active');
+                        $('#appointmentTime').val($(this).text());
+                    });
                 }
             });
 

@@ -53,10 +53,28 @@ class User extends Authenticatable implements JWTSubject {
             'status'                   => 'string',
             'banned_until'             => 'datetime',
             'availability'             => 'string',
+            'weekend_data'             => 'array',
             'created_at'               => 'datetime',
             'updated_at'               => 'datetime',
             'deleted_at'               => 'datetime',
         ];
+    }
+
+    protected static function booted(): void {
+        static::creating(function (User $user) {
+            // if not explicitly set, give every new user full‐day availability
+            if (is_null($user->weekend_data)) {
+                $user->weekend_data = [
+                    ['day' => 0, 'time_from' => '12:00 AM', 'time_to' => '11:00 PM'],
+                    ['day' => 1, 'time_from' => '12:00 AM', 'time_to' => '11:00 PM'],
+                    ['day' => 2, 'time_from' => '12:00 AM', 'time_to' => '11:00 PM'],
+                    ['day' => 3, 'time_from' => '12:00 AM', 'time_to' => '11:00 PM'],
+                    ['day' => 4, 'time_from' => '12:00 AM', 'time_to' => '11:00 PM'],
+                    ['day' => 5, 'time_from' => '12:00 AM', 'time_to' => '11:00 PM'],
+                    ['day' => 6, 'time_from' => '12:00 AM', 'time_to' => '11:00 PM'],
+                ];
+            }
+        });
     }
 
     public function getJWTIdentifier() {

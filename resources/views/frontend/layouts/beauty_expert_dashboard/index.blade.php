@@ -174,6 +174,62 @@
             border-radius: 50%;
         }
     </style>
+
+
+    <style>
+        /* custom override */
+        #weekendModal .modal-dialog {
+            max-width: 400px;
+        }
+
+        .availability-container {
+            width: 100%;
+        }
+
+        .day-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .day-label {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .time-selectors {
+            flex: 2;
+            display: flex;
+            gap: 10px;
+        }
+
+        select {
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            min-width: 100px;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: black;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Add your red-highlight class */
+        .red-highlight {
+            background-color: #808080 !important;
+            color: #000 !important;
+            border-radius: 50%;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -269,6 +325,11 @@
                         </div>
                     </div>
                     <div class="bottom-bottom">
+                        <a type="button" class="common-btn" data-bs-toggle="modal" data-bs-target="#weekendModal"
+                            style="margin-bottom: 1px;">
+                            Set Weekend
+                        </a>
+
                         <a href="{{ route('edit-profile') }}" class="common-btn">
                             View Profile
                         </a>
@@ -389,27 +450,56 @@
         </div>
     </div>
     {{-- Appointments Cancel Modal End --}}
+
+
+    {{-- Weekend Modal --}}
+    <div class="modal fade" id="weekendModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered"><!-- add modal-sm here -->
+            <div class="modal-content"><!-- removed p-4 so we can control padding in the body -->
+                <div class="modal-header border-0">
+                    <h3 class="modal-title text-center w-100">Set Your Availability</h3><!-- center title -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="availability"></div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button class="common-btn w-100" id="saveWeekendBtn" data-bs-dismiss="modal">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Convert PHP array of booking dates to a JavaScript array
-            const highlightDates = @json($highlightDates);
+            // Global array for unchecked days of week (0=SUN,1=MON,...6=SAT)
+            window.unselectedDaysOfWeek = window.unselectedDaysOfWeek || [];
 
-            // Capture initial unavailable ranges
+            // Convert PHP arrays to JS arrays
+            const highlightDates = @json($highlightDates);
             let disableDates = @json($unavailableRanges);
 
-            // Initialize Flatpickr for the main calendar
-            const calendar = flatpickr("#calendar", {
+            // Make the calendar globally accessible
+            window.calendar = flatpickr("#calendar", {
                 inline: true,
                 defaultDate: "today",
                 disable: disableDates,
                 onDayCreate: function(dObj, dStr, fp, dayElem) {
                     const dateString = fp.formatDate(dayElem.dateObj, "Y-m-d");
-                    // If that date exists in highlightDates, add a CSS class
+
+                    // Highlight known "green" dates
                     if (highlightDates.includes(dateString)) {
                         dayElem.classList.add("green-highlight");
+                    }
+
+                    // Highlight unselected weekdays in red
+                    const dayOfWeek = dayElem.dateObj.getDay(); // 0=SUN,1=MON,2=...
+                    if (window.unselectedDaysOfWeek.includes(dayOfWeek)) {
+                        dayElem.classList.add("red-highlight");
                     }
                 },
             });
@@ -429,7 +519,7 @@
             const fromInput = document.getElementById("date-input-from");
             const toInput = document.getElementById("date-input-to");
 
-            // Initialize Flatpickr for both "From" and "To" inputs
+            // Flatpickr for the "From" and "To" date inputs
             flatpickr(fromInput, {
                 dateFormat: "d/m/Y",
                 minDate: "today",
@@ -441,7 +531,7 @@
                 defaultDate: toInput.value || null
             });
 
-            // Toggle to "Available" mode
+            // Toggle UI to "Available" mode
             function showAvailable() {
                 statusText.textContent = "Available";
                 point.classList.add("available");
@@ -453,35 +543,34 @@
                     })
                     .then(() => {
                         toastr.success("You are now Available");
-                        // Clear any ranges from Flatpickr
                         disableDates = [];
-                        calendar.set("disable", disableDates);
-                        calendar.redraw();
+                        window.calendar.set("disable", disableDates);
+                        window.calendar.redraw();
                     })
                     .catch(err => {
                         toastr.error(err.response?.data?.message || "Error updating availability");
                     });
             }
 
-            // Toggle to "Unavailable" mode
+            // Toggle UI to "Unavailable" mode
             function showUnavailable() {
                 statusText.textContent = "Unavailable";
                 point.classList.remove("available");
                 unavailableContainer.style.display = "grid";
             }
 
-            // Listen for changes in the checkbox
+            // Listen for changes on the main Availability checkbox
             checkbox.onchange = function() {
                 this.checked ? showAvailable() : showUnavailable();
             };
 
-            // Helper function to convert dd/mm/yyyy to yyyy-mm-dd
+            // Helper to parse dd/mm/yyyy => yyyy-mm-dd
             function convertToYYYYMMDD(dateStr) {
                 const [day, month, year] = dateStr.split("/");
                 return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
             }
 
-            // Handle saving the unavailability range
+            // Handle saving unavailability range
             saveBtn.onclick = function() {
                 if (!fromInput.value || !toInput.value) {
                     return toastr.error("Please select both From and To dates.");
@@ -494,15 +583,12 @@
                     .then(r => {
                         if (r.data.status === "success") {
                             toastr.success("Unavailability dates saved");
-
-                            // Update disable array
                             disableDates = [{
                                 from: convertToYYYYMMDD(fromInput.value),
                                 to: convertToYYYYMMDD(toInput.value)
                             }];
-                            // Reconfigure Flatpickr
-                            calendar.set("disable", disableDates);
-                            calendar.redraw();
+                            window.calendar.set("disable", disableDates);
+                            window.calendar.redraw();
                         } else {
                             toastr.error(r.data.message || "Save failed");
                         }
@@ -512,7 +598,7 @@
                     });
             };
 
-            // If already unavailable, show the correct UI
+            // If user is already "unavailable," reflect that in the UI
             @if ($availability === 'unavailable')
                 showUnavailable();
             @endif
@@ -557,6 +643,126 @@
                     console.error(error);
                     alert('Error occurred while canceling appointment.');
                 });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const availabilityContainer = document.getElementById('availability');
+            const existingWeekendData = @json(Auth::user()->weekend_data ?? []);
+            if (availabilityContainer.dataset.built) return;
+            availabilityContainer.dataset.built = 'true';
+
+            // Days: 0=SUN,1=MON,2=TUE,3=WED,4=THU,5=FRI,6=SAT
+            const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            const times = Array.from({
+                length: 24
+            }, (_, i) => {
+                const hour = i % 12 === 0 ? 12 : i % 12;
+                const ampm = i < 12 ? 'AM' : 'PM';
+                return `${hour}:00 ${ampm}`;
+            });
+
+            // Build the modal day/time rows
+            days.forEach((day, index) => {
+                const row = document.createElement('div');
+                row.className = 'day-row';
+                row.innerHTML = `
+                <div class="day-label">
+                    <input class="form-check-input" type="checkbox" id="check-${day}">
+                    <label for="check-${day}">${day}</label>
+                </div>
+                <div class="time-selectors" id="time-${day}">
+                    <select class="start-time" disabled>
+                        <option value="">Select</option>
+                        ${times.map(t => `<option value="${t}">${t}</option>`).join('')}
+                    </select>
+                    <select class="end-time" disabled>
+                        <option value="">Select</option>
+                        ${times.map(t => `<option value="${t}">${t}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+                availabilityContainer.appendChild(row);
+
+                // If database has this day as selected, pre-check
+                const existing = existingWeekendData.find(item => item.day === index);
+                if (existing) {
+                    const checkbox = row.querySelector(`#check-${day}`);
+                    const startSel = row.querySelector('.start-time');
+                    const endSel = row.querySelector('.end-time');
+                    checkbox.checked = true;
+                    startSel.disabled = false;
+                    endSel.disabled = false;
+                    startSel.value = existing.time_from || '';
+                    endSel.value = existing.time_to || '';
+                }
+
+                // Toggle time selects when the checkbox changes
+                const checkbox = row.querySelector(`#check-${day}`);
+                const selects = row.querySelectorAll('select');
+                checkbox.addEventListener('change', () => {
+                    const isChecked = checkbox.checked;
+                    selects.forEach(s => {
+                        s.disabled = !isChecked;
+                        if (!isChecked) s.selectedIndex = 0;
+                    });
+                });
+            });
+
+            // Figure out which days are currently "unselected" and highlight them in red on load
+            window.unselectedDaysOfWeek = [0, 1, 2, 3, 4, 5, 6];
+            existingWeekendData.forEach(d => {
+                const idx = window.unselectedDaysOfWeek.indexOf(d.day);
+                if (idx !== -1) window.unselectedDaysOfWeek.splice(idx, 1);
+            });
+
+            // Redraw calendar so unselected days become red
+            if (window.calendar) {
+                window.calendar.redraw();
+            }
+
+            // Save data to DB + re-highlight
+            const saveWeekendBtn = document.getElementById('saveWeekendBtn');
+            saveWeekendBtn.addEventListener('click', () => {
+                window.unselectedDaysOfWeek = [];
+                const dayCheckboxes = availabilityContainer.querySelectorAll(
+                    '.day-label input[type="checkbox"]');
+                const selectedDays = [];
+
+                dayCheckboxes.forEach((cb, idx) => {
+                    if (cb.checked) {
+                        const row = cb.closest('.day-row');
+                        const startTime = row.querySelector('.start-time').value;
+                        const endTime = row.querySelector('.end-time').value;
+                        selectedDays.push({
+                            day: idx,
+                            time_from: startTime,
+                            time_to: endTime
+                        });
+                    } else {
+                        window.unselectedDaysOfWeek.push(idx);
+                    }
+                });
+
+                if (window.calendar) {
+                    window.calendar.redraw();
+                }
+
+                axios.post("{{ route('store-weekend-data') }}", {
+                        weekend_data: selectedDays
+                    })
+                    .then((r) => {
+                        if (r.data.status === 'success') {
+                            toastr.success(r.data.message);
+                        } else {
+                            toastr.error('Could not save weekend data');
+                        }
+                    })
+                    .catch((err) => {
+                        toastr.error(err.response?.data?.message || "Error saving weekend data");
+                    });
+            });
         });
     </script>
 @endpush

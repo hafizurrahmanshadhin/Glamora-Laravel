@@ -59,6 +59,11 @@ class BookServiceController extends Controller {
                 ];
             }
 
+            // Get the expert's weekend availability data
+            $weekendData = $user->weekend_data ?? [];
+
+            // dd($weekendData);
+
             return view('frontend.layouts.booking.index', compact(
                 'serviceProviderId',
                 'serviceId',
@@ -67,7 +72,8 @@ class BookServiceController extends Controller {
                 'selectedServices',
                 'totalPrice',
                 'serviceIds',
-                'unavailableRanges'
+                'unavailableRanges',
+                'weekendData'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
