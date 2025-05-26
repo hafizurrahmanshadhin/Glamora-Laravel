@@ -1,0 +1,1781 @@
+
+/* ==== explore.html page strat form here ========= */
+.categories-tax-service-section h2{
+    color:  #111;
+font-family: "Helvetica Neue";
+font-size: 48px;
+font-style: normal;
+font-weight: 400;
+line-height: 72px;
+}
+.categories-tax-service-section .categori-heading-para {
+    color:  #6B6B6B;
+font-family: "Helvetica Neue";
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 150%;
+margin-top: 8px;
+}
+.categories-tax-service-section .categori-heading-para a {
+    color:  #222;
+font-weight: 500;
+}
+.explore-card-filter-wrapper {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.explore-tax-single-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 8px;
+    border: 1px solid #FFE8EC;
+    background: #FFF8F9;
+    padding: 12px;
+    transition: .3s ease-in-out;
+}
+
+.explore-tax-single-card:hover {
+    border-radius: 8px;
+    border: 1px solid #FFE8EC;
+    background: #FFF8F9;
+    box-shadow: 0px 20px 25px 0px rgba(0, 0, 0, 0.10), 0px 10px 10px 0px rgba(0, 0, 0, 0.04);
+}
+
+.explore-tax-single-card:hover .check-availability-bookmarks a {
+    background-color: #FFB6C1;
+}
+
+.explore-card-img-are {
+    width: 100%;
+    height: 200px;
+    border-radius: 4px;
+    background: url(../../images/explore-img.jpg) lightgray 50% / cover no-repeat;
+}
+
+.explore-rating-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.explore-ratings-star-count {
+    color: #6B6B6B;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    display: flex;
+    gap: 8px;
+}
+
+.explore-card-heading-para {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.explore-card-heading-para h5 {
+    color:  #111;
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+}
+.explore-card-heading-para h4 {
+    color: #111;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+}
+
+.explore-card-location {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--black);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 21px;
+}
+
+.explore-card-main-para {
+    overflow: hidden;
+    color: #6B6B6B;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 21px;
+}
+
+.check-availability-bookmarks {
+    display: flex;
+    gap: 16px;
+}
+
+.check-availability-bookmarks a {
+    flex-grow: 1;
+    color: var(--black);
+font-family: "Helvetica Neue";
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px;
+border-radius: 4px;
+border: 0.5px solid #222;
+background: #FFE8EC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s ease-in-out;
+    padding: 8px 20px;
+}
+
+.check-availability-bookmarks button {
+    border: none;
+    cursor: pointer;
+    background-color: inherit;
+}
+
+/*========== tax-profile.html start form here ==========*/
+.tax-profile-section {
+    padding: 100px 0px;
+}
+
+.tax-profile-content-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+.tax-profile-left {
+    width: 65%;
+    padding-right: 10px;
+}
+
+.tax-profile-left-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 16px 16px 0px;
+}
+
+.tax-profile-left-header-left {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.tax-profile-img-area {
+    width: 126px;
+    height: 126px;
+}
+
+.tax-profile-img-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.tax-profile-address-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.tax-profile-address-wrapper h3 {
+    color: var(--black);
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 42.24px;
+    letter-spacing: -0.64px;
+    display: flex;
+    gap: 14px;
+}
+
+.tax-profile-address {
+    color: #616161;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 21.12px;
+    letter-spacing: -0.32px;
+}
+
+.tax-profile-address-wrapper button {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    background: var(--primary-bg);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border-radius: 4px;
+    border: 1px solid #B3D8BE;
+    padding: 7px 14px;
+}
+
+.tax-profile-left-header-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.tax-profile-right {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    width: 35%;
+    padding-left: 10px;
+}
+
+.doctor-price {
+    text-align: right;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+    background: var(--primary-bg);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tax-profile-left-main {
+    margin-top: 60px;
+}
+
+.tax-profile-left-main-img-area {
+    width: 100%;
+    height: 360px;
+}
+
+.tax-profile-left-main-img-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.user-reg-h3 {
+    color: var(--black);
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+    margin-bottom: 40px;
+}
+
+.tax-profile-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tax-profile-main-content h2 {
+    color: var(#111);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 36px;
+}
+
+.tax-profile-main-content-main-para,
+.tax-profile-specialize h4,
+.tax-profile-specialize ul li {
+    color: #6B6B6B;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.tax-profile-specialize ul li {
+    list-style: disc;
+}
+
+.tax-profile-specialize ul {
+    padding-left: 30px;
+}
+
+.tax-profile-specialize {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.tax-profile-specialize h4 {
+    color: var(--black);
+}
+
+.tax-left-content-devider {
+    background-color: #BABABA;
+    height: 1px;
+    width: 100%;
+    margin: 40px 0px;
+}
+
+.tax-profile-left-comment-area {
+    width: 57%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tax-profile-single-comment {
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #E9E9E9;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.tax-profile-single-comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+}
+
+.tax-profile-single-comment-author {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.tax-profile-single-comment-author-img {
+    width: 46px;
+    height: 46px;
+}
+
+.tax-profile-single-comment-author-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.tax-profile-single-comment-author-name {
+    display: flex;
+    flex-direction: column;
+    gap: 7.68px;
+}
+
+.tax-profile-single-comment-author-name p {
+    color: #293238;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.tax-profile-single-comment-time {
+    color: #BABABA;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.tax-profile-single-comment-content {
+    color: #6B6B6B;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.experience-summary-wrapper {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    background: var(--primary-bg);
+    padding: 33.5px 20px;
+    justify-content: space-between;
+}
+
+.experience-summary {
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-devider {
+    background: #F0F0F0;
+    width: 1px;
+    height: 48px;
+    margin: 0px 20px;
+}
+
+.experience-summary-number {
+    color: var(--white);
+    text-align: center;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 45px;
+}
+
+.experience-summary-p {
+    color: var(--white);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+/* calender */
+.calender-content-wrapper {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #E9E9E9;
+    background: var(--white);
+    position: relative;
+}
+
+.calendar-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.calender-image {
+    width: 48px;
+    height: 48px;
+}
+
+.calender-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.calender-header-p {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.calender-header-p-name {
+    color: var(--black);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 27px;
+}
+
+.calender-header-p-condition {
+    color: #6B6B6B;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 21px;
+    display: flex;
+}
+
+.calendar-output {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    position: relative;
+    flex-direction: column;
+    width: 100% !important;
+}
+
+
+.calendar-output input {
+    border: none;
+}
+
+.calendar-output p {
+    color: #1D1B20;
+    font-family: 'Poppins';
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 40px;
+    border-bottom: 1px solid #E9E9E9;
+    padding-bottom: 12px;
+    margin-bottom: 10px !important;
+    padding-left: 10px;
+}
+
+.calendar>.days-grid>.day.selected {
+    background-color: var(--color-fg-primary);
+    color: var(--color-fg-selected);
+}
+
+.container.lock-plugin .calendar>.days-grid>.day.locked {
+    background-color: transparent;
+    border: none !important;
+    color: var(--color-fg-locked);
+    pointer-events: none;
+}
+
+.container.lock-plugin .calendar>.days-grid>.day.locked:not(.start):not(.end) {
+    background-image: none !important;
+    font-style: normal !important;
+}
+.container.inline {
+    box-shadow: 0 7px 14px 0 rgba(65, 69, 88, .1), 0 3px 6px 0 rgba(0, 0, 0, .07);
+    height: auto;
+    left: 0;
+    position: relative;
+    top: 0;
+    transform: scaleY(1);
+    width: 100% !important;
+}
+
+ #calendar-container {
+    width: 100% !important;
+    margin: 0 auto;
+} 
+/* Custom styles for the Easepick calendar */
+
+/* Style for the selected date */
+.easepick__day--selected {
+    border: 2px solid green;
+    background-color: green;
+    color: white;
+}
+
+/* Style for the hover effect on available dates */
+.easepick__day:not(.easepick__day--disabled):hover {
+    background-color: green;
+    color: black;
+}
+
+/* Style for disabled (booked) dates */
+.easepick__day--disabled {
+    background-color: #d3d3d3;
+    color: #a0a0a0;
+    pointer-events: none;
+}
+
+
+.appointment-btn {
+    color: var(--white);
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    border-radius: 8px;
+    border: 0.5px solid #09BD3F;
+    background: var(--primary-bg);
+    padding: 18px 20px;
+    width: 100%;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.tax-profile-input {
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px;
+    padding: 18px 20px;
+    background: var(--Gradiant, linear-gradient(135deg, #09BD3F 0%, #09812D 100%));
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+    border-radius: 8px;
+    border: 0.5px solid  #09BD3F;
+    cursor: pointer;
+    width: 100%;
+}
+
+
+/* JOIN AND SIGN UP OPTION //JOIN.HTML START */
+.join-explore-section{
+    padding: 200px 0px 166px;
+}
+.client-tax-content-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+.client-tax-preparer-option{
+    display: flex;
+    gap: 40px;
+}
+.client-tax-content-wrapper h1{
+    color: #111;
+text-align: center;
+font-size: 36px;
+font-style: normal;
+font-weight: 700;
+line-height: 54px;
+}
+.join-main-para{
+    color: #6B6B6B;
+text-align: center;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 26.24px;
+max-width: 770px;
+}
+.client-tax-preparer-option-single{
+    border-radius: 10px;
+border: 1.5px solid  #E9E9E9;
+background: var(--white);
+padding: 40px 32px;
+display: flex;
+flex-direction: column;
+gap: 48px;
+position: relative;
+cursor: pointer;
+transition: all .3s ease-in-out;
+}
+.svg2{
+    display: none;
+}
+.active-user-box {
+    border-radius: 10px;
+border: 1.5px solid  #5a5959;
+background: #FFF;
+box-shadow: 0px 20px 25px 0px rgba(0, 0, 0, 0.10), 0px 10px 10px 0px rgba(0, 0, 0, 0.04);
+}
+
+.activeSvg{
+    position: absolute;
+    top: 24px;
+    right: 24px;
+}
+.client-tax-preparer-option-single p{
+    color: #393939;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 35px;
+    max-width: 251px;
+}
+
+.container.lock-plugin .calendar>.days-grid>.day.locked:not(.start):not(.end) {
+
+    background: #5aa061 !important;
+}
+.tm-create-btn-link-wrapper{
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+}
+.tm-create-btn-link-wrapper{
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+}
+.tm-create-btn-link-wrapper{
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+}
+.tm-create-btn-link-wrapper button{
+    color: #fff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    padding: 8px 20px;
+    border-radius: 6px;
+    background: var(--black);
+    border: 1px solid transparent;
+    width: 397px;
+    transition: .3s ease;
+}
+.tm-create-btn-link-wrapper button:hover{
+background-color: white;
+color: var(--black);
+border: 1px solid var(--black);
+}
+ .tm-create-btn-link,
+.tm-create-btn-link a{
+    color: #6B6B6B;
+    text-align: center;
+    font-family: "Helvetica Neue";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+ .tm-create-btn-link a{
+    font-weight: 500;
+    color: #222 ;
+}
+/* join.html end */
+
+/* sign-in/sign-up page start */
+.sign-in-up-common-section{
+    padding: 183px 0px 191px;
+}
+.sign-in-up-content-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+   gap: 50px;
+}
+.sign-in-up-image-area{
+    height: 594px;
+    max-width: 652px;
+}
+.sign-in-up-image-area img{
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+.sign-up-form-area .sign-in-up-image-area{
+    height: 641px;
+    width: 100%;
+    }
+.sign-in-up-form-area{
+    padding: 48px 31.5px;
+    border-radius: 8px;
+    border: 1px solid #BABABA;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    width: 460px;
+}
+.form-header-para{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.form-header-para h1{
+    color: var(--black);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 45px;
+}
+.form-header-para p{
+    color: #6B6B6B;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+.form-header-para p a{
+    color:  #222;
+    font-weight: 500;
+}
+.tm-sign-in-up-form {
+display: flex;
+flex-direction: column;
+gap: 30px;
+width: 100%;
+}
+.tm-sign-in-up-form label{
+    color: #BABABA;
+    font-family: "Helvetica Neue";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+.tm-sign-in-up-form input{
+    border: none;
+    border-bottom: 1px solid #BABABA;
+    border-radius: 0px;
+}
+.form-control:focus {
+    border-color: none;
+    outline: 0;
+    box-shadow: none;
+}
+.tm-sign-in-up-form button{
+    border: none;
+    border-radius: 4px;
+    background: var(--black);
+    padding: 8px 20px;
+    color:  #BABABA;
+font-family: "Helvetica Neue";
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px;
+transition: .3s ease-in-out;
+}
+.tm-sign-in-up-form button:hover{
+    color:  #f8f8f8;
+}
+.or-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+}
+.or-line{
+    background-color: #BABABA;
+    height: 1px;
+    width: 100%;
+}
+.google-link{
+    border-radius: 10px;
+border: 1px solid #222;
+background: #FFF;
+color: var(--black);
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height:  24px;
+padding: 18px;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+}
+.google-link img{
+    width: 20px;
+    height: 21px;
+    object-fit: cover;
+}
+.or-text{
+    color: #6B6B6B;
+text-align: center;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
+margin: 0px 4px;
+}
+/* sign-in/sign-up page end */
+
+/* question page start */
+.question-area .sign-in-up-form-area{
+    border: none;
+    width: 762px;
+    align-items:start;
+}
+.question-area{
+margin-bottom: 120px;
+}
+.question-item{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 24px 10px;
+    border-bottom: 1px solid #6B6B6B;
+    color: #757575;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
+}
+.form-header-para h2{
+    color: #222;
+font-size: 36px;
+font-style: normal;
+font-weight: 500;
+line-height: 54px;
+}
+.question-get-start-btn{
+    border-radius: 6px;
+    background: var(--black);
+color: #E9E9E9;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 150%;
+padding: 8px 20px;
+align-self: flex-start;
+}
+/* question page End */
+
+/* submitted page start */
+.submit-review-section{
+    padding: 183px 0px 191px;
+}
+
+.submit-review-section-content-wrapper{
+    display: flex;
+    gap: 100px;
+}
+.submit-review-img-area{
+    min-width: 424.32px;
+    height: 389px;
+}
+.submit-review-img-area img{
+    width: 100%;
+height: 100%;
+object-fit: cover;
+}
+.submit-review-text-area{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+.submit-review-text-area h1{
+color: #222;
+font-family: "Helvetica Neue";
+font-size: 36px;
+font-style: normal;
+font-weight: 500;
+line-height: 47.52px;
+letter-spacing: -0.72px;
+}
+
+.submit-review-text-area p{
+    color: #6B6B6B;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24.24px;
+}
+.submit-review-text-area p span{
+    color: #222;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+}
+.submit-review-text-two-wrapper{
+    border-radius: 6px;
+    background:  #FFE8EC;
+padding: 10px 18px;
+}
+.submit-review-text-two{
+display: flex;
+gap: 12px;
+color:  #6B6B6B;
+font-family: "Helvetica Neue";
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
+max-width: 540px;
+}
+.goto-home-btn{
+    border-radius: 4px;
+    background: #222;
+padding: 8px 20px;
+color: #fff;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px;
+text-align: center;
+width: fit-content;
+}
+/* submitted page end */
+
+/* appointment start */
+.armie-appointment-wrapper{
+    margin: 60px 0px 120px;
+}
+.armie-upcoming-appointment-card-wrapper{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 24px;
+    margin: 60px 0px;
+}
+.armie-appointment-wrapper .explore-tax-single-card {
+    border: 1px solid #BABABA;
+    background:  #FFF;
+    padding: 16px;
+}
+.armie-appointment-wrapper .explore-tax-single-card:hover {
+    border: 1px solid #dfb3b3;
+}
+
+.armie-appointment-wrapper .check-availability-bookmarks a{
+    background-color: #fff;
+  margin-top: 24px;
+}
+.upcoming-apointments-user-img{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: relative;
+}
+.upcoming-apointments-user-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.tm-active-status{
+    position: absolute;
+    bottom: 4px;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #27ae60;
+    border: 1px solid #fff;
+}
+.arime-view-all{
+color: var(--black);
+text-align: center;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
+text-decoration-line: underline;
+}
+.upcoming-apointments-user-img {
+    width: 50.108px;
+    height: 50.691px;
+}
+.upcoming-apointments-user-img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.upcoming-apointments-user-img-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.upcoming-apointments-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+.upcoming-apointments-user-name-city {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+}
+.upcoming-apointments-user-name-city h5 {
+    color: #222;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 36px;
+}
+.upcoming-apointments-user-link {
+    color: var(--black);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 21px;
+    text-decoration-line: underline;
+    margin-right: 30px;
+}
+.armie-message{
+    margin-right: 30px;
+
+}
+.upcoming-apointment-devider {
+    background-color: #E9E9E9;
+    height: 1px;
+    width: 95%;
+    margin: 10px 0px;
+}
+.explore-card-heading-para h4 {
+    color: #222;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+}
+.explore-card-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6B6B6B;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
+}
+.armie-service-location-type{
+    gap: 10px;
+}
+.armie-service-type-name{
+    color: #FFB6C1;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+.armie-upcoming-appointments-wrapper .armie-upcoming-appointment-card-wrapper{
+    grid-template-columns: repeat(4,1fr);
+}
+
+/* appointment end */
+.armie-service-location-type{
+    flex-wrap: wrap;
+}
+
+
+/* responsive */
+@media (max-width: 991px){
+    .submit-review-section-content-wrapper {
+    flex-direction: column;
+    }
+    .submit-review-img-area {
+        max-width: 424.32px;
+        height: 389px;
+        margin: 0 auto;
+    }
+}
+@media only screen and (min-width: 1200px) and (max-width: 1599px) {
+    .armie-upcoming-appointments-wrapper .armie-upcoming-appointment-card-wrapper {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .armie-new-card-wrapper .armie-upcoming-appointment-card-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+   
+}
+@media only screen and (min-width: 1200px) and (max-width: 1400px) {
+         /* question */
+         .question-area .sign-in-up-image-area{
+            display: none;
+           }
+           .question-area{
+            position: relative;
+    
+        }
+           .question-area .sign-in-up-form-area {
+            width: 100%;
+            background-color: white;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        }
+
+        .form-header-para h2 {
+            font-size: 24px;
+            line-height: 40px;
+        }
+
+        /* join.html start */
+        .join-explore-section {
+            padding: 160px 0px 166px;
+        }
+   
+}
+@media only screen and (min-width: 993px) and (max-width: 1199px) {
+    .categories-hero-section {
+        height: 400px;
+    }
+    .categories-hero-section h1 {
+        font-size: 40px;
+        line-height: 70px;
+    }
+    .categories-tax-card-wrapper{
+        grid-template-columns: repeat(3,1fr);
+        margin-top: 40px;
+    }
+    .categories-tax-service-section h2 {
+        font-size: 30px;
+    }
+    .categories-tax-service-section .categori-heading-para {
+        font-size: 15px;
+    }
+    .categories-tax-single-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    .categories-tax-single-card {
+        gap: 10px;
+    }
+    .categories-tax-single-card p {
+        font-size: 15px;
+        gap: 5px;
+    }
+    .categories-tax-single-card a {
+        font-size: 15px;
+        gap: 5px;
+    }
+
+    /* tax profile */
+    .tax-profile-right {
+        width: 38%;
+        padding-left: 0px;
+    }
+    .tax-profile-left {
+        width: 62%;
+    }
+
+       /* question */
+       .question-area .sign-in-up-image-area{
+        display: none;
+       }
+       .question-area{
+        position: relative;
+
+    }
+       .question-area .sign-in-up-form-area {
+        width: 100%;
+        background-color: white;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    }
+       
+    .form-header-para h2 {
+        font-size: 24px;
+        line-height: 40px;
+    }
+
+    /* join.html */
+    .join-explore-section {
+        padding: 147px 0px 166px;
+    }
+    .armie-upcoming-appointments-wrapper .armie-upcoming-appointment-card-wrapper {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .explore-card-location {
+        gap: 3px;
+        font-size: 15px;
+    }
+    .armie-message {
+        margin-right: 16px;
+    }
+    .upcoming-apointments-user-name-city h5 {
+        font-size: 20px;
+        line-height: 32px;
+    }
+}
+@media only screen and (min-width: 701px) and (max-width: 992px) {
+    /* join.html start */
+    .join-explore-section {
+        padding: 160px 0px 80px;
+    }
+    .client-tax-content-wrapper h1 {
+        font-size: 30px;
+        line-height: 40px;
+    }
+    .client-tax-preparer-option-single p {
+        font-size: 20px;
+        line-height: 31px;
+    }
+    .client-tax-content-wrapper {
+        gap: 20px;
+    }
+    /* join.html end */
+    .categories-tax-service-section {
+        padding: 50px 0px 80px;
+    }
+    .categories-hero-section {
+        height: 400px;
+    }
+    .categories-hero-content-wrapper {
+        gap: 20px;
+    }
+    .categories-hero-section h1 {
+        font-size: 36px;
+        line-height: 60px;
+    }
+    .categories-tax-card-wrapper{
+        grid-template-columns: repeat(2,1fr);
+        margin-top: 40px;
+    }
+    .categories-tax-service-section h2 {
+        font-size: 30px;
+    }
+    .categories-tax-service-section .categori-heading-para {
+        font-size: 15px;
+    }
+    .categories-tax-single-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    .categories-tax-single-card {
+        gap: 10px;
+    }
+    .categories-tax-single-card p {
+        font-size: 15px;
+        gap: 5px;
+    }
+    .categories-tax-single-card a {
+        font-size: 15px;
+        gap: 5px;
+    }
+
+        /* tax profile */
+        .tax-profile-section {
+            padding: 50px 0px;
+        }
+        .tax-profile-content-wrapper{
+            flex-direction: column-reverse;
+        }
+        .tax-profile-left,
+        .tax-profile-right{
+            width: 100%;
+        }
+        .tax-profile-right{
+            gap: 30px;
+            padding-left: 0px;
+        }
+        .tax-profile-left{
+            padding-right: 0px;
+        }
+        .tax-profile-left-header{
+            gap: 10px;
+        }
+        .tax-profile-left-header,
+        .tax-profile-left-header-left,
+        .tax-profile-left-header-right{
+            flex-direction: column;
+            align-items: center;
+        }
+        .experience-summary-wrapper {
+            justify-content: space-between;
+        }
+
+        .calendar-output {
+            margin-top: 15px;
+        }
+
+        .tax-profile-address-wrapper {
+            gap: 10px;
+            align-items: center;
+        }
+
+        .tax-profile-left-comment-area {
+            width: 100%;
+        }
+        .tax-profile-left-main {
+            margin-top: 40px;
+        }
+           /* sign-in-up page reesponsive */
+    .sign-in-up-image-area {
+        display: none;
+       }
+       .sign-in-up-form-area{
+           width: 100%;
+           background-color: white;
+           box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;       }
+       .sign-in-up-common-section{
+           position: relative;
+           width: 100%;
+       }
+
+    /* question */
+    .question-area::before{
+        background: url('../../images/question.png');
+        background-color: rgba(0, 0, 0, 0.5);
+        background-repeat: no-repeat;
+    }
+    .form-header-para h2 {
+        font-size: 24px;
+        line-height: 40px;
+    }
+
+    .armie-upcoming-appointments-wrapper .armie-upcoming-appointment-card-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .explore-card-location {
+        font-size: 15px;
+    }
+    .upcoming-apointments-user-name-city h5 {
+        font-size: 20px;
+        line-height: 30px;
+    }
+  
+
+}
+@media only screen and (min-width: 566px) and (max-width: 700px) {
+    .categories-tax-card-wrapper{
+        grid-template-columns: repeat(2,1fr) !important;
+    }
+    .client-tax-content-wrapper {
+        gap: 18px;
+    }
+    .armie-upcoming-appointments-wrapper .armie-upcoming-appointment-card-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .armie-service-location-type{
+        flex-direction: column;
+        align-items: first start !important;
+    }
+    .upcoming-apointments-user-name-city h5 {
+        font-size: 18px;
+        line-height: 27px;
+    }
+    .upcoming-apointments-user {
+        gap: 3px;
+    }
+    .armie-message {
+        margin-right: 10px;
+    }
+    .armie-message svg{
+        height: 26px;
+        width: 24px;
+    }
+}
+@media (max-width: 700px) {
+    /* join.html start */
+    .join-explore-section {
+        padding: 160px 20px 60px;
+    }
+    .join-explore-section form{
+       width: 100%;
+    }
+    .client-tax-preparer-option {
+        gap: 20px;
+        flex-direction: column;
+    }
+    .client-tax-preparer-option-single {
+        padding: 40px 22px;
+        flex-direction: column;
+        gap: 28px;
+    }
+    .client-tax-preparer-option-single p {
+        font-size: 18px;
+    }
+    .client-tax-content-wrapper h1 {
+        font-size: 22px;
+        line-height: 32px;
+    }
+    .tm-create-btn-link-wrapper button {
+        font-size: 15px;
+        padding: 8px 15px;
+        width: 80%;
+    }
+     .tm-create-btn-link,  .tm-create-btn-link a {
+        font-size: 15px;
+        width: 80%;
+        margin: 0 auto;
+    }
+    .tm-create-btn-link-wrapper {
+        margin-top: 30px;
+        gap: 15px;
+    }
+    /* join.html End */
+    /* explore and catagory page */
+
+    .explore-card-filter-wrapper {
+        margin-top: 40px;
+    }
+    .explore-card-heading-para h4 {
+        font-size: 18px;
+        line-height: 24px;
+    }
+    .categories-hero-section {
+        height: 374px;
+    }
+    .categories-hero-content-wrapper {
+        gap: 15px;
+    }
+    .categories-hero-section p {
+        font-size: 15px;
+        line-height: normal;
+    }
+    .categories-hero-section h1 {
+        font-size: 26px;
+        line-height: 40px;
+    }
+    .categories-tax-card-wrapper{
+        grid-template-columns: repeat(1,1fr);
+        margin-top: 30px;
+        gap: 15px;
+    }
+    .categories-tax-service-section h2 {
+        font-size: 24px;
+        line-height: normal;
+    }
+    .categories-tax-service-section .categori-heading-para {
+        font-size: 15px;
+    }
+    .categories-tax-single-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    .categories-tax-single-card {
+        gap: 10px;
+    }
+    .categories-tax-single-card p {
+        font-size: 15px;
+        gap: 5px;
+    }
+    .categories-tax-single-card a {
+        font-size: 15px;
+        gap: 5px;
+    }
+
+    /* tax profile */
+    .tax-profile-section {
+        padding: 50px 0px;
+    }
+    .tax-profile-content-wrapper{
+        flex-direction: column-reverse;
+    }
+    .tax-profile-left,
+    .tax-profile-right{
+        width: 100%;
+    }
+    .tax-profile-right{
+        gap: 30px;
+        padding-left: 0px;
+    }
+    .tax-profile-left{
+        padding-right: 0px;
+    }
+    .tax-profile-left-header{
+        gap: 10px;
+    }
+    .tax-profile-left-header,
+    .tax-profile-left-header-left,
+    .tax-profile-left-header-right{
+        flex-direction: column;
+        align-items: center;
+    }
+    .experience-summary-wrapper {
+        padding: 25.5px 12px;
+        justify-content: space-between;
+    }
+    .experience-summary-number {
+        font-size: 22px;
+        line-height: 38px;
+    }
+    .experience-summary-p {
+        font-size: 15px;
+        line-height: 19px;
+    }
+    .summary-devider {
+        width: 1px;
+        height: 40px;
+        margin: 0px 10px;
+    }
+    .calendar-output p {
+        font-size: 24px;
+    }
+    .calender-header-p-name {
+        font-size: 16px;
+        line-height: 21px;
+    }
+    .calender-header-p {
+        gap: 5px;
+    }
+    .calendar-output {
+        margin-top: 15px;
+    }
+    .appointment-btn,
+    .tax-profile-input {
+        padding: 13px 20px;
+        margin-bottom: 10px;
+    }
+    .tax-profile-address-wrapper h3 {
+        font-size: 22px;
+        gap: 6px;
+    }
+    .tax-profile-address-wrapper {
+        gap: 10px;
+        align-items: center;
+    }
+    .tax-profile-left-main {
+        margin-top: 28px;
+    }
+    .user-reg-h3 {
+        margin-bottom: 20px;
+    }
+    .tax-profile-left-main-img-area {
+        height: 300px;
+    }
+    .tax-profile-main-content h2 {
+        font-size: 20px;
+        line-height: 32px;
+    }
+    .tax-profile-main-content-main-para, .tax-profile-specialize h4, .tax-profile-specialize ul li {
+        font-size: 15px;
+    }
+    .tax-profile-left-comment-area {
+        width: 100%;
+        gap: 20px;
+    }
+    .tax-profile-single-comment-content,
+    .tax-profile-single-comment-time,
+    .tax-profile-single-comment-author-name p{
+        font-size: 15px;
+    }
+    .tax-profile-single-comment-author-name {
+        gap: 0.68px;
+    }
+    .doctor-price {
+        text-align: center;
+        font-size: 18px;
+        margin-top: 5px;
+    }
+
+    /* sign-in-up page reesponsive */
+    .sign-in-up-image-area {
+     display: none;
+    }
+    .sign-in-up-form-area{
+        padding: 48px 22.5px;
+        gap: 15px;
+        width: 100%;
+        background-color: white;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    }
+    .tm-sign-in-up-form {
+        gap: 15px;
+    }
+    .sign-in-up-common-section{
+        position: relative;
+        width: 100%;
+    }
+
+
+    .form-header-para {
+        gap: 10px;
+    }
+    .form-header-para h1 {
+        font-size: 24px;
+        line-height: 36px;
+    }
+    .form-header-para p {
+        font-size: 15px;
+    }
+    .tm-sign-in-up-form button{
+    padding: 6px 20px;
+    font-size: 15px;
+    }
+
+    /* question area */
+    .question-area::before{
+        background: url('../../images/question.png');
+        background-color: rgba(0, 0, 0, 0.5);
+        background-repeat: no-repeat;
+    }
+    .form-header-para h2 {
+        font-size: 18px;
+        line-height: 30px;
+    }
+    .question-item {
+        gap: 10px;
+        padding: 15px 7px;
+    }
+    .question-get-start-btn {
+        font-size: 15px;
+        padding: 6px 20px;
+    }
+
+/* question area end */
+/* submit review area start*/
+.submit-review-section-content-wrapper {
+    gap: 25px;
+}
+.submit-review-img-area {
+    width: 282.32px;
+    height: 263px;
+}
+.submit-review-text-area {
+    gap: 15px;
+}
+.submit-review-text-area h1 {
+    font-size: 22px;
+    line-height: 35.52px;
+}
+.submit-review-text-area p {
+    font-size: 15px;
+}
+.submit-review-text-two {
+    padding: 10px 13px;
+    gap: 6px;
+}
+/* submit review area end */
+.question-area{
+    margin-bottom: 50px;
+    }
+}
+@media (max-width: 565px){
+    .join-main-para {
+        font-size: 15px;
+        line-height: 24px;
+    }
+    .client-tax-content-wrapper h1 {
+        font-size: 20px !important;
+        line-height: 28px !important;
+    }
+    .client-tax-preparer-option-single {
+        padding: 30px 15px !important;
+        gap: 20px !important;
+    }
+    .tm-create-btn-link-wrapper button {
+        font-size: 14px !important;
+    }
+    .tm-create-btn-link, .tm-create-btn-link a {
+        font-size: 14px !important;
+    }
+    .client-tax-preparer-option-single p {
+        font-size: 16px !important;
+        line-height: 26px;
+    }
+    .client-tax-content-wrapper {
+        gap: 15px;
+    }
+    .armie-upcoming-appointments-wrapper .armie-upcoming-appointment-card-wrapper {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .upcoming-apointments-user-name-city h5 {
+        color: #222;
+        font-size: 17px;
+        line-height: 27px;
+    }
+    .upcoming-apointments-user {
+        gap: 13px;
+    }
+    .upcoming-apointment-devider {
+        margin: 5px 0px;
+    }
+    .armie-appointment-wrapper .check-availability-bookmarks a {
+        background-color: #fff;
+        margin-top: 15px;
+    }
+
+
+}
+
+@media (max-width: 400px){
+    .armie-upcoming-appointments-wrapper .armie-upcoming-appointment-card-wrapper {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .armie-service-location-type{
+        flex-direction: column;
+        align-items: first start !important;
+    }
+    .armie-appointment-wrapper .check-availability-bookmarks a {
+        background-color: #fff;
+        margin-top: 10px !important;
+    }
+    .check-availability-bookmarks a {
+        font-size: 14px;
+        padding: 6px 20px;
+    }
+}
+
+
+
+
+

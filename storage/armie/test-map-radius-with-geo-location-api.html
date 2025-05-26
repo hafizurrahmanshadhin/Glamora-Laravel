@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Map with Geolocation</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            border-right: 2px solid #ddd;
+            height: 100%;
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        span {
+            display: inline-block;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; height: 100vh;">
+        <!-- Map Container -->
+        <div id="map" style="flex: 1;"></div>
+
+        <!-- Right-Side Panel -->
+        <div style="width: 300px; padding: 20px;">
+            <h3>How Far Are You Willing to Travel</h3>
+
+            <label>Set Free Travel Radius:</label>
+            <input type="range" id="free-radius" min="1" max="50" value="5" />
+            <span id="free-radius-value">5 km</span>
+
+            <label>Set Your Travel Radius:</label>
+            <input type="range" id="travel-radius" min="1" max="50" value="20" />
+            <span id="travel-radius-value">20 km</span>
+
+            <label>Set Your Maximum Travel Radius:</label>
+            <input type="range" id="max-radius" min="1" max="100" value="50" />
+            <span id="max-radius-value">50 km</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const map = L.map('map').setView([0, 0], 13); // Temporary center
+
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+            }).addTo(map);
+
+            // Add a circle
+            const circle = L.circle([0, 0], {
+                color: 'rgba(88, 88, 88, 0.30)',
+                weight: 2,
+                fillColor: '#add8e6',
+                fillOpacity: 0.5,
+                radius: 20000, // Default radius: 20 km
+            }).addTo(map);
+
+            // Function to update the circle
+            const updateCircle = (lat, lng, radius) => {
+                circle.setLatLng([lat, lng]);
+                circle.setRadius(radius * 1000); // Convert km to meters
+                map.fitBounds(circle.getBounds(), { padding: [20, 20] });
+            };
+
+            // Fetch user's precise location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        map.setView([latitude, longitude], 13);
+                        circle.setLatLng([latitude, longitude]);
+                    },
+                    (error) => {
+                        console.error('Geolocation error:', error);
+                        alert('Unable to fetch your location. Please allow location access.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+
+            // Sliders for radius adjustment
+            const freeRadiusInput = document.getElementById('free-radius');
+            const travelRadiusInput = document.getElementById('travel-radius');
+            const maxRadiusInput = document.getElementById('max-radius');
+
+            const freeRadiusValue = document.getElementById('free-radius-value');
+            const travelRadiusValue = document.getElementById('travel-radius-value');
+            const maxRadiusValue = document.getElementById('max-radius-value');
+
+            // Event listeners for sliders
+            freeRadiusInput.addEventListener('input', (e) => {
+                const value = e.target.value;
+                freeRadiusValue.textContent = `${value} km`;
+                updateCircle(circle.getLatLng().lat, circle.getLatLng().lng, value);
+            });
+
+            travelRadiusInput.addEventListener('input', (e) => {
+                const value = e.target.value;
+                travelRadiusValue.textContent = `${value} km`;
+                updateCircle(circle.getLatLng().lat, circle.getLatLng().lng, value);
+            });
+
+            maxRadiusInput.addEventListener('input', (e) => {
+                const value = e.target.value;
+                maxRadiusValue.textContent = `${value} km`;
+                updateCircle(circle.getLatLng().lat, circle.getLatLng().lng, value);
+            });
+        });
+    </script>
+</body>
+</html>

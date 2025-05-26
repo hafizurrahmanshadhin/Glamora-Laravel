@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Set Your Availability</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .availability-container {
+      max-width: 400px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 90vh;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .day-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+
+    .day-label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .time-selectors {
+      flex: 2;
+      display: flex;
+      gap: 10px;
+    }
+
+    select {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      min-width: 100px;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: black;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    select:disabled {
+      background-color: #f5f5f5;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-back {
+      background-color: #ccc;
+      color: #000;
+    }
+
+    .btn-next {
+      background-color: #000;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="availability-container">
+    <p>2/3 Create profile</p>
+    <h2>Set Your Availability</h2>
+
+    <div id="availability"></div>
+    <div class="buttons">
+      <button class="btn btn-back">Back</button>
+      <button class="btn btn-next">Next</button>
+    </div>
+  </div>
+
+  <script>
+    const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const availabilityContainer = document.getElementById('availability');
+
+    const times = Array.from({ length: 24 }, (_, i) => {
+      const hour = i % 12 === 0 ? 12 : i % 12;
+      const ampm = i < 12 ? 'AM' : 'PM';
+      return `${hour}:00 ${ampm}`;
+    });
+
+    days.forEach(day => {
+      const row = document.createElement('div');
+      row.className = 'day-row';
+      row.innerHTML = `
+        <div class="day-label">
+          <input class="form-check-input" type="checkbox" id="check-${day}">
+          <label for="check-${day}">${day}</label>
+        </div>
+        <div class="time-selectors" id="time-${day}">
+          <select class="start-time" disabled>
+            <option value="">Select</option>
+            ${times.map(t => `<option value="${t}">${t}</option>`).join('')}
+          </select>
+          <select class="end-time" disabled>
+            <option value="">Select</option>
+            ${times.map(t => `<option value="${t}">${t}</option>`).join('')}
+          </select>
+        </div>
+        <button class="remove-btn" onclick="clearTime('${day}')">✕</button>
+      `;
+      availabilityContainer.appendChild(row);
+
+      const checkbox = row.querySelector(`#check-${day}`);
+      const timeSelectors = row.querySelector(`#time-${day}`);
+      const selects = timeSelectors.querySelectorAll('select');
+
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          selects.forEach(s => s.disabled = false);
+        } else {
+          selects.forEach(s => {
+            s.disabled = true;
+            s.selectedIndex = 0;
+          });
+        }
+      });
+    });
+
+    function clearTime(day) {
+      const selects = document.querySelectorAll(`#time-${day} select`);
+      selects.forEach(select => select.selectedIndex = 0);
+    }
+  </script>
+</body>
+
+</html>

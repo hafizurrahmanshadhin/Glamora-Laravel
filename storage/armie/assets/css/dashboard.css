@@ -1,0 +1,293 @@
+.dashboard-layout {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.dashboard-left {
+  min-width: 301px;
+  max-width: 301px;
+  margin: 0 auto;
+}
+.dashboard-profile-container {
+  border-radius: 8px;
+  border: 1px solid #bababa;
+  background: #fff;
+  min-height: 340px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+
+}
+.dashboard-profile-container .top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #bababa;
+}
+.dashboard-profile-container .img-content {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
+}
+.dashboard-profile-container .img-content img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.dashboard-profile-container .active-status {
+  position: absolute;
+  bottom: 0px;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #27ae60;
+  border: 1px solid #fff;
+}
+.dashboard-profile-container .profile-title {
+  color: #222;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
+.dashboard-profile-container .profile-text {
+  color: #6b6b6b;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+.dashboard-profile-container .bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+.dashboard-profile-container .bottom-top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+}
+.dashboard-profile-container .bottom-top .item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dashboard-profile-container .bottom-top .item .title {
+  color: #222;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
+.dashboard-profile-container .ratings {
+  color: #fbb040;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
+.dashboard-profile-container .ratings .span {
+  color: #6b6b6b;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
+.dashboard-profile-container .profile-view-btn {
+  color: #222;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  text-decoration-line: underline;
+}
+.dashboard-profile-container .common-btn {
+  border: 1px solid #222;
+  background: #fff;
+  color: #222;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  display: flex;
+  justify-content: center;
+}
+.dashboard-profile-container .dashboard-main-content {
+  width: 100%;
+  flex-grow: 1;
+}
+
+/* dashboard banner */
+.dashboard-banner {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff8f9;
+}
+.dashboard-banner .text-content {
+  width: 100%;
+}
+.dashboard-banner .title-italic {
+  color: #222;
+  font-family: "Seaweed Script";
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+.dashboard-banner .banner-title {
+  color: #222;
+  font-family: "Helvetica Neue";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  text-transform: uppercase;
+}
+.dashboard-banner .text {
+  margin-top: 18px;
+  color: #6b6b6b;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+.dashboard-banner .img-content {
+  width: 40%;
+  padding-right: 30px;
+  display: none;
+}
+.dashboard-banner .img-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dashboard-banner .search-container {
+    padding: 0;
+    background-color: transparent;
+    margin-top: 30px;
+}
+
+
+@media screen and (min-width: 650px){}
+@media screen and (min-width: 769px){}
+@media screen and (min-width: 992px){}
+@media screen and (min-width: 1300px){
+  .dashboard-layout {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+  }
+  .dashboard-banner .title-italic {
+      color: #222;
+      font-family: "Seaweed Script";
+      font-size: 40px;
+  }
+  .dashboard-banner .banner-title {
+      color: #222;
+      font-family: "Helvetica Neue";
+      font-size: 32px;
+  }
+  .dashboard-banner {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  
+}
+@media screen and (min-width: 1400px){
+  .dashboard-banner .img-content {
+    width: 30%;
+    padding-right: 0px;
+    display: block;
+  }
+  .dashboard-banner .text-content {
+    width: 70%;
+  }
+}
+@media screen and (min-width: 1700px){
+  .dashboard-banner .text-content {
+    width: 60%;
+  }
+  .dashboard-banner .img-content {
+    width: 40%;
+    padding-right: 30px;
+  }
+    .dashboard-banner .text {
+        margin-top: 24px;
+        color: #6b6b6b;
+        font-size: 16px;
+    }
+    .dashboard-banner .banner-title {
+        color: #222;
+        font-family: "Helvetica Neue";
+        font-size: 40px;
+    }
+    .dashboard-banner .title-italic {
+        color: #222;
+        font-family: "Seaweed Script";
+        font-size: 60px;
+    }
+    .dashboard-profile-container .profile-view-btn {
+        color: #222;
+        font-size: 16px;
+    }
+    .dashboard-profile-container .ratings {
+        color: #fbb040;
+        font-size: 20px;
+    }
+    .dashboard-profile-container .bottom-top .item .title {
+        color: #222;
+        font-size: 20px;
+    }
+    .dashboard-profile-container .bottom-top {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-top: 26px;
+      }
+    .dashboard-left {
+        min-width: 381px;
+        max-width: 381px;
+      }
+    .dashboard-profile-container .top {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding-bottom: 26px;
+        border-bottom: 1px solid #bababa;
+      }
+    .dashboard-profile-container .profile-title {
+        color: #222;
+        font-size: 24px;
+    }
+    .dashboard-profile-container {
+        min-height: 440px;
+        padding: 24px;
+    }
+    .dashboard-profile-container .img-content {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        position: relative;
+    }
+    .dashboard-profile-container .active-status {
+        position: absolute;
+        bottom: 4px;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #27ae60;
+        border: 1px solid #fff;
+      }
+}

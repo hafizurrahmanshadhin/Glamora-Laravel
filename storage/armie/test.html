@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Map with Radius Control</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            border-right: 2px solid #ddd;
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        span {
+            display: inline-block;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; height: 100vh;">
+        <!-- Map Container -->
+        <div id="map" style="flex: 1; height: 100%;"></div>
+
+        <!-- Right-Side Panel -->
+        <div style="width: 800px; padding: 20px;">
+            <h3>How Far Are You Willing to Travel</h3>
+
+            <label>Set Free Travel Radius:</label>
+            <input type="range" id="free-radius" min="1" max="50" value="5" />
+            <span id="free-radius-value">5 km</span>
+
+            <label>Set Your Travel Radius:</label>
+            <input type="range" id="travel-radius" min="1" max="50" value="20" />
+            <span id="travel-radius-value">20 km</span>
+
+            <label>Set Your Maximum Travel Radius:</label>
+            <input type="range" id="max-radius" min="1" max="100" value="50" />
+            <span id="max-radius-value">50 km</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize the map
+            const map = L.map('map').setView([40.7128, -74.0060], 13); // Default to New York coordinates
+
+            // Add tile layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+            }).addTo(map);
+
+            // Add a circle to the map
+            const circle = L.circle([40.7128, -74.0060], {
+                color: 'blue',
+                fillColor: '#add8e6',
+                fillOpacity: 0.5,
+                radius: 20000, // 20 km default radius
+            }).addTo(map);
+
+            // Update circle radius based on slider values
+            const updateRadius = (radius) => {
+                circle.setRadius(radius * 1000); // Convert km to meters
+                map.fitBounds(circle.getBounds()); // Adjust the map view to fit the circle
+            };
+
+            // Input elements for dynamic radius control
+            const travelRadiusInput = document.getElementById('travel-radius');
+            const travelRadiusValue = document.getElementById('travel-radius-value');
+
+            travelRadiusInput.addEventListener('input', (e) => {
+                const value = e.target.value;
+                travelRadiusValue.textContent = `${value} km`;
+                updateRadius(value);
+            });
+
+            // Additional sliders for free-radius and max-radius (optional logic)
+            document.getElementById('free-radius').addEventListener('input', (e) => {
+                document.getElementById('free-radius-value').textContent = `${e.target.value} km`;
+            });
+
+            document.getElementById('max-radius').addEventListener('input', (e) => {
+                document.getElementById('max-radius-value').textContent = `${e.target.value} km`;
+            });
+        });
+    </script>
+</body>
+</html>
