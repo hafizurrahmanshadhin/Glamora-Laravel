@@ -25,21 +25,28 @@ class MessageSendEvent implements ShouldBroadcastNow {
 
     public function broadcastWith(): array {
         $avatar = $this->message->sender->avatar
-        ? asset($this->message->sender->avatar)
-        : asset('backend/images/default_images/user_1.jpg');
+            ? asset($this->message->sender->avatar)
+            : asset('backend/images/default_images/user_1.jpg');
+
+        // Build full URLs for each attachment
+        $publicUrls = [];
+        if (!empty($this->message->attachments) && is_array($this->message->attachments)) {
+            foreach ($this->message->attachments as $relPath) {
+                $publicUrls[] = asset($relPath);
+            }
+        }
 
         return [
-            'id'         => $this->message->id,
-            'message'    => $this->message->message,
-            'sender'     => [
+            'id'          => $this->message->id,
+            'message'     => $this->message->message,
+            'attachments' => $publicUrls,
+            'sender'      => [
                 'id'         => $this->message->sender->id,
                 'first_name' => $this->message->sender->first_name,
                 'last_name'  => $this->message->sender->last_name,
                 'avatar'     => $avatar,
             ],
-            // 'created_at' => $this->message->created_at->format('H:i'),
-            // Use 12-hour format with AM/PM
-            'created_at' => $this->message->created_at->format('h:i A'),
+            'created_at'  => $this->message->created_at->format('h:i A'),
         ];
     }
 }

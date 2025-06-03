@@ -15,6 +15,7 @@ class Message extends Model {
         'sender_id',
         'receiver_id',
         'message',
+        'attachments',
         'status',
     ];
 
@@ -23,6 +24,7 @@ class Message extends Model {
         'sender_id'   => 'integer',
         'receiver_id' => 'integer',
         'message'     => 'string',
+        'attachments' => 'array',
         'status'      => 'string',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',

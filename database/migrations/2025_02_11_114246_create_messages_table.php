@@ -22,7 +22,8 @@ return new class extends Migration {
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
 
-            $table->text('message');
+            $table->text('message')->nullable();
+            $table->json('attachments')->nullable();
 
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamp('created_at')->useCurrent();
