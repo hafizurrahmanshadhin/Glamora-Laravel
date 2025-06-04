@@ -4,30 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CMS extends Model {
-    use HasFactory;
-    protected $table = 'c_m_s';
-
+class RegisterQuestionSurvey extends Model {
+    use HasFactory, SoftDeletes;
+    protected $table    = 'register_question_surveys';
     protected $fillable = [
-        'section',
-        'title',
         'description',
-        'image',
+        'status',
     ];
-
     protected $hidden = [
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
-
     protected $casts = [
         'id'          => 'integer',
-        'section'     => 'string',
-        'title'       => 'string',
         'description' => 'string',
-        'image'       => 'string',
+        'status'      => 'string',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
+        'deleted_at'  => 'datetime',
     ];
 }

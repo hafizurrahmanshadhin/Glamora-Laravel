@@ -223,6 +223,22 @@
                                     Questionnaires
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('cms.join-us.index') }}"
+                                    class="nav-link {{ request()->routeIs('cms.join-us.index') ? 'active' : '' }}"
+                                    data-key="t-join-us">
+                                    Join Us
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('cms.service-type.index') }}"
+                                    class="nav-link {{ request()->routeIs('cms.service-type.index') ? 'active' : '' }}"
+                                    data-key="t-service-type">
+                                    Service Types
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

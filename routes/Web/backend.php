@@ -5,7 +5,9 @@ use App\Http\Controllers\Web\Backend\AuthPageImageController;
 use App\Http\Controllers\Web\Backend\BeautyExpertController;
 use App\Http\Controllers\Web\Backend\BeforePaymentController;
 use App\Http\Controllers\Web\Backend\ClientController;
+use App\Http\Controllers\Web\Backend\CMS\JoinUsController;
 use App\Http\Controllers\Web\Backend\CMS\QuestionnairesController;
+use App\Http\Controllers\Web\Backend\CMS\ServiceTypeController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
@@ -115,6 +117,19 @@ Route::prefix('cms')->name('cms.')->group(function () {
         Route::put('/update/{id}', 'update')->name('update');
         Route::get('/status/{id}', 'status')->name('status');
         Route::delete('/destroy/{id}', 'destroy')->name('destroy');
+    });
+
+    //! Route for Join Us Page
+    Route::controller(JoinUsController::class)->prefix('join-us')->name('join-us.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::patch('/', 'update')->name('update');
+    });
+
+    //! Route for Service Type Page
+    Route::controller(ServiceTypeController::class)->prefix('service-type')->name('service-type.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/{id}', 'destroy')->name('destroy');
     });
 });
 

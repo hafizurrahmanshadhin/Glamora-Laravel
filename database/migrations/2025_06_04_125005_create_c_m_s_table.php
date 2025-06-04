@@ -14,13 +14,10 @@ return new class extends Migration {
 
             $table->enum('section', ['questionnaires', 'join_us', 'user-type-container'])->nullable(false)->index();
             $table->string('title')->nullable();
-            $table->text('content')->nullable();
+            $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->json('items')->nullable();
 
-            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

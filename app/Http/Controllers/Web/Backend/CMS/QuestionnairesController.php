@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Web\Backend\CMS;
 
-use App\Models\CMS;
 use App\Helpers\Helper;
-use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Models\CMS;
+use App\Models\RegisterQuestionSurvey;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\DataTables;
 
 class QuestionnairesController extends Controller {
     public function index(Request $request) {
         if ($request->ajax()) {
-            $data = CMS::where('section', 'questionnaires')->latest()->get();
+            $data = RegisterQuestionSurvey::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('description', function ($data) {
@@ -55,34 +57,105 @@ class QuestionnairesController extends Controller {
 
     public function updateQuestionnaires(Request $request) {
         $validator = Validator::make($request->all(), [
-            'title'   => 'required|string',
-            'content' => 'required|string',
+            'title'       => 'required|string',
+            'description' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $questionnaires          = CMS::firstOrNew(['section' => 'questionnaires']);
-        $questionnaires->title   = $request->input('title');
-        $questionnaires->content = $request->input('content');
-        $questionnaires->section = 'questionnaires';
+        $questionnaires              = CMS::firstOrNew(['section' => 'questionnaires']);
+        $questionnaires->title       = $request->input('title');
+        $questionnaires->description = $request->input('description');
+        $questionnaires->section     = 'questionnaires';
         $questionnaires->save();
 
         return redirect()->route('cms.questionnaires.index')->with('t-success', 'Questionnaires updated successfully.');
     }
 
-    // public function store(Request $request) {
-    //     $validator = Validator::make($request->all(), [
+    public function show(int $id) {
+        try {
+            $data = RegisterQuestionSurvey::findOrFail($id);
+            return Helper::jsonResponse(true, 'Data fetched successfully', 200, $data);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 
-    //         ]);
+    public function store(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'description' => 'required|string',
+            ]);
 
-    //         if ($validator->fails()) {
-    //             return Helper::jsonResponse(false, 'Validation errors', 422, null, $validator->errors());
-    //         }
+            if ($validator->fails()) {
+                return Helper::jsonResponse(false, 'Validation errors', 422, null, $validator->errors());
+            }
 
-    //         $data =
+            $questionnaires = RegisterQuestionSurvey::create($request->only('description'));
 
-    //         return Helper::jsonResponse(true, 'Created Successfully.', 201, $data);
-    // }
+            return Helper::jsonResponse(true, 'Questionnaires created successfully.', 201, $questionnaires);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'Error creating questionnaires: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function update(Request $request, int $id) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'description' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return Helper::jsonResponse(false, 'Validation errors', 422, null, $validator->errors());
+            }
+
+            $questionnaires = RegisterQuestionSurvey::findOrFail($id);
+            $questionnaires->update($request->only('description'));
+
+            return Helper::jsonResponse(true, 'Questionnaires updated successfully.', 200, $questionnaires);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'Error updating questionnaires: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function status(int $id) {
+        try {
+            $questionnaires = RegisterQuestionSurvey::findOrFail($id);
+
+            if ($questionnaires->status === 'active') {
+                $questionnaires->status = 'inactive';
+                $questionnaires->save();
+
+                return Helper::jsonResponse(false, 'Unpublished Successfully.', 200, $questionnaires);
+            } else {
+                $questionnaires->status = 'active';
+                $questionnaires->save();
+
+                return Helper::jsonResponse(true, 'Published Successfully.', 200, $questionnaires);
+            }
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function destroy(int $id) {
+        try {
+            $questionnaires = RegisterQuestionSurvey::findOrFail($id);
+
+            // Delete the record
+            $questionnaires->delete();
+
+            return Helper::jsonResponse(true, 'Deleted successfully.', 200, $questionnaires);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred while deleting.', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 }
