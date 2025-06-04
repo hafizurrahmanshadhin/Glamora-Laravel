@@ -29,7 +29,7 @@
         }
 
         .user-title {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFCED5 0%, #FFF8F9 100%);
             color: white;
             padding: 20px;
             border-radius: 12px 12px 0 0;
@@ -233,7 +233,7 @@
 
         /* Send button */
         .send-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, ##FFCED5 0%, #FFF8F9 100%);
             border: none;
             border-radius: 50%;
             width: 40px;
