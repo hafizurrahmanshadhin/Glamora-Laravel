@@ -215,6 +215,14 @@
                                     Auth Page
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('cms.questionnaires.index') }}"
+                                    class="nav-link {{ request()->routeIs('cms.questionnaires.index') ? 'active' : '' }}"
+                                    data-key="t-questionnaires">
+                                    Questionnaires
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

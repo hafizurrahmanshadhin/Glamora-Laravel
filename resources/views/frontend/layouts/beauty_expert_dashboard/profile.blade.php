@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/jquery.fancybox.css') }}" />
 @endpush
 
 @section('content')
@@ -129,7 +130,8 @@
                         <h3>Gallery of Previous Work</h3>
                         <div class="gallery-grid">
                             @foreach ($user->userGalleries as $gallery)
-                                <a href="#" class="gallery-item" data-gallery-id="{{ $gallery->id }}">
+                                <a href="{{ asset($gallery->image) }}" data-fancybox="gallery" data-caption="Gallery Image"
+                                    class="gallery-item" data-gallery-id="{{ $gallery->id }}">
                                     <div class="gallery-item-img-area" style="position: relative;">
                                         <img src="{{ asset($gallery->image) }}" alt="Gallery Image">
                                         @if ($gallery->status === 'inactive')
@@ -461,6 +463,15 @@
                 .catch(function(error) {
                     console.error(error);
                 });
+        });
+    </script>
+
+    <script src="{{ asset('frontend/custom-downloaded-cdn/jquery.fancybox.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('[data-fancybox="gallery"]').fancybox({
+                loop: true
+            });
         });
     </script>
 @endpush

@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/helper.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/tarek.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/categories.css') }}" />
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css" /> --}}
+    <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/jquery.fancybox.css') }}" />
 @endpush
 
 @section('content')
@@ -115,7 +117,8 @@
                         <h3>Gallery of Previous Work</h3>
                         <div class="gallery-grid">
                             @foreach ($user->userGalleries->where('status', 'active') as $gallery)
-                                <a href="#" class="gallery-item">
+                                <a href="{{ asset($gallery->image) }}" data-fancybox="gallery" data-caption="Gallery Image"
+                                    class="gallery-item">
                                     <div class="gallery-item-img-area">
                                         <img src="{{ asset($gallery->image) }}" alt="Gallery Image">
                                     </div>
@@ -245,6 +248,16 @@
                         }
                     });
                 @endif
+            });
+        });
+    </script>
+
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.js"></script> --}}
+    <script src="{{ asset('frontend/custom-downloaded-cdn/jquery.fancybox.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('[data-fancybox="gallery"]').fancybox({
+                loop: true
             });
         });
     </script>

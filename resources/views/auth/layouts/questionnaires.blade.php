@@ -4,8 +4,6 @@
 
 @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/owl.carousel.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/owl.theme.default.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins/magnific-popup.min.css') }}" />
 @endpush
 
 @section('content')
@@ -17,7 +15,7 @@
                 </div>
                 <div class="sign-in-up-form-area">
                     <div class="form-header-para">
-                        <h2>Answer a few quick questions to start building your profile and enjoy your first year free!</h2>
+                        <h2>Answer a few quick questions to start building your profile and get started</h2>
                     </div>
                     <div class="question-list-wrapper">
                         <p class="question-item">
@@ -87,7 +85,3 @@
         </section>
     </section>
 @endsection
-
-@push('scripts')
-    <script src="{{ asset('frontend/js/owl.carousel.min.js') }}"></script>
-@endpush

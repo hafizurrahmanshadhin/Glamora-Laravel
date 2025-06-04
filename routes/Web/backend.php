@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\Backend\AuthPageImageController;
 use App\Http\Controllers\Web\Backend\BeautyExpertController;
 use App\Http\Controllers\Web\Backend\BeforePaymentController;
 use App\Http\Controllers\Web\Backend\ClientController;
+use App\Http\Controllers\Web\Backend\CMS\QuestionnairesController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
@@ -90,17 +91,31 @@ Route::controller(NewsletterSubscriptionController::class)->group(function () {
     Route::delete('/newsletter-subscription/destroy/{id}', 'destroy')->name('newsletter-subscription.destroy');
 });
 
-//! Route for CMS Home Page Image
-Route::controller(HomePageImageController::class)->prefix('cms')->group(function () {
-    Route::get('/home-page', 'index')->name('cms.home-page.index');
-    Route::post('/home-page/store', 'store')->name('cms.home-page.store');
-    Route::delete('/home-page/{id}', 'destroy')->name('cms.home-page.destroy');
-});
+//! Route for CMS Pages
+Route::prefix('cms')->name('cms.')->group(function () {
+    //! Route for Home Page Image
+    Route::controller(HomePageImageController::class)->group(function () {
+        Route::get('/home-page', 'index')->name('home-page.index');
+        Route::post('/home-page/store', 'store')->name('home-page.store');
+        Route::delete('/home-page/{id}', 'destroy')->name('home-page.destroy');
+    });
 
-//! Route for CMS Auth Page Image
-Route::controller(AuthPageImageController::class)->prefix('cms')->group(function () {
-    Route::get('/auth-page', 'index')->name('cms.auth-page.index');
-    Route::post('/auth-page/store', 'store')->name('cms.auth-page.store');
+    //! Route for Auth Page Image
+    Route::controller(AuthPageImageController::class)->group(function () {
+        Route::get('/auth-page', 'index')->name('auth-page.index');
+        Route::post('/auth-page/store', 'store')->name('auth-page.store');
+    });
+
+    //! Route for questionnaires Page
+    Route::controller(QuestionnairesController::class)->prefix('questionnaires')->name('questionnaires.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::patch('/', 'updateQuestionnaires')->name('update.questionnaires');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/show/{id}', 'show')->name('show');
+        Route::put('/update/{id}', 'update')->name('update');
+        Route::get('/status/{id}', 'status')->name('status');
+        Route::delete('/destroy/{id}', 'destroy')->name('destroy');
+    });
 });
 
 //! Booking Cancellation Routes
