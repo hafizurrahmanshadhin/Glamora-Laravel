@@ -51,7 +51,7 @@
 
                                     <div class="col-md-12">
                                         <label for="description" class="form-label">Description:</label>
-                                        <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                                        <textarea class="form-control @error('description') is-invalid @enderror" id="main_description" name="description"
                                             placeholder="Enter any detailed information here...">{{ old('description', $questionnaires->description ?? '') }}</textarea>
                                         @error('description')
                                             <span class="text-danger">{{ $message }}</span>

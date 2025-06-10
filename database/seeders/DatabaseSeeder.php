@@ -8,6 +8,7 @@ use Database\Seeders\BookingCancellationBeforeAppointmentSeeder;
 use Database\Seeders\BookingSeeder;
 use Database\Seeders\BusinessInformationSeeder;
 use Database\Seeders\CMSImageSeeder;
+use Database\Seeders\CMSSeeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\DynamicPageSeeder;
@@ -17,6 +18,7 @@ use Database\Seeders\NewsletterSubscriptionSeeder;
 use Database\Seeders\NotificationsSeeder;
 use Database\Seeders\OrderSeeder;
 use Database\Seeders\PaymentSeeder;
+use Database\Seeders\RegisterQuestionSurveySeeder;
 use Database\Seeders\ReportSeeder;
 use Database\Seeders\ReviewSeeder;
 use Database\Seeders\ServiceSeeder;
@@ -57,6 +59,8 @@ class DatabaseSeeder extends Seeder {
             BookingCancellationAfterAppointmentSeeder::class,
             AdminCommentSeeder::class,
             MessageSeeder::class,
+            CMSSeeder::class,
+            RegisterQuestionSurveySeeder::class,
         ]);
     }
 }

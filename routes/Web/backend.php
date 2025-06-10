@@ -128,8 +128,10 @@ Route::prefix('cms')->name('cms.')->group(function () {
     //! Route for Service Type Page
     Route::controller(ServiceTypeController::class)->prefix('service-type')->name('service-type.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::patch('/', 'update')->name('update');
-        Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::get('/show/{id}', 'show')->name('show');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::patch('/update/{id}', 'update')->name('update');
+        Route::get('/status/{id}', 'status')->name('status');
     });
 });
 

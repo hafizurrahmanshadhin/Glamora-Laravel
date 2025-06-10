@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'Edit Service Type')
+@section('title', 'Edit Service Types')
 
 @push('styles')
     <style>
@@ -13,7 +13,7 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- Page breadcrumb --}}
+            {{-- Start page title --}}
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -22,91 +22,66 @@
                                 <li class="breadcrumb-item">
                                     <a href="{{ route('cms.service-type.index') }}">CMS</a>
                                 </li>
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('cms.service-type.index') }}">Service Types</a>
-                                </li>
-                                <li class="breadcrumb-item active">Edit</li>
+                                <li class="breadcrumb-item active">Service Types</li>
+                                <li class="breadcrumb-item">Edit</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
+            {{-- End page title --}}
 
-            {{-- Success/Error Messages --}}
-            @if (session('t-success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Success!</strong> {{ session('t-success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-            @if (session('t-error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error!</strong> {{ session('t-error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            {{-- Edit form --}}
             <div class="row">
-                <div class="col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-edit me-1"></i>
-                                Edit Service Type
-                            </h5>
-                        </div>
+                <div class="col-lg-12">
+                    <div class="card">
                         <div class="card-body">
-                            <form method="POST" action="{{ route('cms.service-type.update', $serviceType->id) }}"
+                            <form action="{{ route('cms.service-type.update', ['id' => $data->id]) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PATCH')
                                 <div class="row gy-4">
-                                    <div class="col-md-6">
-                                        <label for="title" class="form-label">Title:</label>
-                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                            name="title" id="title" placeholder="Enter Title"
-                                            value="{{ old('title', $serviceType->title ?? '') }}" required>
-                                        @error('title')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                    <div class="col-md-12">
+                                        <div>
+                                            <label for="title" class="form-label">Title:</label>
+                                            <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                                id="title" name="title" value="{{ old('title', $data->title) }}"
+                                                placeholder="Please Enter Title">
+                                            @error('title')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                     </div>
+
                                     <div class="col-md-6">
-                                        <label for="description" class="form-label">Description:</label>
-                                        <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description"
-                                            placeholder="About Service Type..." required>{{ old('description', $serviceType->description ?? '') }}</textarea>
-                                        @error('description')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                        <div>
+                                            <label for="description" class="form-label">Description:</label>
+                                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                                                placeholder="Type here...">{{ old('description', $data->description) }}</textarea>
+                                            @error('description')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                     </div>
+
                                     <div class="col-md-6">
-                                        <label for="image" class="form-label">Image (optional):</label>
-                                        <input type="hidden" name="remove_image" value="0">
-                                        <input class="form-control dropify @error('image') is-invalid @enderror"
-                                            type="file" name="image" id="image"
-                                            data-default-file="@if ($serviceType->image) {{ asset($serviceType->image) }} @endif">
+                                        <label for="image" class="form-label">Image:</label>
+                                        <input type="file"
+                                            class="form-control dropify @error('image') is-invalid @enderror" id="image"
+                                            name="image"
+                                            data-default-file="{{ $data->image ? asset($data->image) : '' }}">
                                         @error('image')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
-                                        <small class="text-muted">
-                                            If you want to remove the existing image, click the “remove” button on the
-                                            preview.
-                                        </small>
                                     </div>
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary mt-2">
-                                            <i class="fas fa-save me-1"></i>
-                                            Update Service Type
-                                        </button>
-                                        <a href="{{ route('cms.service-type.index') }}" class="btn btn-secondary mt-2">
-                                            <i class="fas fa-arrow-left me-1"></i>
-                                            Back to List
-                                        </a>
+
+                                    <div class="mt-3">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                        <a href="{{ route('cms.service-type.index') }}" class="btn btn-danger">Cancel</a>
                                     </div>
                                 </div>
                             </form>
                         </div>
-                    </div> {{-- end card --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,14 +95,5 @@
             .catch(error => {
                 console.error(error);
             });
-
-        $(document).ready(function() {
-            $('.dropify').dropify();
-
-            // If user clicks remove on dropify, set remove_image=1
-            $('#image').on('dropify.afterClear', function() {
-                $('input[name="remove_image"]').val('1');
-            });
-        });
     </script>
 @endpush

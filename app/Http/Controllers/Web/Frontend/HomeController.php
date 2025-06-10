@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\CMS;
 use App\Models\CMSImage;
 use App\Models\Review;
 use App\Models\Service;
@@ -60,6 +61,12 @@ class HomeController extends Controller {
                 ->where('status', 'active')
                 ->get();
 
+            // Fetch the "Join Us" section from the CMS
+            $joinUs = CMS::where('section', 'join_us')->first();
+
+            // Fetch service types for the user type container section
+            $serviceTypes = CMS::where('section', 'user-type-container')->where('status', 'active')->orderBy('id')->get();
+
             return view('frontend.layouts.home.index', compact(
                 'systemSetting',
                 'approvedServices',
@@ -68,7 +75,9 @@ class HomeController extends Controller {
                 'averageRating',
                 'totalReviews',
                 'topBeautyExperts',
-                'homeBanners'
+                'homeBanners',
+                'joinUs',
+                'serviceTypes'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [

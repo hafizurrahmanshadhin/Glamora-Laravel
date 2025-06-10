@@ -14,6 +14,7 @@ class CMS extends Model {
         'title',
         'description',
         'image',
+        'status',
     ];
 
     protected $hidden = [
@@ -27,6 +28,7 @@ class CMS extends Model {
         'title'       => 'string',
         'description' => 'string',
         'image'       => 'string',
+        'status'      => 'string',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
     ];
