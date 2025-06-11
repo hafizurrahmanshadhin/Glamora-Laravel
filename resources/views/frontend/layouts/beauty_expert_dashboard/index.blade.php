@@ -231,6 +231,18 @@
             border-radius: 50%;
         }
     </style>
+
+    <style>
+        .delete-range:hover {
+            background-color: #dc3545 !important;
+            color: white !important;
+            transform: scale(1.05);
+        }
+
+        .delete-range:active {
+            transform: scale(0.95);
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -279,13 +291,13 @@
                             @if (!empty($user->unavailable_ranges))
                                 @foreach ($user->unavailable_ranges as $index => $range)
                                     <div class="range-row" data-index="{{ $index }}" style="margin-top: 8px;">
-                                        <div class="row">
-                                            <div class="col-md-6">
+                                        <div class="row" style="align-items: center;">
+                                            <div class="col-md-5">
                                                 <h6>From</h6>
                                                 <div class="date-picker-container-from">
-                                                    <input class="range-from" placeholder="DD/MM/YY" readonly
+                                                    <input style="padding-right: 8px" class="range-from"
+                                                        placeholder="DD/MM/YY" readonly
                                                         value="{{ isset($range['from_date']) ? \Carbon\Carbon::createFromFormat('d/m/Y', $range['from_date'])->format('d/m/Y') : '' }}">
-
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
                                                         viewBox="0 0 19 20" fill="none">
                                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
@@ -293,18 +305,25 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-5">
                                                 <h6>To</h6>
                                                 <div class="date-picker-container-to">
-                                                    <input class="range-to" placeholder="DD/MM/YY" readonly
+                                                    <input style="padding-right: 8px" class="range-to"
+                                                        placeholder="DD/MM/YY" readonly
                                                         value="{{ isset($range['to_date']) ? \Carbon\Carbon::createFromFormat('d/m/Y', $range['to_date'])->format('d/m/Y') : '' }}">
-
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
                                                         viewBox="0 0 19 20" fill="none">
                                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
                                                             fill="#767676" />
                                                     </svg>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-2 d-flex align-items-end" style="margin-top: 23.5px">
+                                                <button type="button" class="delete-range"
+                                                    data-index="{{ $index }}" title="Delete this range"
+                                                    style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 50px; color: #dc3545; font-size: 18px; font-weight: bold; height: 28px; width: 28px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; hover:background-color: #dc3545; hover:color: white; padding: 0;">
+                                                    ×
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -316,7 +335,8 @@
                                         <div class="col-md-6">
                                             <h6>From</h6>
                                             <div class="date-picker-container-from">
-                                                <input class="range-from" placeholder="DD/MM/YY" readonly value="">
+                                                <input style="padding-right: 8px" class="range-from" placeholder="DD/MM/YY"
+                                                    readonly value="">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
                                                     viewBox="0 0 19 20" fill="none">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
@@ -327,7 +347,8 @@
                                         <div class="col-md-6">
                                             <h6>To</h6>
                                             <div class="date-picker-container-to">
-                                                <input class="range-to" placeholder="DD/MM/YY" readonly value="">
+                                                <input style="padding-right: 8px" class="range-to" placeholder="DD/MM/YY"
+                                                    readonly value="">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
                                                     viewBox="0 0 19 20" fill="none">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
@@ -638,8 +659,9 @@
             // Initialize pickers for any existing range row
             document.querySelectorAll(".range-row").forEach(row => initRangePickers(row));
 
-            // Use event delegation for the "Add Another" button
+            // Use event delegation for both "Add Another" and "Delete" buttons
             document.body.addEventListener("click", function(e) {
+                // Handle "Add Another" button
                 if (e.target && e.target.id === "add-unavailability-range") {
                     e.preventDefault();
                     e.stopPropagation();
@@ -648,17 +670,17 @@
                     const container = document.getElementById("unavailable-ranges");
                     const index = container.querySelectorAll(".range-row").length;
 
-                    // Create a new range row with blank inputs
+                    // Create a new range row with blank inputs and delete button
                     const newRow = document.createElement("div");
                     newRow.className = "range-row";
                     newRow.setAttribute("data-index", index);
                     newRow.style.marginTop = "8px";
                     newRow.innerHTML = `
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="row" style="align-items: center;">
+                            <div class="col-md-5">
                                 <h6>From</h6>
                                 <div class="date-picker-container-from">
-                                    <input class="range-from" placeholder="DD/MM/YY" readonly value="">
+                                    <input style="padding-right: 8px" class="range-from" placeholder="DD/MM/YY" readonly value="">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
                                         viewBox="0 0 19 20" fill="none">
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
@@ -666,23 +688,88 @@
                                     </svg>
                                 </div>
                             </div>
-
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <h6>To</h6>
                                 <div class="date-picker-container-to">
-                                    <input class="range-to" placeholder="DD/MM/YY" readonly value="">
+                                    <input style="padding-right: 8px" class="range-to" placeholder="DD/MM/YY" readonly value="">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
                                         viewBox="0 0 19 20" fill="none">
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
                                             fill="#767676" />
                                     </svg>
                                 </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end" style="margin-top: 23.5px">
+                                <button type="button" class="delete-range"
+                                    data-index="{{ $index ?? '' }}" title="Delete this range"
+                                    style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 50px; color: #dc3545; font-size: 18px; font-weight: bold; height: 28px; width: 28px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; hover:background-color: #dc3545; hover:color: white; padding: 0;">
+                                    ×
+                                </button>
                             </div>
                         </div>
                     `;
                     container.appendChild(newRow);
                     // Initialize flatpickr for our new inputs
                     initRangePickers(newRow);
+                }
+
+                // Handle delete button clicks
+                if (e.target && e.target.classList.contains("delete-range")) {
+                    e.preventDefault();
+
+                    const rangeRow = e.target.closest(".range-row");
+                    const container = document.getElementById("unavailable-ranges");
+                    const allRanges = container.querySelectorAll(".range-row");
+
+                    // If this is the only range and it has no values, don't delete
+                    if (allRanges.length === 1) {
+                        const fromInput = rangeRow.querySelector(".range-from");
+                        const toInput = rangeRow.querySelector(".range-to");
+                        if (!fromInput.value && !toInput.value) {
+                            toastr.warning("Cannot delete the last empty range.");
+                            return;
+                        }
+                    }
+
+                    // Remove the range directly without confirmation
+                    rangeRow.remove();
+
+                    // If no ranges left, add one empty range
+                    if (container.querySelectorAll(".range-row").length === 0) {
+                        const emptyRow = document.createElement("div");
+                        emptyRow.className = "range-row";
+                        emptyRow.setAttribute("data-index", 0);
+                        emptyRow.innerHTML = `
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>From</h6>
+                                    <div class="date-picker-container-from">
+                                        <input class="range-from" placeholder="DD/MM/YY" readonly value="">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
+                                            viewBox="0 0 19 20" fill="none">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
+                                                fill="#767676" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>To</h6>
+                                    <div class="date-picker-container-to">
+                                        <input class="range-to" placeholder="DD/MM/YY" readonly value="">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
+                                            viewBox="0 0 19 20" fill="none">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
+                                                fill="#767676" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(emptyRow);
+                        initRangePickers(emptyRow);
+                    }
+
+                    toastr.success("Date range deleted locally. Click 'Save' to update.");
                 }
             });
 

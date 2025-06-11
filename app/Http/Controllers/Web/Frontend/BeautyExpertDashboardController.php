@@ -149,6 +149,47 @@ class BeautyExpertDashboardController extends Controller {
     }
 
     /**
+     * Delete a specific unavailable range by index.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteUnavailableRange(Request $request): JsonResponse {
+        try {
+            $user          = Auth::user();
+            $indexToDelete = $request->input('index');
+
+            if (!is_numeric($indexToDelete) || empty($user->unavailable_ranges)) {
+                return response()->json(['status' => 'error', 'message' => 'Invalid range index'], 400);
+            }
+
+            $ranges = $user->unavailable_ranges;
+
+            // Check if index exists
+            if (!isset($ranges[$indexToDelete])) {
+                return response()->json(['status' => 'error', 'message' => 'Range not found'], 404);
+            }
+
+            // Remove the range at the specified index
+            unset($ranges[$indexToDelete]);
+
+            // Reindex the array to maintain proper indexing
+            $ranges = array_values($ranges);
+
+            // Update user
+            $user->unavailable_ranges = empty($ranges) ? null : $ranges;
+            $user->save();
+
+            return response()->json(['status' => 'success', 'message' => 'Range deleted successfully']);
+
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
      * Store the weekend data for the beauty expert.
      *
      * @param Request $request
