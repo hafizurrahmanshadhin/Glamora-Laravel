@@ -132,9 +132,10 @@
         .unavailable-container {
             display: none;
             margin-top: 16px;
-            grid-template-columns: repeat(2, 1fr);
+            /* grid-template-columns: repeat(2, 1fr); */
             gap: 16px;
-            align-items: end;
+            /* align-items: end; */
+            flex-direction: column;
         }
 
         .unavailable-container h6 {
@@ -272,30 +273,78 @@
                     @php
                         $hasWindow = !is_null($user->unavailable_from) && !is_null($user->unavailable_to);
                     @endphp
-                    <div class="unavailable-container" style="{{ $hasWindow ? 'display: grid;' : 'display: none;' }}">
-                        <div>
-                            <h6>From</h6>
-                            <div class="date-picker-container-from">
-                                <input id="date-input-from" placeholder="DD/MM/YY" readonly
-                                    value="{{ $user->unavailable_from ? \Carbon\Carbon::parse($user->unavailable_from)->format('d/m/Y') : '' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20"
-                                    fill="none">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…" fill="#767676" />
-                                </svg>
-                            </div>
+                    <div class="unavailable-container"
+                        style="{{ $availability === 'unavailable' ? 'display: flex;' : 'display: none;' }}">
+                        <div id="unavailable-ranges">
+                            @if (!empty($user->unavailable_ranges))
+                                @foreach ($user->unavailable_ranges as $index => $range)
+                                    <div class="range-row" data-index="{{ $index }}" style="margin-top: 8px;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>From</h6>
+                                                <div class="date-picker-container-from">
+                                                    <input class="range-from" placeholder="DD/MM/YY" readonly
+                                                        value="{{ isset($range['from_date']) ? \Carbon\Carbon::createFromFormat('d/m/Y', $range['from_date'])->format('d/m/Y') : '' }}">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
+                                                        viewBox="0 0 19 20" fill="none">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
+                                                            fill="#767676" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>To</h6>
+                                                <div class="date-picker-container-to">
+                                                    <input class="range-to" placeholder="DD/MM/YY" readonly
+                                                        value="{{ isset($range['to_date']) ? \Carbon\Carbon::createFromFormat('d/m/Y', $range['to_date'])->format('d/m/Y') : '' }}">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
+                                                        viewBox="0 0 19 20" fill="none">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
+                                                            fill="#767676" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                {{-- Fallback: show a single blank range --}}
+                                <div class="range-row" data-index="0">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>From</h6>
+                                            <div class="date-picker-container-from">
+                                                <input class="range-from" placeholder="DD/MM/YY" readonly value="">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
+                                                    viewBox="0 0 19 20" fill="none">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
+                                                        fill="#767676" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>To</h6>
+                                            <div class="date-picker-container-to">
+                                                <input class="range-to" placeholder="DD/MM/YY" readonly value="">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
+                                                    viewBox="0 0 19 20" fill="none">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
+                                                        fill="#767676" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-                        <div>
-                            <h6>To</h6>
-                            <div class="date-picker-container-to">
-                                <input id="date-input-to" placeholder="DD/MM/YY" readonly
-                                    value="{{ $user->unavailable_to ? \Carbon\Carbon::parse($user->unavailable_to)->format('d/m/Y') : '' }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20"
-                                    fill="none">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…" fill="#767676" />
-                                </svg>
-                            </div>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 8px; margin-top: 8px;">
+                            <button type="button" class="common-btn" style="grid-column: span 2 / span 2;"
+                                id="add-unavailability-range">Add Another</button>
+                            <button id="save-unavailability" class="common-btn">Save</button>
                         </div>
-                        <button id="save-unavailability" class="common-btn">Save</button>
                     </div>
                 </div>
 
@@ -476,14 +525,21 @@
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Prevent multiple initialization
+            if (window.availabilityInitialized) {
+                return;
+            }
+            window.availabilityInitialized = true;
+
             // Global array for unchecked days of week (0=SUN,1=MON,...6=SAT)
             window.unselectedDaysOfWeek = window.unselectedDaysOfWeek || [];
 
-            // Convert PHP arrays to JS arrays
             const highlightDates = @json($highlightDates);
+            // "disableDates" is an array of { from: "YYYY-MM-DD", to: "YYYY-MM-DD" }
+            // representing current disabled ranges
             let disableDates = @json($unavailableRanges);
 
-            // Make the calendar globally accessible
+            // Initialize the embedded calendar
             window.calendar = flatpickr("#calendar", {
                 inline: true,
                 defaultDate: "today",
@@ -504,39 +560,25 @@
                 },
             });
 
-            // Retrieve any stored success message for cancellations
+            // Coloring previous cancellation messages (not related to the range logic)
             const storedMessage = localStorage.getItem('cancellationMessage');
             if (storedMessage) {
                 toastr.success(storedMessage);
                 localStorage.removeItem('cancellationMessage');
             }
 
+            // Main availability toggle
             const checkbox = document.getElementById("flexSwitchCheckChecked");
             const statusText = document.querySelector(".availability-status");
             const point = document.querySelector(".point");
             const unavailableContainer = document.querySelector(".unavailable-container");
-            const saveBtn = document.getElementById("save-unavailability");
-            const fromInput = document.getElementById("date-input-from");
-            const toInput = document.getElementById("date-input-to");
 
-            // Flatpickr for the "From" and "To" date inputs
-            flatpickr(fromInput, {
-                dateFormat: "d/m/Y",
-                minDate: "today",
-                defaultDate: fromInput.value || null
-            });
-            flatpickr(toInput, {
-                dateFormat: "d/m/Y",
-                minDate: "today",
-                defaultDate: toInput.value || null
-            });
-
-            // Toggle UI to "Available" mode
             function showAvailable() {
                 statusText.textContent = "Available";
                 point.classList.add("available");
                 unavailableContainer.style.display = "none";
-                fromInput.value = toInput.value = "";
+                // Clear out local input fields
+                document.querySelectorAll(".range-from, .range-to").forEach(el => el.value = "");
 
                 axios.post("{{ route('toggle-availability') }}", {
                         status: "available"
@@ -552,41 +594,134 @@
                     });
             }
 
-            // Toggle UI to "Unavailable" mode
             function showUnavailable() {
                 statusText.textContent = "Unavailable";
                 point.classList.remove("available");
                 unavailableContainer.style.display = "grid";
             }
 
-            // Listen for changes on the main Availability checkbox
             checkbox.onchange = function() {
                 this.checked ? showAvailable() : showUnavailable();
             };
 
-            // Helper to parse dd/mm/yyyy => yyyy-mm-dd
+            // Convert dd/mm/yyyy => yyyy-mm-dd
             function convertToYYYYMMDD(dateStr) {
                 const [day, month, year] = dateStr.split("/");
                 return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
             }
 
-            // Handle saving unavailability range
-            saveBtn.onclick = function() {
-                if (!fromInput.value || !toInput.value) {
-                    return toastr.error("Please select both From and To dates.");
+            // Setup flatpickr on new range inputs
+            function initRangePickers(rangeRow) {
+                const fromInput = rangeRow.querySelector(".range-from");
+                const toInput = rangeRow.querySelector(".range-to");
+
+                // Destroy existing flatpickr instances if they exist
+                if (fromInput._flatpickr) {
+                    fromInput._flatpickr.destroy();
                 }
+                if (toInput._flatpickr) {
+                    toInput._flatpickr.destroy();
+                }
+
+                flatpickr(fromInput, {
+                    dateFormat: "d/m/Y",
+                    minDate: "today",
+                    defaultDate: fromInput.value || null
+                });
+                flatpickr(toInput, {
+                    dateFormat: "d/m/Y",
+                    minDate: "today",
+                    defaultDate: toInput.value || null
+                });
+            }
+
+            // Initialize pickers for any existing range row
+            document.querySelectorAll(".range-row").forEach(row => initRangePickers(row));
+
+            // Use event delegation for the "Add Another" button
+            document.body.addEventListener("click", function(e) {
+                if (e.target && e.target.id === "add-unavailability-range") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+
+                    const container = document.getElementById("unavailable-ranges");
+                    const index = container.querySelectorAll(".range-row").length;
+
+                    // Create a new range row with blank inputs
+                    const newRow = document.createElement("div");
+                    newRow.className = "range-row";
+                    newRow.setAttribute("data-index", index);
+                    newRow.style.marginTop = "8px";
+                    newRow.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>From</h6>
+                                <div class="date-picker-container-from">
+                                    <input class="range-from" placeholder="DD/MM/YY" readonly value="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
+                                        viewBox="0 0 19 20" fill="none">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
+                                            fill="#767676" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6>To</h6>
+                                <div class="date-picker-container-to">
+                                    <input class="range-to" placeholder="DD/MM/YY" readonly value="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
+                                        viewBox="0 0 19 20" fill="none">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
+                                            fill="#767676" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(newRow);
+                    // Initialize flatpickr for our new inputs
+                    initRangePickers(newRow);
+                }
+            });
+
+            // Handle saving multiple ranges
+            const saveBtn = document.getElementById("save-unavailability");
+            saveBtn.onclick = function() {
+                // Gather all from/to pairs
+                const rows = document.querySelectorAll(".range-row");
+                const rangesToSend = [];
+                for (let row of rows) {
+                    const fromVal = row.querySelector(".range-from").value.trim();
+                    const toVal = row.querySelector(".range-to").value.trim();
+                    if (fromVal && toVal) {
+                        rangesToSend.push({
+                            from_date: fromVal,
+                            to_date: toVal
+                        });
+                    }
+                }
+                if (!rangesToSend.length) {
+                    return toastr.error("Please set at least one 'From' and 'To' dates.");
+                }
+
+                // Post all ranges to the server
                 axios.post("{{ route('toggle-availability') }}", {
                         status: "unavailable",
-                        from_date: fromInput.value,
-                        to_date: toInput.value
+                        ranges: rangesToSend
                     })
                     .then(r => {
                         if (r.data.status === "success") {
-                            toastr.success("Unavailability dates saved");
-                            disableDates = [{
-                                from: convertToYYYYMMDD(fromInput.value),
-                                to: convertToYYYYMMDD(toInput.value)
-                            }];
+                            toastr.success("All unavailability ranges saved");
+                            // Update local disableDates to reflect all new ranges
+                            disableDates = [];
+                            for (const rng of rangesToSend) {
+                                disableDates.push({
+                                    from: convertToYYYYMMDD(rng.from_date),
+                                    to: convertToYYYYMMDD(rng.to_date)
+                                });
+                            }
                             window.calendar.set("disable", disableDates);
                             window.calendar.redraw();
                         } else {
@@ -598,7 +733,7 @@
                     });
             };
 
-            // If user is already "unavailable," reflect that in the UI
+            // If the user is already "unavailable," show the container
             @if ($availability === 'unavailable')
                 showUnavailable();
             @endif

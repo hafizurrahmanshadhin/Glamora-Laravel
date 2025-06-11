@@ -53,6 +53,7 @@ class User extends Authenticatable implements JWTSubject {
             'status'                   => 'string',
             'banned_until'             => 'datetime',
             'availability'             => 'string',
+            'unavailable_ranges'       => 'array',
             'weekend_data'             => 'array',
             'created_at'               => 'datetime',
             'updated_at'               => 'datetime',
