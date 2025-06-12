@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,7 @@
             height: 500px;
             border-radius: 10px;
         }
+
         .locate-btn {
             background: white;
             padding: 8px;
@@ -21,14 +22,17 @@
             font-size: 14px;
             text-align: center;
         }
+
         .locate-btn:hover {
             background: lightgray;
         }
+
         .map-controls {
             margin: 10px 0;
         }
     </style>
 </head>
+
 <body>
 
     <h2>Location Selector</h2>
@@ -49,7 +53,7 @@
         let currentMarker;
         const defaultLat = 34.0522;  // Default to Los Angeles
         const defaultLng = -118.2437;
-        
+
         const map = L.map('map', {
             center: [defaultLat, defaultLng],
             zoom: 13,
@@ -131,4 +135,5 @@
     </script>
 
 </body>
+
 </html>
