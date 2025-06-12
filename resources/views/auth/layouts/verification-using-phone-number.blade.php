@@ -3,16 +3,6 @@
 @section('title', 'Phone Number Verification')
 
 @section('content')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <section class="sign-in-up-common-section">
         <div class="container">
             <div class="sign-in-up-content-wrapper">

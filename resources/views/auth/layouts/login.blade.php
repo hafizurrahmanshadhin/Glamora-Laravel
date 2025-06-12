@@ -42,9 +42,7 @@
 
                         <button type="submit">Sign In</button>
                         <p class="tm-create-btn-link">Forgot Password?
-                            <a href="{{ route('password.request') }}">
-                                Click Here
-                            </a>
+                            <a href="{{ route('password.request') }}">Click Here</a>
                         </p>
 
                         <p class="tm-create-btn-link">Verify account?

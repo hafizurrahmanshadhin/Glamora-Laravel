@@ -54,29 +54,58 @@ class PhoneNumberVerificationController extends Controller {
 
         $phoneNumber = $request->input('phone_number');
 
+        // Ensure phone number is in international format
+        if (!str_starts_with($phoneNumber, '+')) {
+            // For Bangladesh numbers, add +880 prefix if not present
+            if (preg_match('/^01[3-9]\d{8}$/', $phoneNumber)) {
+                $phoneNumber = '+880' . substr($phoneNumber, 1);
+            } else {
+                return redirect()->back()
+                    ->withErrors(['phone_number' => 'Please enter a valid phone number with country code.']);
+            }
+        }
+
         // Generate a 4-digit OTP (with leading zeros if needed)
         $otp = sprintf("%04d", rand(0, 9999));
 
         // Send the OTP via SMS using Twilio
-        $sid   = env('TWILIO_SID');
-        $token = env('TWILIO_AUTH_TOKEN');
-        $from  = env('TWILIO_PHONE_NUMBER');
+        $sid   = config('services.twilio.sid');
+        $token = config('services.twilio.token');
+        $from  = config('services.twilio.from');
 
         if (!$sid || !$token || !$from) {
+            Log::error('Twilio configuration missing', [
+                'sid_present'   => !empty($sid),
+                'token_present' => !empty($token),
+                'from_present'  => !empty($from),
+            ]);
             return redirect()->back()
                 ->withErrors(['phone_number' => 'SMS service is not properly configured.']);
         }
 
         try {
             $client = new Client($sid, $token);
-            $client->messages->create($phoneNumber, [
+
+            Log::info('Attempting to send SMS', [
+                'to'   => $phoneNumber,
+                'from' => $from,
+                'sid'  => $sid,
+            ]);
+
+            $message = $client->messages->create($phoneNumber, [
                 'body' => "Your OTP is: $otp",
                 'from' => $from,
             ]);
+
+            Log::info('SMS sent successfully', ['message_sid' => $message->sid]);
+
         } catch (Exception $e) {
-            Log::error("Twilio error: " . $e->getMessage());
+            Log::error("Twilio error: " . $e->getMessage(), [
+                'phone_number' => $phoneNumber,
+                'error_code'   => $e->getCode(),
+            ]);
             return redirect()->back()
-                ->withErrors(['phone_number' => 'Failed to send SMS: ' . $e->getMessage()]);
+                ->withErrors(['phone_number' => 'Failed to send SMS. Please check your phone number and try again.']);
         }
 
         // Save or update the OTP record in the password_resets table
@@ -86,7 +115,6 @@ class PhoneNumberVerificationController extends Controller {
         );
 
         // Redirect the user to the OTP verification page.
-        // Store the phone number in the session so the OTP page can use it (and hide it from the user).
         return redirect()->route('phone-otp-verification')
             ->with('t-success', 'OTP sent to your phone.')
             ->with('phone_number', $phoneNumber);

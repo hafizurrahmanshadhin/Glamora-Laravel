@@ -26,21 +26,19 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-    Route::controller(PhoneNumberVerificationController::class)
-        ->group(function () {
-            Route::get('phone-number-verification', 'index')->name('phone-number-verification');
-            Route::post('send-sms-otp', 'sendOtpToPhone')->name('send-sms-otp');
-            Route::get('phone-otp-verification', 'otpVerificationView')->name('phone-otp-verification');
-            Route::post('verify-sms-otp', 'verifyOtpForPhone')->name('verify-sms-otp');
-        });
+    Route::controller(PhoneNumberVerificationController::class)->group(function () {
+        Route::get('phone-number-verification', 'index')->name('phone-number-verification');
+        Route::post('send-sms-otp', 'sendOtpToPhone')->name('send-sms-otp');
+        Route::get('phone-otp-verification', 'otpVerificationView')->name('phone-otp-verification');
+        Route::post('verify-sms-otp', 'verifyOtpForPhone')->name('verify-sms-otp');
+    });
 
-    Route::controller(EmailVerificationController::class)
-        ->group(function () {
-            Route::get('/email-verification', 'index')->name('email-verification');
-            Route::post('/send-otp', 'sendOtpToEmail')->name('send-otp');
-            Route::get('/otp-verification', 'otpVerificationView')->name('otp-verification');
-            Route::post('/verify-otp', 'verifyOTP')->name('verify-otp');
-        });
+    Route::controller(EmailVerificationController::class)->group(function () {
+        Route::get('/email-verification', 'index')->name('email-verification');
+        Route::post('/send-otp', 'sendOtpToEmail')->name('send-otp');
+        Route::get('/otp-verification', 'otpVerificationView')->name('otp-verification');
+        Route::post('/verify-otp', 'verifyOTP')->name('verify-otp');
+    });
 
     Route::get('verification-success', [VerificationSuccessController::class, 'index'])->name('verification-success');
 
@@ -62,12 +60,10 @@ Route::middleware(['auth', 'allow_beauty_expert'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)->name('verification.notice');
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
+        ->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
 
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
+        ->middleware('throttle:6,1')->name('verification.send');
 
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);

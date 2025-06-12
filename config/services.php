@@ -1,28 +1,19 @@
 <?php
 
 return [
-    'postmark' => [
-        'token' => env('POSTMARK_TOKEN'),
-    ],
-
-    'ses'      => [
+    'ses'    => [
         'key'    => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'resend'   => [
-        'key' => env('RESEND_KEY'),
+    'twilio' => [
+        'sid'   => env('TWILIO_SID'),
+        'token' => env('TWILIO_AUTH_TOKEN'),
+        'from'  => env('TWILIO_PHONE_NUMBER'),
     ],
 
-    'slack'    => [
-        'notifications' => [
-            'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel'              => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
-        ],
-    ],
-
-    'stripe'   => [
+    'stripe' => [
         'secret' => env('STRIPE_SECRET'),
         'key'    => env('STRIPE_KEY'),
     ],
