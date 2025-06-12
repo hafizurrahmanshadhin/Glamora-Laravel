@@ -531,7 +531,7 @@
     {{-- Appointments Cancel Modal End --}}
 
 
-    {{-- Weekend Modal --}}
+    {{-- Weekend Modal Start --}}
     <div class="modal fade" id="weekendModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered"><!-- add modal-sm here -->
             <div class="modal-content"><!-- removed p-4 so we can control padding in the body -->
@@ -550,6 +550,28 @@
             </div>
         </div>
     </div>
+    {{-- Weekend Modal End --}}
+
+
+    {{-- Booking Details of specific Date Details Modal Start --}}
+    <div class="modal fade" id="dateDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-calendar-day"></i>
+                        Appointment Details
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body modal-scrollbar" id="dateDetailsModalBody"
+                    style="max-height: 500px; overflow-y: auto;">
+                    {{-- Dynamically filled content --}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Booking Details of specific Date Details Modal End --}}
 @endsection
 
 @push('scripts')
@@ -577,17 +599,89 @@
                 onDayCreate: function(dObj, dStr, fp, dayElem) {
                     const dateString = fp.formatDate(dayElem.dateObj, "Y-m-d");
 
-                    // Highlight known "green" dates
                     if (highlightDates.includes(dateString)) {
                         dayElem.classList.add("green-highlight");
+                        dayElem.style.cursor = "pointer";
+
+                        dayElem.addEventListener("click", function() {
+                            axios.get("{{ route('booking.details.by.date') }}", {
+                                    params: {
+                                        date: dateString
+                                    }
+                                })
+                                .then(response => {
+                                    const {
+                                        bookings
+                                    } = response.data;
+                                    const modalBody = document.getElementById(
+                                        "dateDetailsModalBody");
+                                    modalBody.innerHTML = "";
+
+                                    if (bookings.length > 0) {
+                                        bookings.forEach(b => {
+                                            const avatarUrl = b.user.avatar ?
+                                                "{{ url('/') }}".replace(
+                                                    /\/$/, '') + '/' + b.user
+                                                .avatar :
+                                                "{{ asset('backend/images/default_images/user_1.jpg') }}";
+
+                                            // Format the date to be user-friendly
+                                            const appointmentDate = new Date(b
+                                                .appointment_date);
+                                            const formattedDate = appointmentDate
+                                                .toLocaleDateString('en-US', {
+                                                    weekday: 'short',
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric'
+                                                });
+
+                                            const div = document.createElement(
+                                                "div");
+                                            div.classList.add("p-3", "mb-3",
+                                                "border", "rounded");
+                                            div.innerHTML = `
+                                                <div class="d-flex align-items-start">
+                                                    <img src="${avatarUrl}" alt="Client Avatar"
+                                                         style="width:50px;height:50px;border-radius:50%;object-fit:cover;margin-right:15px;">
+                                                    <div>
+                                                        <p class="mb-1"><strong>Client:</strong>
+                                                            ${b.user.first_name} ${b.user.last_name}
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Date:</strong> ${formattedDate},
+                                                            <strong>Time:</strong> ${b.appointment_time}
+                                                        </p>
+                                                        <p class="mb-1"><strong>Services:</strong><br>
+                                                            ${b.services_text ?? "N/A"}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            `;
+                                            modalBody.appendChild(div);
+                                        });
+                                    } else {
+                                        modalBody.innerHTML =
+                                            "<p>No details found for this date.</p>";
+                                    }
+
+                                    const myModal = new bootstrap.Modal(document
+                                        .getElementById("dateDetailsModal"));
+                                    myModal.show();
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    toastr.error("Could not fetch appointment details.");
+                                });
+                        });
                     }
 
                     // Highlight unselected weekdays in red
-                    const dayOfWeek = dayElem.dateObj.getDay(); // 0=SUN,1=MON,2=...
+                    const dayOfWeek = dayElem.dateObj.getDay();
                     if (window.unselectedDaysOfWeek.includes(dayOfWeek)) {
                         dayElem.classList.add("red-highlight");
                     }
-                },
+                }
             });
 
             // Coloring previous cancellation messages (not related to the range logic)

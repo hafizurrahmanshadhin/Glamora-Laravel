@@ -12,6 +12,7 @@ Route::controller(BeautyExpertDashboardController::class)->group(function () {
     Route::post('/store-weekend-data', 'storeWeekendData')->name('store-weekend-data');
     Route::post('/booking-cancellation-after-appointments', 'bookingCancellationAfterAppointments')
         ->name('booking-cancellation-after-appointments');
+    Route::get('/booking-details-by-date', 'getBookingDetailsByDate')->name('booking.details.by.date');
 });
 
 //! Route for Service Provider Profile

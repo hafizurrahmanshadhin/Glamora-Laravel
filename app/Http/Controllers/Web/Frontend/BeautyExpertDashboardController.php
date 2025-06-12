@@ -220,8 +220,8 @@ class BeautyExpertDashboardController extends Controller {
         ]);
 
         try {
-            $booking = Booking::findOrFail($request->booking_id);
-            $canceledBy = Auth::id() ?? null;
+            $booking     = Booking::findOrFail($request->booking_id);
+            $canceledBy  = Auth::id() ?? null;
             $requestedBy = $booking->user_id ?? null;
 
             BookingCancellationAfterAppointment::create([
@@ -233,6 +233,46 @@ class BeautyExpertDashboardController extends Controller {
             return Helper::jsonResponse(true, 'Appointment canceled successfully.', 200);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'Failed to cancel appointment', 500, null, $e->getMessage());
+        }
+    }
+
+    /**
+     * Get booking details by date.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getBookingDetailsByDate(Request $request) {
+        try {
+            $date = $request->query('date');
+
+            $bookings = Booking::whereDate('appointment_date', $date)
+                ->whereHas('userService', function ($query) {
+                    $query->where('user_id', Auth::id());
+                })
+                ->whereHas('payments', function ($query) {
+                    $query->where('payment_status', 'completed');
+                })
+                ->whereDoesntHave('bookingCancellationAfterAppointments')
+                ->with(['user', 'userService.service'])
+                ->get();
+
+            // Convert service_ids to line-separated service names
+            foreach ($bookings as $booking) {
+                if (!empty($booking->service_ids)) {
+                    $serviceIds             = explode(',', $booking->service_ids);
+                    $services               = Service::whereIn('id', $serviceIds)->pluck('services_name')->toArray();
+                    $booking->services_text = implode('<br>', $services);
+                } else {
+                    $booking->services_text = "N/A";
+                }
+            }
+
+            return response()->json(['status' => true, 'bookings' => $bookings]);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }
