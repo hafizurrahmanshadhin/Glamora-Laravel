@@ -90,58 +90,6 @@
                 </div>
                 {{-- Step - 1: How you want to take this service? END --}}
 
-
-                {{-- Step - 2: What time do you need to be ready by? START --}}
-                {{-- <div class="tm-multi-step-form-step">
-                    <h2 class="tm-multistep-form-heading">What time do you need to be ready by?</h2>
-                    <div class="second-step-wrapper">
-                        <div class="multistep-date-label">
-                            <label>Select Date</label>
-                            <div class="date-input-wrapper">
-                                <input type="text" id="appointment-date" class="date-input">
-                                <img src="{{ asset('frontend/images/Calendar.svg') }}" alt="Calendar Icon"
-                                    class="custom-calendar-icon">
-                            </div>
-                        </div>
-
-                        <div class="time-option-wrapper">
-                            <label>Time</label>
-                            <div class="tm-multi-step-time-options">
-                                <button type="button">6:00 AM</button>
-                                <button type="button">7:00 AM</button>
-                                <button type="button">8:00 AM</button>
-                                <button type="button">9:00 AM</button>
-                                <button type="button">10:00 AM</button>
-                                <button type="button">11:00 AM</button>
-                                <button type="button">12:00 PM</button>
-                                <button type="button">1:00 PM</button>
-                                <button type="button">2:00 PM</button>
-                                <button type="button">3:00 PM</button>
-                                <button type="button">4:00 PM</button>
-                                <button type="button">5:00 PM</button>
-                                <button type="button">6:00 PM</button>
-                                <button type="button">7:00 PM</button>
-                                <button type="button">8:00 PM</button>
-                                <button type="button">9:00 PM</button>
-                                <button type="button">10:00 PM</button>
-                                <button type="button">11:00 PM</button>
-                                <button type="button">12:00 AM</button>
-                                <button type="button">1:00 AM</button>
-                                <button type="button">2:00 AM</button>
-                                <button type="button">3:00 AM</button>
-                                <button type="button">4:00 AM</button>
-                                <button type="button">5:00 AM</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tm-multistep-btn-wrapper">
-                        <button type="button" class="tm-multi-step-prev-step">Back</button>
-                        <button type="button" class="tm-multi-step-next-step">Continue</button>
-                    </div>
-                </div> --}}
-                {{-- Step - 2: What time do you need to be ready by? END --}}
-
                 {{-- Step - 2: What time do you need to be ready by? START --}}
                 <div class="tm-multi-step-form-step">
                     <h2 class="tm-multistep-form-heading">What time do you need to be ready by?</h2>

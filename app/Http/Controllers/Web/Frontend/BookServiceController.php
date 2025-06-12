@@ -52,17 +52,17 @@ class BookServiceController extends Controller {
             $user = User::find($serviceProviderId);
 
             $unavailableRanges = [];
-            if ($user && $user->unavailable_from && $user->unavailable_to) {
-                $unavailableRanges[] = [
-                    'from' => Carbon::parse($user->unavailable_from)->format('Y-m-d'),
-                    'to'   => Carbon::parse($user->unavailable_to)->format('Y-m-d'),
-                ];
+            if (!empty($user->unavailable_ranges)) {
+                foreach ($user->unavailable_ranges as $range) {
+                    $unavailableRanges[] = [
+                        'from' => Carbon::createFromFormat('d/m/Y', $range['from_date'])->format('Y-m-d'),
+                        'to'   => Carbon::createFromFormat('d/m/Y', $range['to_date'])->format('Y-m-d'),
+                    ];
+                }
             }
 
             // Get the expert's weekend availability data
             $weekendData = $user->weekend_data ?? [];
-
-            // dd($weekendData);
 
             return view('frontend.layouts.booking.index', compact(
                 'serviceProviderId',
