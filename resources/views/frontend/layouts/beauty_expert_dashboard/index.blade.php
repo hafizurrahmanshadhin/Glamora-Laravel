@@ -406,7 +406,7 @@
                     <div class="bottom-bottom">
                         <a type="button" class="common-btn" data-bs-toggle="modal" data-bs-target="#weekendModal"
                             style="margin-bottom: 1px;">
-                            Set Weekend
+                            My Weekly Availability
                         </a>
 
                         <a href="{{ route('edit-profile') }}" class="common-btn">
@@ -533,10 +533,10 @@
 
     {{-- Weekend Modal Start --}}
     <div class="modal fade" id="weekendModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered"><!-- add modal-sm here -->
-            <div class="modal-content"><!-- removed p-4 so we can control padding in the body -->
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
                 <div class="modal-header border-0">
-                    <h3 class="modal-title text-center w-100">Set Your Availability</h3><!-- center title -->
+                    <h3 class="modal-title text-center w-100">Set Availability</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
