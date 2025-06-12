@@ -11,46 +11,57 @@ use Illuminate\Console\Command;
 
 class UpdateUserAvailability extends Command {
     protected $signature   = 'users:update-availability';
-    protected $description = 'Sync user availability based on unavailable_from/unavailable_to windows';
+    protected $description = 'Sync user availability based on unavailable_ranges';
 
     public function handle() {
-        $now = Carbon::now();
+        $now         = Carbon::now();
+        $currentDate = $now->format('Y-m-d');
 
-        $unavailableUsers = User::whereNotNull('unavailable_from')
-            ->whereNotNull('unavailable_to')
-            ->where('unavailable_from', '<=', $now)
-            ->where('unavailable_to', '>=', $now)
-            ->get(['id']);
+        // Get all users who have unavailable_ranges set
+        $usersWithRanges = User::whereNotNull('unavailable_ranges')
+            ->where('unavailable_ranges', '!=', '[]')
+            ->get();
 
-        if ($unavailableUsers->isNotEmpty()) {
-            $ids = $unavailableUsers->pluck('id')->all();
+        foreach ($usersWithRanges as $user) {
+            $shouldBeUnavailable = false;
 
-            User::whereIn('id', $ids)->update(['availability' => 'unavailable']);
+            // Check if current date falls within any of the user's unavailable ranges
+            foreach ($user->unavailable_ranges as $range) {
+                if (isset($range['from_date']) && isset($range['to_date'])) {
+                    $fromDate = Carbon::createFromFormat('d/m/Y', $range['from_date'])->format('Y-m-d');
+                    $toDate   = Carbon::createFromFormat('d/m/Y', $range['to_date'])->format('Y-m-d');
 
-            BusinessInformation::whereIn('user_id', $ids)->update(['status' => 'inactive']);
-            TravelRadius::whereIn('user_id', $ids)->update(['status' => 'inactive']);
-            UserService::whereIn('user_id', $ids)->update(['status' => 'inactive']);
+                    if ($currentDate >= $fromDate && $currentDate <= $toDate) {
+                        $shouldBeUnavailable = true;
+                        break;
+                    }
+                }
+            }
+
+            $newAvailability = $shouldBeUnavailable ? 'unavailable' : 'available';
+            $relatedStatus   = $shouldBeUnavailable ? 'inactive' : 'active';
+
+            // Only update if availability has changed
+            if ($user->availability !== $newAvailability) {
+                $user->update(['availability' => $newAvailability]);
+
+                // Update related models
+                BusinessInformation::where('user_id', $user->id)->update(['status' => $relatedStatus]);
+                TravelRadius::where('user_id', $user->id)->update(['status' => $relatedStatus]);
+                UserService::where('user_id', $user->id)->update(['status' => $relatedStatus]);
+
+                $this->info("Updated user {$user->id} availability to: {$newAvailability}");
+            }
         }
 
-        $expiredUsers = User::whereNotNull('unavailable_to')
-            ->where('unavailable_to', '<', $now)
-            ->get(['id']);
+        // Handle users who don't have any ranges but might still be marked unavailable
+        User::where(function ($query) {
+            $query->whereNull('unavailable_ranges')
+                ->orWhere('unavailable_ranges', '[]');
+        })
+            ->where('availability', 'unavailable')
+            ->update(['availability' => 'available']);
 
-        if ($expiredUsers->isNotEmpty()) {
-            $ids = $expiredUsers->pluck('id')->all();
-
-            User::whereIn('id', $ids)
-                ->update([
-                    'availability'     => 'available',
-                    'unavailable_from' => null,
-                    'unavailable_to'   => null,
-                ]);
-
-            BusinessInformation::whereIn('user_id', $ids)->update(['status' => 'active']);
-            TravelRadius::whereIn('user_id', $ids)->update(['status' => 'active']);
-            UserService::whereIn('user_id', $ids)->update(['status' => 'active']);
-        }
-
-        $this->info('User availability and related statuses synced at ' . $now->toDateTimeString());
+        $this->info('User availability sync completed at ' . $now->toDateTimeString());
     }
 }

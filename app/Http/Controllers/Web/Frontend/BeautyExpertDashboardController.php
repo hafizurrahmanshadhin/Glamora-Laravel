@@ -122,25 +122,43 @@ class BeautyExpertDashboardController extends Controller {
             $user = Auth::user();
 
             if ($request->input('status') === 'available') {
+                // Clear all unavailability data
                 $user->availability       = 'available';
                 $user->unavailable_from   = null;
                 $user->unavailable_to     = null;
                 $user->unavailable_ranges = null;
+
+                $relatedStatus = 'active';
             } elseif ($request->input('status') === 'unavailable' && $request->has('ranges')) {
-                $user->availability       = 'unavailable';
-                $user->unavailable_from   = null;
-                $user->unavailable_to     = null;
                 $user->unavailable_ranges = $request->input('ranges');
+
+                // Check if current date falls within any of the ranges
+                $currentDate         = Carbon::now()->format('Y-m-d');
+                $shouldBeUnavailable = false;
+
+                foreach ($request->input('ranges') as $range) {
+                    $fromDate = Carbon::createFromFormat('d/m/Y', $range['from_date'])->format('Y-m-d');
+                    $toDate   = Carbon::createFromFormat('d/m/Y', $range['to_date'])->format('Y-m-d');
+
+                    if ($currentDate >= $fromDate && $currentDate <= $toDate) {
+                        $shouldBeUnavailable = true;
+                        break;
+                    }
+                }
+
+                // Set availability based on whether current date is in any range
+                $user->availability = $shouldBeUnavailable ? 'unavailable' : 'available';
+                $relatedStatus      = $shouldBeUnavailable ? 'inactive' : 'active';
             }
 
-            $relatedStatus = $user->availability === 'unavailable' ? 'inactive' : 'active';
-
             $user->save();
+
+            // Update related models based on current availability
             BusinessInformation::where('user_id', $user->id)->update(['status' => $relatedStatus]);
             TravelRadius::where('user_id', $user->id)->update(['status' => $relatedStatus]);
             UserService::where('user_id', $user->id)->update(['status' => $relatedStatus]);
 
-            return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'success', 'current_availability' => $user->availability]);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),

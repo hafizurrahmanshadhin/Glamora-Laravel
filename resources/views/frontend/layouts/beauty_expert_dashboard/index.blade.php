@@ -914,7 +914,20 @@
                     })
                     .then(r => {
                         if (r.data.status === "success") {
-                            toastr.success("All unavailability ranges saved");
+                            toastr.success("Unavailability ranges saved successfully");
+
+                            // Update the UI based on current availability returned from server
+                            const currentAvailability = r.data.current_availability;
+                            if (currentAvailability === 'available') {
+                                statusText.textContent = "Available";
+                                point.classList.add("available");
+                                checkbox.checked = true;
+                            } else {
+                                statusText.textContent = "Unavailable";
+                                point.classList.remove("available");
+                                checkbox.checked = false;
+                            }
+
                             // Update local disableDates to reflect all new ranges
                             disableDates = [];
                             for (const rng of rangesToSend) {
