@@ -290,7 +290,7 @@
                         <div id="unavailable-ranges">
                             @if (!empty($user->unavailable_ranges))
                                 @foreach ($user->unavailable_ranges as $index => $range)
-                                    <div class="range-row" data-index="{{ $index }}" style="margin-top: 8px;">
+                                    <div class="range-row" data-index="{{ $index ?? '' }}" style="margin-top: 8px;">
                                         <div class="row" style="align-items: center;">
                                             <div class="col-md-5">
                                                 <h6>From</h6>
@@ -320,7 +320,7 @@
                                             </div>
                                             <div class="col-md-2 d-flex align-items-end" style="margin-top: 23.5px">
                                                 <button type="button" class="delete-range"
-                                                    data-index="{{ $index }}" title="Delete this range"
+                                                    data-index="{{ $index ?? '' }}" title="Delete this range"
                                                     style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 50px; color: #dc3545; font-size: 18px; font-weight: bold; height: 28px; width: 28px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; hover:background-color: #dc3545; hover:color: white; padding: 0;">
                                                     ×
                                                 </button>
@@ -331,8 +331,8 @@
                             @else
                                 {{-- Fallback: show a single blank range --}}
                                 <div class="range-row" data-index="0">
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="row" style="align-items: center;">
+                                        <div class="col-md-5">
                                             <h6>From</h6>
                                             <div class="date-picker-container-from">
                                                 <input style="padding-right: 8px" class="range-from" placeholder="DD/MM/YY"
@@ -344,7 +344,8 @@
                                                 </svg>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+
+                                        <div class="col-md-5">
                                             <h6>To</h6>
                                             <div class="date-picker-container-to">
                                                 <input style="padding-right: 8px" class="range-to" placeholder="DD/MM/YY"
@@ -355,6 +356,14 @@
                                                         fill="#767676" />
                                                 </svg>
                                             </div>
+                                        </div>
+
+                                        <div class="col-md-2 d-flex align-items-end" style="margin-top: 23.5px">
+                                            <button type="button" class="delete-range" data-index="{{ $index ?? '' }}"
+                                                title="Delete this range"
+                                                style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 50px; color: #dc3545; font-size: 18px; font-weight: bold; height: 28px; width: 28px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; hover:background-color: #dc3545; hover:color: white; padding: 0;">
+                                                ×
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -688,6 +697,7 @@
                                     </svg>
                                 </div>
                             </div>
+
                             <div class="col-md-5">
                                 <h6>To</h6>
                                 <div class="date-picker-container-to">
@@ -699,6 +709,7 @@
                                     </svg>
                                 </div>
                             </div>
+
                             <div class="col-md-2 d-flex align-items-end" style="margin-top: 23.5px">
                                 <button type="button" class="delete-range"
                                     data-index="{{ $index ?? '' }}" title="Delete this range"
@@ -752,6 +763,7 @@
                                         </svg>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <h6>To</h6>
                                     <div class="date-picker-container-to">
@@ -762,6 +774,14 @@
                                                 fill="#767676" />
                                         </svg>
                                     </div>
+                                </div>
+
+                                <div class="col-md-2 d-flex align-items-end" style="margin-top: 23.5px">
+                                    <button type="button" class="delete-range"
+                                        data-index="{{ $index ?? '' }}" title="Delete this range"
+                                        style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 50px; color: #dc3545; font-size: 18px; font-weight: bold; height: 28px; width: 28px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; hover:background-color: #dc3545; hover:color: white; padding: 0;">
+                                        ×
+                                    </button>
                                 </div>
                             </div>
                         `;

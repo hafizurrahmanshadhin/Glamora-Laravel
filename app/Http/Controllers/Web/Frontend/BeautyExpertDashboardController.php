@@ -66,7 +66,7 @@ class BeautyExpertDashboardController extends Controller {
             $averageRating = Review::whereHas('booking.userService', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
-                ->where('status', 'active') // Ensure only active reviews are considered
+                ->where('status', 'active')
                 ->avg('rating');
 
             // Count total number of reviews
@@ -198,7 +198,7 @@ class BeautyExpertDashboardController extends Controller {
     public function storeWeekendData(Request $request): JsonResponse {
         try {
             $user               = Auth::user();
-            $weekendData        = $request->input('weekend_data'); // array of { day, time_from, time_to }
+            $weekendData        = $request->input('weekend_data');
             $user->weekend_data = $weekendData;
             $user->save();
 
@@ -220,12 +220,8 @@ class BeautyExpertDashboardController extends Controller {
         ]);
 
         try {
-            // Find the booking to cancel
             $booking = Booking::findOrFail($request->booking_id);
-
-            // The currently logged-in user is “canceling_by”
             $canceledBy = Auth::id() ?? null;
-            // The “requested_by” from the original booking (or any logic you prefer)
             $requestedBy = $booking->user_id ?? null;
 
             BookingCancellationAfterAppointment::create([
