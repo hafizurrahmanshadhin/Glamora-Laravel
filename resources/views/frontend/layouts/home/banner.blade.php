@@ -262,6 +262,14 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Initialize Flatpickr for date input
+        flatpickr("#date-input", {
+            dateFormat: "d/m/Y",
+            minDate: "today",
+            placeholder: "DD/MM/YY"
+        });
+
+
         // Array to hold the selected services.
         let selectedServices = [];
 
@@ -391,11 +399,19 @@
                 return;
             }
             let locationInput = document.getElementById('location-input').value.trim();
+            let dateInput = document.getElementById('date-input').value.trim();
+
             let queryParams = new URLSearchParams();
             queryParams.append('service_ids', selectedServiceIds);
+
             if (locationInput) {
                 queryParams.append('location', locationInput);
             }
+
+            if (dateInput) {
+                queryParams.append('date', dateInput);
+            }
+
             let url = "{{ url('available-services') }}";
             if (queryParams.toString()) {
                 url += '?' + queryParams.toString();

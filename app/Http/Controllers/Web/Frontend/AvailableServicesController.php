@@ -6,9 +6,12 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
 use App\Models\Service;
+use App\Models\User;
 use App\Models\UserService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AvailableServicesController extends Controller {
@@ -23,6 +26,7 @@ class AvailableServicesController extends Controller {
             $rating     = request('rating');
             $priceRange = request('price_range');
             $location   = request('location');
+            $searchDate = request('date');
 
             // Retrieve serviceIds from query parameters.
             $queryParamIds = request('service_ids');
@@ -69,6 +73,15 @@ class AvailableServicesController extends Controller {
 
                 return $service;
             });
+
+            // Filter by date availability if date is provided
+            if ($searchDate) {
+                $approvedServices = $approvedServices->filter(function ($service) use ($searchDate) {
+                    $isAvailable = $this->isUserAvailableOnDate($service->user, $searchDate);
+                    Log::info("User {$service->user->id} availability check for date {$searchDate}: " . ($isAvailable ? 'AVAILABLE' : 'NOT AVAILABLE'));
+                    return $isAvailable;
+                });
+            }
 
             // Filter by rating if selected
             if ($rating) {
@@ -127,11 +140,113 @@ class AvailableServicesController extends Controller {
                 'selectedRating'       => $rating,
                 'selectedPrice'        => $priceRange,
                 'location'             => $location,
+                'searchDate'           => $searchDate,
             ]);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Check if a beauty expert is available on a specific date.
+     *
+     * @param User $user
+     * @param string $searchDate (d/m/Y or d/m/y format)
+     * @return bool
+     */
+    private function isUserAvailableOnDate(User $user, string $searchDate): bool {
+        Log::info("Checking availability for user {$user->id} on date: {$searchDate}");
+
+        // Check if user is a beauty expert and is active
+        if ($user->role !== 'beauty_expert' || $user->status !== 'active') {
+            Log::info("User {$user->id} is not a beauty expert or not active");
+            return false;
+        }
+
+        // Check if user is currently available
+        if ($user->availability === 'unavailable') {
+            Log::info("User {$user->id} has general availability set to unavailable");
+            return false;
+        }
+
+        try {
+            // Normalize the search date - handle both d/m/y and d/m/Y formats
+            $searchDateCarbon = null;
+
+            // Try to parse the search date with explicit year handling
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2})$/', $searchDate, $matches)) {
+                // Format: dd/mm/yy - need to convert to full year
+                $day              = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+                $month            = str_pad($matches[2], 2, '0', STR_PAD_LEFT);
+                $year             = '20' . $matches[3]; // Assuming 21st century
+                $fullDate         = "{$day}/{$month}/{$year}";
+                $searchDateCarbon = Carbon::createFromFormat('d/m/Y', $fullDate);
+            } elseif (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $searchDate, $matches)) {
+                // Format: dd/mm/yyyy
+                $searchDateCarbon = Carbon::createFromFormat('d/m/Y', $searchDate);
+            }
+
+            if (!$searchDateCarbon) {
+                Log::info("Could not parse search date: {$searchDate}");
+                return true; // If we can't parse the date, assume available
+            }
+
+            $dateToCheck = $searchDateCarbon->format('Y-m-d');
+            Log::info("Parsed search date to: {$dateToCheck}");
+
+        } catch (Exception $e) {
+            Log::error("Date parsing error: " . $e->getMessage());
+            return true; // If date format is invalid, assume available
+        }
+
+        // Check if date falls within any unavailable ranges
+        if (!empty($user->unavailable_ranges)) {
+            Log::info("User {$user->id} has unavailable ranges: " . json_encode($user->unavailable_ranges));
+
+            foreach ($user->unavailable_ranges as $range) {
+                if (isset($range['from_date']) && isset($range['to_date'])) {
+                    try {
+                        // Parse database dates (should be in d/m/Y format)
+                        $fromDateCarbon = Carbon::createFromFormat('d/m/Y', $range['from_date']);
+                        $toDateCarbon   = Carbon::createFromFormat('d/m/Y', $range['to_date']);
+
+                        $fromDate = $fromDateCarbon->format('Y-m-d');
+                        $toDate   = $toDateCarbon->format('Y-m-d');
+
+                        Log::info("Checking range: {$fromDate} to {$toDate} against {$dateToCheck}");
+
+                        // If the search date falls within this unavailable range, user is not available
+                        if ($dateToCheck >= $fromDate && $dateToCheck <= $toDate) {
+                            Log::info("User {$user->id} is unavailable - date falls within range {$fromDate} to {$toDate}");
+                            return false;
+                        }
+
+                    } catch (Exception $e) {
+                        Log::error("Error parsing unavailable range: " . $e->getMessage());
+                        continue;
+                    }
+                }
+            }
+        }
+
+        // Check weekend availability if weekend_data is set
+        if (!empty($user->weekend_data)) {
+            $dayOfWeek = $searchDateCarbon->dayOfWeek; // 0 = Sunday, 1 = Monday, etc.
+            Log::info("Checking weekend availability for user {$user->id} on day {$dayOfWeek}");
+
+            // Check if the user is available on this day of the week
+            $isAvailableOnDay = collect($user->weekend_data)->contains(function ($dayData) use ($dayOfWeek) {
+                return isset($dayData['day']) && (int) $dayData['day'] === $dayOfWeek;
+            });
+
+            Log::info("User {$user->id} weekend availability on day {$dayOfWeek}: " . ($isAvailableOnDay ? 'AVAILABLE' : 'NOT AVAILABLE'));
+            return $isAvailableOnDay;
+        }
+
+        Log::info("User {$user->id} is available - no restrictions apply");
+        // If no weekend restrictions and not in unavailable ranges, user is available
+        return true;
     }
 }

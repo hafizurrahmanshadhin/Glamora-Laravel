@@ -45,6 +45,15 @@
                         <input type="hidden" name="service_ids"
                             value="{{ isset($serviceIds) ? implode(',', (array) $serviceIds) : '' }}">
 
+                        {{-- Preserve location filter if it exists --}}
+                        @if (request('location'))
+                            <input type="hidden" name="location" value="{{ request('location') }}">
+                        @endif
+                        {{-- Preserve date filter if it exists --}}
+                        @if (request('date'))
+                            <input type="hidden" name="date" value="{{ request('date') }}">
+                        @endif
+
                         <div class="explore-card-filter-wrapper">
                             <div class="rating-filter">
                                 <select name="rating" onchange="this.form.submit()">
