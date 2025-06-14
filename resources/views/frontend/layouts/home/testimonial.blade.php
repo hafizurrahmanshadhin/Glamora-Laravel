@@ -34,8 +34,9 @@
             </div>
             <div class="total-reviews-number">{{ $totalReviews }} Reviews</div>
         </div>
-        <img class="home-testimonial-img" src="{{ asset('frontend/images/home-testimonial-img.png') }}"
-            alt="" />
+        <img class="home-testimonial-img"
+            src="{{ asset($testimonialImage->image ?? 'frontend/images/home-testimonial-img.png') }}"
+            alt="testimonial image" />
     </div>
 
     <div class="home-testimonial-slider">

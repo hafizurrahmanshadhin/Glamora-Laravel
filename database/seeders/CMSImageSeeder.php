@@ -44,6 +44,15 @@ class CMSImageSeeder extends Seeder {
                 'updated_at' => '2025-03-01 22:19:10',
                 'deleted_at' => null,
             ],
+            [
+                'id'         => 5,
+                'image'      => 'frontend/uploads/home-testimonial-img.png',
+                'page'       => 'testimonial',
+                'status'     => 'active',
+                'created_at' => '2025-03-01 22:19:10',
+                'updated_at' => '2025-03-01 22:19:10',
+                'deleted_at' => null,
+            ],
         ]);
     }
 }

@@ -217,6 +217,14 @@
                             </li>
 
                             <li class="nav-item">
+                                <a href="{{ route('cms.testimonial.index') }}"
+                                    class="nav-link {{ request()->routeIs('cms.testimonial.index') ? 'active' : '' }}"
+                                    data-key="t-auth-page">
+                                    Testimonial Page
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('cms.questionnaires.index') }}"
                                     class="nav-link {{ request()->routeIs('cms.questionnaires.index') ? 'active' : '' }}"
                                     data-key="t-questionnaires">

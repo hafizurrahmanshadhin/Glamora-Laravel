@@ -61,6 +61,11 @@ class HomeController extends Controller {
                 ->where('status', 'active')
                 ->get();
 
+            $testimonialImage = CMSImage::where('page', 'testimonial')
+                ->where('status', 'active')
+                ->latest()
+                ->first();
+
             // Fetch the "Join Us" section from the CMS
             $joinUs = CMS::where('section', 'join_us')->first();
 
@@ -76,6 +81,7 @@ class HomeController extends Controller {
                 'totalReviews',
                 'topBeautyExperts',
                 'homeBanners',
+                'testimonialImage',
                 'joinUs',
                 'serviceTypes'
             ));

@@ -1,17 +1,12 @@
 <?php
 
 use App\Http\Controllers\Web\Backend\AfterPaymentController;
-use App\Http\Controllers\Web\Backend\AuthPageImageController;
 use App\Http\Controllers\Web\Backend\BeautyExpertController;
 use App\Http\Controllers\Web\Backend\BeforePaymentController;
 use App\Http\Controllers\Web\Backend\ClientController;
-use App\Http\Controllers\Web\Backend\CMS\JoinUsController;
-use App\Http\Controllers\Web\Backend\CMS\QuestionnairesController;
-use App\Http\Controllers\Web\Backend\CMS\ServiceTypeController;
 use App\Http\Controllers\Web\Backend\ContactController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FAQController;
-use App\Http\Controllers\Web\Backend\HomePageImageController;
 use App\Http\Controllers\Web\Backend\ImageApprovalRequestController;
 use App\Http\Controllers\Web\Backend\NewsletterSubscriptionController;
 use App\Http\Controllers\Web\Backend\ReportController;
@@ -91,48 +86,6 @@ Route::controller(NewsletterSubscriptionController::class)->group(function () {
     Route::get('/newsletter-subscription', 'index')->name('newsletter-subscription.index');
     Route::get('/newsletter-subscription/status/{id}', 'status')->name('newsletter-subscription.status');
     Route::delete('/newsletter-subscription/destroy/{id}', 'destroy')->name('newsletter-subscription.destroy');
-});
-
-//! Route for CMS Pages
-Route::prefix('cms')->name('cms.')->group(function () {
-    //! Route for Home Page Image
-    Route::controller(HomePageImageController::class)->group(function () {
-        Route::get('/home-page', 'index')->name('home-page.index');
-        Route::post('/home-page/store', 'store')->name('home-page.store');
-        Route::delete('/home-page/{id}', 'destroy')->name('home-page.destroy');
-    });
-
-    //! Route for Auth Page Image
-    Route::controller(AuthPageImageController::class)->group(function () {
-        Route::get('/auth-page', 'index')->name('auth-page.index');
-        Route::post('/auth-page/store', 'store')->name('auth-page.store');
-    });
-
-    //! Route for questionnaires Page
-    Route::controller(QuestionnairesController::class)->prefix('questionnaires')->name('questionnaires.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::patch('/', 'updateQuestionnaires')->name('update.questionnaires');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/show/{id}', 'show')->name('show');
-        Route::put('/update/{id}', 'update')->name('update');
-        Route::get('/status/{id}', 'status')->name('status');
-        Route::delete('/destroy/{id}', 'destroy')->name('destroy');
-    });
-
-    //! Route for Join Us Page
-    Route::controller(JoinUsController::class)->prefix('join-us')->name('join-us.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::patch('/', 'update')->name('update');
-    });
-
-    //! Route for Service Type Page
-    Route::controller(ServiceTypeController::class)->prefix('service-type')->name('service-type.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/show/{id}', 'show')->name('show');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::patch('/update/{id}', 'update')->name('update');
-        Route::get('/status/{id}', 'status')->name('status');
-    });
 });
 
 //! Booking Cancellation Routes

@@ -25,6 +25,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->group(base_path('routes/Web/backend.php'));
 
             Route::middleware(['web', 'auth', 'admin'])
+                ->prefix('admin/cms')
+                ->name('cms.')
+                ->group(base_path('routes/Web/cms.php'));
+
+            Route::middleware(['web', 'auth', 'admin'])
                 ->prefix('admin/settings')
                 ->group(base_path('routes/Web/settings.php'));
 
@@ -37,7 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->group(base_path('routes/Web/beauty-expert.php'));
         },
     )
-    
+
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin'               => AdminMiddleware::class,

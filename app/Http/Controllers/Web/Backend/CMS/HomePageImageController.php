@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web\Backend;
+namespace App\Http\Controllers\Web\Backend\CMS;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
-class AuthPageImageController extends Controller {
+class HomePageImageController extends Controller {
     /**
-     * Display the current auth page image.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return View|JsonResponse
@@ -21,14 +21,13 @@ class AuthPageImageController extends Controller {
     public function index(Request $request): View | JsonResponse {
         try {
             if ($request->ajax()) {
-                $data = CMSImage::where('page', 'auth')->latest()->get();
+                $data = CMSImage::where('page', 'home')->latest()->get();
                 return response()->json([
                     'status' => true,
                     'data'   => $data,
                 ]);
             }
-            $currentImage = CMSImage::where('page', 'auth')->latest()->first();
-            return view('backend.layouts.cms.auth-page.index', compact('currentImage'));
+            return view('backend.layouts.cms.home-page.index');
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),
@@ -37,7 +36,7 @@ class AuthPageImageController extends Controller {
     }
 
     /**
-     * Update the auth page image. If an image already exists, it is replaced.
+     * Store a newly created home page image in storage.
      *
      * @param Request $request
      * @return JsonResponse
@@ -53,29 +52,31 @@ class AuthPageImageController extends Controller {
 
         try {
             $uploadedFile = $request->file('image');
-            $filePath     = Helper::fileUpload($uploadedFile, 'auth-images', 'auth-banner');
+            $filePath     = Helper::fileUpload($uploadedFile, 'home-images', 'home-banner');
 
             if (!$filePath) {
                 return Helper::jsonResponse(false, 'File upload failed. Please try again.', 500);
             }
 
-            $existingImage = CMSImage::where('page', 'auth')->first();
-            if ($existingImage) {
-                // Delete the old file and update the record.
-                Helper::fileDelete(public_path($existingImage->image));
-                $existingImage->update([
-                    'image' => $filePath,
-                ]);
-            } else {
-                CMSImage::create([
-                    'image' => $filePath,
-                    'page'  => 'auth',
-                ]);
-            }
+            CMSImage::create([
+                'image' => $filePath,
+                'page'  => 'home',
+            ]);
 
-            return Helper::jsonResponse(true, 'Auth page image updated successfully.', 200, ['newImageUrl' => asset($filePath)]);
+            return Helper::jsonResponse(true, 'Home page image created successfully.', 200);
         } catch (Exception $e) {
-            return Helper::jsonResponse(false, 'An error occurred while updating the auth page image: ' . $e->getMessage(), 500);
+            return Helper::jsonResponse(false, 'An error occurred while creating the home page image: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function destroy($id): JsonResponse {
+        try {
+            $image = CMSImage::findOrFail($id);
+            Helper::fileDelete(public_path($image->image));
+            $image->delete();
+            return Helper::jsonResponse(true, 'Image deleted successfully.', 200);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'Error deleting image: ' . $e->getMessage(), 500);
         }
     }
 }

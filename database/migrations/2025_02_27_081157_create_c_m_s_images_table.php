@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->id();
 
             $table->string('image')->nullable(false);
-            $table->enum('page', ['home', 'auth'])->nullable(false);
+            $table->enum('page', ['home', 'auth', 'testimonial'])->nullable(false);
 
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamp('created_at')->useCurrent();
