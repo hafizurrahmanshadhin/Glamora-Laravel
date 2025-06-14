@@ -19,6 +19,9 @@ return new class extends Migration {
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->timestamps();
+
+            $table->index('section', 'idx_cms_section');
+            $table->index(['section', 'status'], 'idx_cms_section_status');
         });
     }
 

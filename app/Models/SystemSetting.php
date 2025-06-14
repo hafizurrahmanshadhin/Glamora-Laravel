@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class SystemSetting extends Model {
     use HasFactory;
@@ -25,5 +26,15 @@ class SystemSetting extends Model {
             'created_at'     => 'datetime',
             'updated_at'     => 'datetime',
         ];
+    }
+
+    protected static function booted(): void {
+        static::saved(function () {
+            Cache::forget('system_setting');
+        });
+
+        static::deleted(function () {
+            Cache::forget('system_setting');
+        });
     }
 }

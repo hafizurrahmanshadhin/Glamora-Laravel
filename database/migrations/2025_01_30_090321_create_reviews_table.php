@@ -29,6 +29,9 @@ return new class extends Migration {
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();
+
+            $table->index('status', 'idx_reviews_status');
+            $table->index(['status', 'created_at'], 'idx_reviews_status_created');
         });
     }
 

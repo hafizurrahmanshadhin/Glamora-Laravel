@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -75,6 +76,19 @@ class User extends Authenticatable implements JWTSubject {
                     ['day' => 6, 'time_from' => '12:00 AM', 'time_to' => '11:00 PM'],
                 ];
             }
+        });
+
+        static::saved(function ($user) {
+            if ($user->role === 'beauty_expert') {
+                Cache::forget('top_beauty_experts');
+            }
+        });
+
+        static::deleted(function ($user) {
+            if ($user->role === 'beauty_expert') {
+                Cache::forget('top_beauty_experts');
+            }
+            Cache::forget('latest_reviews'); // User relation in reviews
         });
     }
 

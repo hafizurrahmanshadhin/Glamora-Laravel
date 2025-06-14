@@ -4,11 +4,13 @@
     <div class="home-beauty-experts">
         <div class="rk--hero--marquee">
             <div class="slide">
-                @foreach ($topBeautyExperts as $expert)
+                @foreach ($topBeautyExperts as $index => $expert)
                     <a href="#" class="slider--item">
                         <div class="img--area">
                             <img src="{{ asset($expert->businessInformation->avatar ?? 'backend/images/default_images/user_1.jpg') }}"
-                                alt="maquee--img" />
+                                alt="{{ $expert->businessInformation->name ?? 'Beauty Expert' }}"
+                                loading="{{ $index < 3 ? 'eager' : 'lazy' }}" decoding="async" width="200"
+                                height="200" style="object-fit: cover; border-radius: 50%;" />
                         </div>
 
                         <div class="home-expert-text-content">

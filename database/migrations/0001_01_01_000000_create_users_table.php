@@ -10,8 +10,8 @@ return new class extends Migration {
             $table->id();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('email')->unique()->nullable(false);
-            $table->string('phone_number')->unique()->nullable(false);
+            $table->string('email')->unique()->nullable(false)->index();
+            $table->string('phone_number')->unique()->nullable(false)->index();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_number_verified_at')->nullable();
             $table->text('address');
@@ -35,6 +35,8 @@ return new class extends Migration {
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();
+
+            $table->index(['role', 'status'], 'idx_users_role_status');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

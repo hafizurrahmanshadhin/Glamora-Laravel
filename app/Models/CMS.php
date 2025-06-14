@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class CMS extends Model {
     use HasFactory;
@@ -32,4 +33,24 @@ class CMS extends Model {
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
     ];
+
+    protected static function booted(): void {
+        static::saved(function ($cms) {
+            if ($cms->section === 'join_us') {
+                Cache::forget('join_us');
+            }
+            if ($cms->section === 'user-type-container') {
+                Cache::forget('service_types');
+            }
+        });
+
+        static::deleted(function ($cms) {
+            if ($cms->section === 'join_us') {
+                Cache::forget('join_us');
+            }
+            if ($cms->section === 'user-type-container') {
+                Cache::forget('service_types');
+            }
+        });
+    }
 }

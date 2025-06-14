@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Review extends Model {
     use HasFactory, SoftDeletes;
@@ -31,6 +32,18 @@ class Review extends Model {
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    protected static function booted(): void {
+        static::saved(function () {
+            Cache::forget('review_stats');
+            Cache::forget('latest_reviews');
+        });
+
+        static::deleted(function () {
+            Cache::forget('review_stats');
+            Cache::forget('latest_reviews');
+        });
     }
 
     public function user(): BelongsTo {

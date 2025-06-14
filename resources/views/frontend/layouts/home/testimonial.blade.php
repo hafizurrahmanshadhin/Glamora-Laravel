@@ -1,5 +1,6 @@
 <div class="home-testimonial section-padding-x m-bottom ">
-    <img class="home-testimonial-shape" src="{{ asset('frontend/images/home-testimonial-shape.png') }}" alt="" />
+    <img class="home-testimonial-shape" src="{{ asset('frontend/images/home-testimonial-shape.png') }}"
+        alt="Testimonial background shape" loading="lazy" decoding="async" width="300" height="200" />
 
     <div class="img-content">
         <div class="total-reviews">
@@ -34,9 +35,12 @@
             </div>
             <div class="total-reviews-number">{{ $totalReviews }} Reviews</div>
         </div>
+
+        {{-- Main testimonial image with optimization --}}
         <img class="home-testimonial-img"
             src="{{ asset($testimonialImage->image ?? 'frontend/images/home-testimonial-img.png') }}"
-            alt="testimonial image" />
+            alt="Customer testimonials showcase" loading="eager" decoding="async" width="400" height="300"
+            style="object-fit: cover;" />
     </div>
 
     <div class="home-testimonial-slider">
@@ -52,15 +56,18 @@
                             </div>
                             <div class="home-testimonial-author">
                                 <div class="author-img">
+                                    {{-- User avatar with optimization --}}
                                     <img src="{{ asset($review->user->avatar ?? 'backend/images/default_images/user_1.jpg') }}"
-                                        alt="Profile Picture" />
+                                        alt="{{ ($review->user->first_name ?? '') . ' ' . ($review->user->last_name ?? '') ?: 'Customer' }}"
+                                        loading="{{ $key === 0 ? 'eager' : 'lazy' }}" decoding="async" width="60"
+                                        height="60" style="object-fit: cover; border-radius: 50%;" />
                                 </div>
                                 <div>
                                     <div class="author-title">
-                                        {{ ($review->user->first_name ?? '') . ' ' . ($review->user->last_name ?? '') }}
+                                        {{ ($review->user->first_name ?? '') . ' ' . ($review->user->last_name ?? '') ?: 'Anonymous Customer' }}
                                     </div>
                                     <div class="author-stars">
-                                        @for ($i = 0; $i < $review->rating; $i++)
+                                        @for ($i = 0; $i < min($review->rating, 5); $i++)
                                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24"
                                                 viewBox="0 0 25 24" fill="none">
                                                 <path

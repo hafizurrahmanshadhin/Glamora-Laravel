@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 
 class UserService extends Model {
     use HasFactory, Notifiable, SoftDeletes;
@@ -37,6 +38,16 @@ class UserService extends Model {
         'updated_at'    => 'datetime',
         'deleted_at'    => 'datetime',
     ];
+
+    protected static function booted(): void {
+        static::saved(function () {
+            Cache::forget('approved_services');
+        });
+
+        static::deleted(function () {
+            Cache::forget('approved_services');
+        });
+    }
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 
 class Service extends Model {
     use HasFactory, Notifiable, SoftDeletes;
@@ -28,6 +29,18 @@ class Service extends Model {
         'updated_at'    => 'datetime',
         'deleted_at'    => 'datetime',
     ];
+
+    protected static function booted(): void {
+        static::saved(function () {
+            Cache::forget('active_services');
+            Cache::forget('approved_services');
+        });
+
+        static::deleted(function () {
+            Cache::forget('active_services');
+            Cache::forget('approved_services');
+        });
+    }
 
     public function userServices(): HasMany {
         return $this->hasMany(UserService::class);

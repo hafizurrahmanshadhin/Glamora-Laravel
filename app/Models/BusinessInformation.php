@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 
 class BusinessInformation extends Model {
     use HasFactory, Notifiable, SoftDeletes;
@@ -30,6 +31,16 @@ class BusinessInformation extends Model {
             'updated_at'         => 'datetime',
             'deleted_at'         => 'datetime',
         ];
+    }
+
+    protected static function booted(): void {
+        static::saved(function () {
+            Cache::forget('top_beauty_experts');
+        });
+
+        static::deleted(function () {
+            Cache::forget('top_beauty_experts');
+        });
     }
 
     public function user(): BelongsTo {

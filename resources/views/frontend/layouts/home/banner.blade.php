@@ -155,16 +155,19 @@
 
             <div class="carousel-inner">
                 @if ($homeBanners->isNotEmpty())
-                    @foreach ($homeBanners as $homeBanner)
+                    @foreach ($homeBanners as $index => $homeBanner)
                         <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                             <img src="{{ asset($homeBanner->image ?? 'frontend/images/home-banner.png') }}"
-                                alt="Home banner" class="d-block w-100">
+                                alt="Beauty services banner {{ $index + 1 }}"
+                                loading="{{ $index === 0 ? 'eager' : 'lazy' }}" decoding="async" width="1200"
+                                height="600" class="d-block w-100" style="object-fit: cover;" />
                         </div>
                     @endforeach
                 @else
                     <div class="carousel-item active">
-                        <img src="{{ asset('frontend/images/home-banner.png') }}" alt="Default Banner"
-                            class="d-block w-100">
+                        <img src="{{ asset('frontend/images/home-banner.png') }}"
+                            alt="Find the best beauty professionals" loading="eager" decoding="async" width="1200"
+                            height="600" class="d-block w-100" style="object-fit: cover;" />
                     </div>
                 @endif
             </div>
