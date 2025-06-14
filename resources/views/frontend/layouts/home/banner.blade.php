@@ -34,9 +34,25 @@
 
         {{-- search container start --}}
         <div data-aos="fade-right" data-aos-delay="400" class="search-container ">
-            <div class="item location">
+            <div class="item location" style="position: relative;">
                 <div class="title">Location</div>
-                <input id="location-input" placeholder="Search" type="text" value="{{ request('location') }}">
+                <input id="location-input" placeholder="Search" type="text" value="{{ request('location') }}"
+                    autocomplete="off" style="width:100%;">
+                <ul id="location-suggestions"
+                    style="
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: none;
+      ">
+                </ul>
             </div>
 
             <div class="item date">
@@ -262,6 +278,64 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // ─────────────────────────────────────────────────────────────
+        // 1) LOCATION AUTOCOMPLETE (using OSM Nominatim)
+        // ─────────────────────────────────────────────────────────────
+        const input = document.getElementById("location-input");
+        const list = document.getElementById("location-suggestions");
+        let currentFetch;
+
+        input.addEventListener("input", () => {
+            const q = input.value.trim();
+            if (q.length < 3) {
+                list.style.display = "none";
+                return;
+            }
+            if (currentFetch) currentFetch.abort();
+            const ctrl = new AbortController();
+            currentFetch = ctrl;
+
+            fetch("https://nominatim.openstreetmap.org/search?" + new URLSearchParams({
+                    q,
+                    countrycodes: "au,bd",
+                    format: "json",
+                    addressdetails: 1,
+                    limit: 5
+                }), {
+                    signal: ctrl.signal
+                })
+                .then(r => r.json())
+                .then(results => {
+                    list.innerHTML = "";
+                    if (!results.length) {
+                        list.style.display = "none";
+                        return;
+                    }
+                    results.forEach(place => {
+                        const li = document.createElement("li");
+                        li.textContent = place.display_name;
+                        li.style.padding = "8px";
+                        li.style.cursor = "pointer";
+                        li.addEventListener("click", () => {
+                            input.value = place.display_name;
+                            list.style.display = "none";
+                        });
+                        list.appendChild(li);
+                    });
+                    list.style.display = "block";
+                })
+                .catch(err => {
+                    if (err.name !== "AbortError") console.error(err);
+                });
+        });
+
+        document.addEventListener("click", e => {
+            if (!input.contains(e.target) && !list.contains(e.target)) {
+                list.style.display = "none";
+            }
+        });
+
+
         // Initialize Flatpickr for date input
         flatpickr("#date-input", {
             dateFormat: "d/m/Y",
@@ -398,14 +472,15 @@
             if (!selectedServiceIds) {
                 return;
             }
-            let locationInput = document.getElementById('location-input').value.trim();
+            // let locationInput = document.getElementById('location-input').value.trim();
+            const locationValue = document.getElementById('location-input').value.trim();
             let dateInput = document.getElementById('date-input').value.trim();
 
             let queryParams = new URLSearchParams();
             queryParams.append('service_ids', selectedServiceIds);
 
-            if (locationInput) {
-                queryParams.append('location', locationInput);
+            if (locationValue) {
+                queryParams.append('location', locationValue);
             }
 
             if (dateInput) {
