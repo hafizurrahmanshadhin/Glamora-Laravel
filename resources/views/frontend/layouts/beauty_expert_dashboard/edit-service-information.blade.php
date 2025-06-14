@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/flatpickr.min.css') }}" />
     <script src="{{ asset('frontend/custom-downloaded-cdn/flatpickr.js') }}"></script>
     <link href="{{ asset('frontend/custom-downloaded-cdn/aos.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('frontend/css/loader-logo.css') }}" />
 @endpush
 
 @section('content')
@@ -93,14 +94,16 @@
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
                                     fill="none">
-                                    <path d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582
-                                        25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
-                                        33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
-                                        34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
-                                        29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
-                                        6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
-                                        6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z" stroke="#222222"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path
+                                        d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582
+                                                                                                                            25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
+                                                                                                                            33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
+                                                                                                                            34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
+                                                                                                                            29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
+                                                                                                                            6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
+                                                                                                                            6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                        stroke="#222222" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
                                 </svg>
                             </div>
                             <p style="color: #6B6B6B;" id="upload-btn">Upload Documents</p>
@@ -371,10 +374,11 @@
                                             <svg class="service-delete-btn" width="20px"
                                                 style="display: {{ $data['image'] ? 'block' : 'none' }};"
                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                                <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4
-                                                24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
-                                                47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
-                                                0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                                <path
+                                                    d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4
+                                                                                                                                    24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
+                                                                                                                                    47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
+                                                                                                                                    0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                             </svg>
                                         </div>
                                     </td>
@@ -401,6 +405,12 @@
             {{-- step 3 end --}}
         </div>
     </form>
+
+    <div id="overlay" class="overlay">
+        <div class="loader-logo">
+            <img src="{{ asset('frontend/logo.png') }}" alt="Loading...">
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -996,16 +1006,24 @@
         const step2 = document.getElementById('service-provider-step-form-2');
         const step3 = document.getElementById('service-provider-step-form-3');
 
+        const overlay = document.getElementById('overlay');
+        const form = document.querySelector('form');
+
         const step1NextBtn = document.getElementById('step-1-next-btn');
         const step2BackBtn = document.getElementById('step-2-back-btn');
         const step2NextBtn = document.getElementById('step-2-next-btn');
         const step3BackBtn = document.getElementById('step-3-back-btn');
+        const step3NextBtn = document.getElementById('step-3-next-btn');
+
+        // Track current step
+        let currentStep = 1;
 
         step1NextBtn.addEventListener('click', () => {
             step1.style.display = "none";
             step2.style.display = "flex";
             step2.style.opacity = 1;
             step2.style.visibility = "visible";
+            currentStep = 2;
 
             setTimeout(() => {
                 sliders.forEach(({
@@ -1022,16 +1040,36 @@
         step2BackBtn.addEventListener('click', () => {
             step2.style.display = "none";
             step1.style.display = "flex";
+            currentStep = 1;
         })
 
         step2NextBtn.addEventListener('click', () => {
             step2.style.display = "none";
             step3.style.display = "block";
+            currentStep = 3;
         })
 
         step3BackBtn.addEventListener('click', () => {
             step3.style.display = "none";
             step2.style.display = "flex";
+            currentStep = 2;
         })
+
+
+        // Show loader when submit button is clicked
+        step3NextBtn.addEventListener('click', function() {
+            if (currentStep === 3) {
+                console.log('Submit button clicked, showing loader');
+                overlay.style.display = 'flex';
+                // Don't disable the button, let the form submit naturally
+            }
+        });
+
+        // Hide loader if there are form validation errors
+        form.addEventListener('invalid', function() {
+            overlay.style.display = 'none';
+            step3NextBtn.disabled = false;
+            step3NextBtn.textContent = 'Next';
+        }, true);
     </script>
 @endpush

@@ -844,12 +844,13 @@
                         const emptyRow = document.createElement("div");
                         emptyRow.className = "range-row";
                         emptyRow.setAttribute("data-index", 0);
+                        emptyRow.style.marginTop = "8px";
                         emptyRow.innerHTML = `
-                            <div class="row">
-                                <div class="col-md-6">
+                            <div class="row" style="align-items: center;">
+                                <div class="col-md-5">
                                     <h6>From</h6>
                                     <div class="date-picker-container-from">
-                                        <input class="range-from" placeholder="DD/MM/YY" readonly value="">
+                                        <input style="padding-right: 8px" class="range-from" placeholder="DD/MM/YY" readonly value="">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
                                             viewBox="0 0 19 20" fill="none">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
@@ -858,10 +859,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <h6>To</h6>
                                     <div class="date-picker-container-to">
-                                        <input class="range-to" placeholder="DD/MM/YY" readonly value="">
+                                        <input style="padding-right: 8px" class="range-to" placeholder="DD/MM/YY" readonly value="">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
                                             viewBox="0 0 19 20" fill="none">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"

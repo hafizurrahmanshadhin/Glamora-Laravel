@@ -1,0 +1,144 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+    display: none;
+    /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /* Make sure it's on top of other content */
+    backdrop-filter: blur(5px);
+    /* Apply blur to the whole page */
+}
+
+/* Hide the existing loader */
+.loader {
+    display: none;
+}
+
+/* Logo loader styling */
+.loader-logo {
+    width: 150px;
+    height: 150px;
+    /* Choose one of these animations: */
+    animation: logoPulse 2s ease-in-out infinite;
+    /* animation: logoBreath 3s ease-in-out infinite; */
+    /* animation: logoGlow 2s ease-in-out infinite; */
+    /* animation: logoBounce 2s infinite; */
+    /* animation: logoFloat 3s ease-in-out infinite; */
+    /* animation: logoFade 2s ease-in-out infinite; */
+    /* animation: logoScaleGlow 2.5s ease-in-out infinite; */
+}
+
+.loader-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Option 1: Pulse animation */
+@keyframes logoPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+/* Option 2: Breathing animation */
+@keyframes logoBreath {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Option 3: Glow animation */
+@keyframes logoGlow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.9));
+    }
+}
+
+/* Option 4: Bounce animation */
+@keyframes logoBounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Option 5: Float animation */
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Option 6: Fade in/out animation */
+@keyframes logoFade {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* Option 7: Scale with glow combination */
+@keyframes logoScaleGlow {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+    }
+
+    50% {
+        transform: scale(1.15);
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+    }
+}
