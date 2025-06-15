@@ -19,10 +19,8 @@ class AuthenticatedSessionController extends Controller {
      */
     public function create(): View | JsonResponse {
         try {
-            // Fetch dynamic auth page banners from the CMS images table
-            $authBanner = CMSImage::where('page', 'auth')
-                ->where('status', 'active')
-                ->first();
+            // Fetch data using static methods from CMSImage model
+            $authBanner = CMSImage::authBanner();
 
             return view('auth.layouts.login', compact('authBanner'));
         } catch (Exception $e) {

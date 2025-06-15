@@ -15,6 +15,7 @@ use App\Models\TravelRadius;
 use App\Models\UserGallery;
 use App\Models\UserService;
 use App\Models\UserTool;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -78,6 +80,12 @@ class User extends Authenticatable implements JWTSubject {
             }
         });
 
+        // Automatically hide users whose ban hasn't yet expired
+        static::addGlobalScope('notBanned', function (Builder $q) {
+            $q->whereNull('banned_until')
+                ->orWhere('banned_until', '<=', now());
+        });
+
         static::saved(function ($user) {
             if ($user->role === 'beauty_expert') {
                 Cache::forget('top_beauty_experts');
@@ -98,6 +106,20 @@ class User extends Authenticatable implements JWTSubject {
 
     public function getJWTCustomClaims(): array {
         return [];
+    }
+
+    /**
+     * Check if user is currently banned for manual checks
+     */
+    public function isBanned(): bool {
+        return $this->banned_until && $this->banned_until->isFuture();
+    }
+
+    /**
+     * Scope to include banned users when need to override global scope
+     */
+    public function scopeWithBanned(Builder $q): Builder {
+        return $q->withoutGlobalScope('notBanned');
     }
 
     public function businessInformation(): HasOne {

@@ -52,6 +52,15 @@ class CMSImage extends Model {
         );
     }
 
+    /**
+     * Get the latest "authBanner" image, cached for 1 hour.
+     */
+    public static function authBanner(): ?self {
+        return Cache::remember('authBanner', 3600, fn() =>
+            static::where('page', 'auth')->where('status', 'active')->first()
+        );
+    }
+
     protected static function booted(): void {
         static::saved(function ($cmsImage) {
             if ($cmsImage->page === 'home') {
@@ -59,6 +68,9 @@ class CMSImage extends Model {
             }
             if ($cmsImage->page === 'testimonial') {
                 Cache::forget('testimonial_image');
+            }
+            if ($cmsImage->page === 'auth') {
+                Cache::forget('authBanner');
             }
         });
 
@@ -68,6 +80,9 @@ class CMSImage extends Model {
             }
             if ($cmsImage->page === 'testimonial') {
                 Cache::forget('testimonial_image');
+            }
+            if ($cmsImage->page === 'auth') {
+                Cache::forget('authBanner');
             }
         });
     }

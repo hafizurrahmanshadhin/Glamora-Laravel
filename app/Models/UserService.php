@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Service;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,6 +48,13 @@ class UserService extends Model {
         static::deleted(function () {
             Cache::forget('approved_services');
         });
+    }
+
+    /**
+     * Scope for active services with non-banned users
+     */
+    public function scopeActive(Builder $q): Builder {
+        return $q->where('status', 'active')->whereHas('user');
     }
 
     public function user(): BelongsTo {

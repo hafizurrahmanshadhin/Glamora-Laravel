@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,6 +42,13 @@ class BusinessInformation extends Model {
         static::deleted(function () {
             Cache::forget('top_beauty_experts');
         });
+    }
+
+    /**
+     * Scope for active business information with non-banned users
+     */
+    public function scopeActive(Builder $q): Builder {
+        return $q->where('status', 'active')->whereHas('user');
     }
 
     public function user(): BelongsTo {

@@ -34,11 +34,11 @@ class BookingCancellationAfterAppointment extends Model {
         return $this->belongsTo(Booking::class);
     }
 
-    public function canceledBy(): BelongsTo {
-        return $this->belongsTo(User::class, 'canceled_by');
+    public function canceledBy() {
+        return $this->belongsTo(User::class, 'canceled_by')->withBanned();
     }
 
-    public function requestedBy(): BelongsTo {
-        return $this->belongsTo(User::class, 'requested_by');
+    public function requestedBy() {
+        return $this->belongsTo(User::class, 'requested_by')->withBanned();
     }
 }

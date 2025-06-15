@@ -6,14 +6,11 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\AdminComment;
 use App\Models\BookingCancellationAfterAppointment;
-use App\Models\BusinessInformation;
-use App\Models\TravelRadius;
 use App\Models\User;
-use App\Models\UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
@@ -108,39 +105,30 @@ class AfterPaymentController extends Controller {
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function banUser(Request $request): JsonResponse {
-        $request->validate([
-            'user_id'  => 'required|exists:users,id',
-            'duration' => 'required|in:1,3,5,7,10,15,30',
-        ]);
-
-        DB::beginTransaction();
         try {
-            $user     = User::findOrFail($request->user_id);
-            $duration = (int) $request->duration;
+            $request->validate([
+                'user_id'  => 'required|exists:users,id',
+                'duration' => 'required|in:1,3,5,7,10,15,30',
+            ]);
 
-            // Calculate banned_until (current time + duration days)
-            $banDuration = now()->addDays($duration);
+            $user               = User::withBanned()->findOrFail($request->user_id);
+            $user->banned_until = now()->addDays((int) $request->duration);
+            $user->saveQuietly();
 
-            // Update user ban status
-            $user->banned_until = $banDuration;
-            $user->save();
+            // Clear only the count-related caches, keep base data cached
+            Cache::forget('all_styler_counts');
+            Cache::forget('top_beauty_experts');
 
-            // Determine new status
-            $status = $request->input('status') === 'available' ? 'active' : 'inactive';
-
-            // Update related tables
-            BusinessInformation::where('user_id', $user->id)->update(['status' => $status]);
-            TravelRadius::where('user_id', $user->id)->update(['status' => $status]);
-            UserService::where('user_id', $user->id)->update(['status' => $status]);
-
-            DB::commit();
-            return Helper::jsonResponse(true, "User has been banned successfully for $request->duration day(s).", 200);
+            return Helper::jsonResponse(
+                true,
+                "User has been banned for {$request->duration} day(s).",
+                200
+            );
         } catch (Exception $e) {
-            DB::rollBack();
-
-            return Helper::jsonResponse(false, 'An error occurred while banning the user.', 500, [
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),
             ]);
         }

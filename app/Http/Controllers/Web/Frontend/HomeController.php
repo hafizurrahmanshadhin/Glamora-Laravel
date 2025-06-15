@@ -14,6 +14,7 @@ use App\Models\UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class HomeController extends Controller {
@@ -22,12 +23,6 @@ class HomeController extends Controller {
      *
      * @return View|JsonResponse
      * @throws Exception
-     * @description This method retrieves various data for the home page, including system settings,
-     * approved services, active services, review statistics, latest reviews, top beauty experts,
-     * home banners, testimonial images, join us section, and service types.
-     *
-     * It uses caching to optimize performance and reduce database queries.
-     * If an error occurs, it returns a JSON response with an error message.
      */
     public function index(): View | JsonResponse {
         try {
@@ -39,31 +34,37 @@ class HomeController extends Controller {
             $joinUs           = CMS::joinUs();
             $serviceTypes     = CMS::serviceTypes();
 
-            // $approvedServices = Cache::remember('approved_services', 300, function () {
-            //     return UserService::where('status', 'active')
-            //         ->with('service')
-            //         ->selectRaw('user_services.*, (
-            //               SELECT COUNT(DISTINCT us.user_id)
-            //               FROM user_services as us
-            //               WHERE us.service_id = user_services.service_id AND us.status = "active"
-            //           ) as styler_count')
-            //         ->get();
-            // });
-
-            $approvedServices = Cache::remember('approved_services', 300, function () {
-                // Sub select that counts distinct users for the same service_id
-                $subQuery = UserService::where('status', 'active')
-                    ->whereColumn('service_id', 'user_services.service_id')
-                    ->selectRaw('COUNT(DISTINCT user_id)');
-
-                // Main query selecting user_services.* and sub select as styler_count
-                return UserService::where('status', 'active')
-                    ->with('service') // eager-load the related service
-                    ->select('user_services.*')
-                    ->selectSub($subQuery, 'styler_count')
-                    ->get();
+            // Get all approved services with their users and services (cache for 5 minutes)
+            $approvedServices = Cache::remember('approved_services_base', 300, function () {
+                return UserService::active()->with(['service', 'user'])->get();
             });
 
+            // Get all styler counts in one query (cache for just 1 minute)
+            $allCounts = Cache::remember('all_styler_counts', 60, function () {
+                return DB::table('user_services as us')
+                    ->join('users as u', 'us.user_id', '=', 'u.id')
+                    ->where('us.status', 'active')
+                    ->where('u.status', 'active')
+                    ->where(function ($q) {
+                        $q->whereNull('u.banned_until')
+                            ->orWhere('u.banned_until', '<=', now());
+                    })
+                    ->whereNull('us.deleted_at')
+                    ->whereNull('u.deleted_at')
+                    ->select('us.service_id')
+                    ->selectRaw('COUNT(DISTINCT us.user_id) as count')
+                    ->groupBy('us.service_id')
+                    ->pluck('count', 'service_id')
+                    ->toArray();
+            });
+
+            // Map the styler counts to the approved services
+            $approvedServices = $approvedServices->map(function ($service) use ($allCounts) {
+                $service->styler_count = $allCounts[$service->service_id] ?? 0;
+                return $service;
+            });
+
+            // Retrieve review statistics and latest reviews. Cache for 5 minutes.
             $reviewStats = Cache::remember('review_stats', 300, function () {
                 return Review::where('status', 'active')
                     ->selectRaw('AVG(rating) as average_rating, COUNT(*) as total_reviews')
@@ -72,10 +73,12 @@ class HomeController extends Controller {
             $averageRating = $reviewStats->average_rating ?? 0;
             $totalReviews  = $reviewStats->total_reviews;
 
+            // Retrieve latest reviews with user relation, cache for 5 minutes
             $reviews = Cache::remember('latest_reviews', 300, function () {
                 return Review::with('user')->where('status', 'active')->latest()->take(5)->get();
             });
 
+            // Get top beauty experts (active users with role 'beauty_expert')
             $topBeautyExperts = Cache::remember('top_beauty_experts', 300, function () {
                 return User::where('role', 'beauty_expert')
                     ->where('status', 'active')

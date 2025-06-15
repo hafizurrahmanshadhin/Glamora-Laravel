@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,10 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TravelRadius extends Model {
     use HasFactory, SoftDeletes;
 
-    // Table name if it's different from the default (plural form of the model)
     protected $table = 'travel_radius';
 
-    // Fillable attributes to protect against mass assignment vulnerabilities
     protected $fillable = [
         'id',
         'user_id',
@@ -27,7 +26,6 @@ class TravelRadius extends Model {
         'status',
     ];
 
-    // Cast attributes to specific data types
     protected function casts(): array {
         return [
             'id'                => 'integer',
@@ -43,6 +41,10 @@ class TravelRadius extends Model {
             'updated_at'        => 'datetime',
             'deleted_at'        => 'datetime',
         ];
+    }
+
+    public function scopeActive(Builder $q): Builder {
+        return $q->where('status', 'active')->whereHas('user');
     }
 
     public function user(): BelongsTo {

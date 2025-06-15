@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\CMS;
 use App\Models\Review;
 use App\Models\Service;
 use App\Models\User;
@@ -46,8 +47,8 @@ class AvailableServicesController extends Controller {
                     ->toArray();
             }
 
-            // Build the query for approved services.
-            $query = UserService::where('status', 'active')->with(['service', 'user']);
+            // Use the active scope - this automatically excludes banned users
+            $query = UserService::active()->with(['service', 'user']);
             if (!empty($queryParamIds)) {
                 $query->whereIn('service_id', $queryParamIds);
             }
@@ -65,8 +66,10 @@ class AvailableServicesController extends Controller {
                         $q->where('user_id', $service->user_id);
                     })
                     ->count();
-                $service->styler_count = UserService::where('service_id', $service->service_id)
-                    ->where('status', 'active')
+
+                // This count automatically excludes banned users due to global scope
+                $service->styler_count = UserService::active()
+                    ->where('service_id', $service->service_id)
                     ->distinct('user_id')
                     ->count();
 
@@ -130,6 +133,8 @@ class AvailableServicesController extends Controller {
                 });
             }
 
+            $joinUs = CMS::joinUs();
+
             return view('frontend.layouts.available_services.index', [
                 'serviceId'            => $serviceId,
                 'serviceIds'           => $queryParamIds,
@@ -139,6 +144,7 @@ class AvailableServicesController extends Controller {
                 'selectedPrice'        => $priceRange,
                 'location'             => $location,
                 'searchDate'           => $searchDate,
+                'joinUs'               => $joinUs,
             ]);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
