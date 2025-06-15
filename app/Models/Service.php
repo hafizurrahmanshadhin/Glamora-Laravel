@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class Service extends Model {
@@ -29,6 +30,15 @@ class Service extends Model {
         'updated_at'    => 'datetime',
         'deleted_at'    => 'datetime',
     ];
+
+    /**
+     * Return all active services, cached for 1 hour.
+     */
+    public static function activeServices(): Collection {
+        return Cache::remember('active_services', 3600, fn() =>
+            static::where('status', 'active')->get()
+        );
+    }
 
     protected static function booted(): void {
         static::saved(function () {

@@ -31,9 +31,13 @@ class HomeController extends Controller {
      */
     public function index(): View | JsonResponse {
         try {
-            $systemSetting = Cache::remember('system_setting', 600, function () {
-                return SystemSetting::first();
-            });
+            // Fetching data using static methods from models
+            $systemSetting    = SystemSetting::current();
+            $services         = Service::activeServices();
+            $homeBanners      = CMSImage::homeBanners();
+            $testimonialImage = CMSImage::testimonialImage();
+            $joinUs           = CMS::joinUs();
+            $serviceTypes     = CMS::serviceTypes();
 
             $approvedServices = Cache::remember('approved_services', 300, function () {
                 return UserService::where('status', 'active')
@@ -44,10 +48,6 @@ class HomeController extends Controller {
                           WHERE us.service_id = user_services.service_id AND us.status = "active"
                       ) as styler_count')
                     ->get();
-            });
-
-            $services = Cache::remember('active_services', 300, function () {
-                return Service::where('status', 'active')->get();
             });
 
             $reviewStats = Cache::remember('review_stats', 300, function () {
@@ -67,22 +67,6 @@ class HomeController extends Controller {
                     ->where('status', 'active')
                     ->with('businessInformation')
                     ->get();
-            });
-
-            $homeBanners = Cache::remember('home_banners', 600, function () {
-                return CMSImage::where('page', 'home')->where('status', 'active')->get();
-            });
-
-            $testimonialImage = Cache::remember('testimonial_image', 600, function () {
-                return CMSImage::where('page', 'testimonial')->where('status', 'active')->latest()->first();
-            });
-
-            $joinUs = Cache::remember('join_us', 600, function () {
-                return CMS::where('section', 'join_us')->first();
-            });
-
-            $serviceTypes = Cache::remember('service_types', 600, function () {
-                return CMS::where('section', 'user-type-container')->where('status', 'active')->orderBy('id')->get();
             });
 
             return view('frontend.layouts.home.index', compact(

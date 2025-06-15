@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class CMSImage extends Model {
@@ -27,6 +28,29 @@ class CMSImage extends Model {
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * Get all "home" banners, cached for 1 hour.
+     */
+    public static function homeBanners(): Collection {
+        return Cache::remember('home_banners', 3600, fn() =>
+            static::where('page', 'home')
+                ->where('status', 'active')
+                ->get()
+        );
+    }
+
+    /**
+     * Get the latest "testimonial" image, cached for 1 hour.
+     */
+    public static function testimonialImage(): ?self {
+        return Cache::remember('testimonial_image', 3600, fn() =>
+            static::where('page', 'testimonial')
+                ->where('status', 'active')
+                ->latest()
+                ->first()
+        );
+    }
 
     protected static function booted(): void {
         static::saved(function ($cmsImage) {

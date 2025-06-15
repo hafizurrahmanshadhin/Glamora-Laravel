@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\CMS;
 use App\Models\Contact;
 use App\Models\SystemSetting;
 use Exception;
@@ -19,9 +20,11 @@ class ContactController extends Controller {
      */
     public function index(): View | JsonResponse {
         try {
-            $systemSettings = SystemSetting::first();
+            // Used static helpers from CMS and SystemSetting models to fetch data
+            $systemSettings = SystemSetting::current();
+            $joinUs         = CMS::joinUs();
 
-            return view('frontend.layouts.contact.index', compact('systemSettings'));
+            return view('frontend.layouts.contact.index', compact('systemSettings', 'joinUs'));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),

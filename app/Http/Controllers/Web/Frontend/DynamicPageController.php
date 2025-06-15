@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Frontend;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\CMS;
 use App\Models\DynamicPage;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +23,9 @@ class DynamicPageController extends Controller {
                 ->whereNull('deleted_at')
                 ->where("page_slug", $page_slug)
                 ->first();
-            return view('frontend.layouts.dynamic_page.index', compact('pageData'));
+
+            $joinUs = CMS::joinUs();
+            return view('frontend.layouts.dynamic_page.index', compact('pageData', 'joinUs'));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),

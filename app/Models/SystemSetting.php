@@ -28,6 +28,13 @@ class SystemSetting extends Model {
         ];
     }
 
+    /**
+     * Fetch the current system settings, cached for 1 hour.
+     */
+    public static function current(): ?self {
+        return Cache::remember('system_setting', 3600, fn() => static::first());
+    }
+
     protected static function booted(): void {
         static::saved(function () {
             Cache::forget('system_setting');
