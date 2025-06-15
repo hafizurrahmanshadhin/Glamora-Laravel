@@ -490,7 +490,7 @@
                                 <div class="explore-card-heading-para">
                                     <h4>
                                         {{ \Carbon\Carbon::parse($booking->appointment_date)->format('D, M j') }}
-                                        at {{ $booking->appointment_time }}
+                                        at {{ \Carbon\Carbon::parse($booking->appointment_time)->format('g:i A') }}
                                     </h4>
                                     <div
                                         class="armie-service-location-type d-flex align-items-center justify-content-between">
@@ -625,6 +625,44 @@
                                                 .avatar :
                                                 "{{ asset('backend/images/default_images/user_1.jpg') }}";
 
+
+                                            // Trim any extra spaces
+                                            let rawTime = b.appointment_time.trim();
+                                            // Check if rawTime ends with AM/PM
+                                            const suffix = rawTime.slice(-2)
+                                                .toUpperCase();
+
+                                            let hour, minute;
+
+                                            if (suffix === 'AM' || suffix ===
+                                                'PM') {
+                                                // Already 12-hour format: strip AM/PM for numeric parsing
+                                                rawTime = rawTime.slice(0, -2)
+                                                    .trim();
+                                                const [h, m] = rawTime.split(':');
+                                                hour = parseInt(h, 10);
+                                                minute = parseInt(m, 10);
+
+                                                // Convert that existing 12-hour time to 24-hour internally
+                                                if (suffix === 'PM' && hour < 12)
+                                                    hour += 12;
+                                                if (suffix === 'AM' && hour === 12)
+                                                    hour = 0;
+                                            } else {
+                                                // If the data is 24-hour (e.g., “19:00”), parse accordingly
+                                                const [h, m] = rawTime.split(':');
+                                                hour = parseInt(h, 10);
+                                                minute = parseInt(m, 10);
+                                            }
+
+                                            // Now convert to 12-hour format with AM/PM
+                                            const ampm = hour >= 12 ? 'PM' : 'AM';
+                                            hour = hour % 12 || 12;
+                                            const formattedTime = hour + ':' +
+                                                String(minute).padStart(2, '0') +
+                                                ' ' + ampm;
+
+
                                             // Format the date to be user-friendly
                                             const appointmentDate = new Date(b
                                                 .appointment_date);
@@ -650,7 +688,7 @@
                                                         </p>
                                                         <p class="mb-1">
                                                             <strong>Date:</strong> ${formattedDate},
-                                                            <strong>Time:</strong> ${b.appointment_time}
+                                                            <strong>Time:</strong> ${formattedTime}
                                                         </p>
                                                         <p class="mb-1"><strong>Services:</strong><br>
                                                             ${b.services_text ?? "N/A"}

@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/tarek.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/categories.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/custom-downloaded-cdn/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/availability-note.css') }}">
 @endpush
 
 @section('content')
@@ -110,6 +111,28 @@
                             </div>
                         </div>
                     </div>
+
+
+                    {{-- AVAILABILITY NOTE START --}}
+                    <div class="availability-info-card">
+                        <div class="info-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="m9,12 2,2 4,-4"></path>
+                            </svg>
+                        </div>
+                        <div class="info-content">
+                            <h4 class="info-title">Availability Information</h4>
+                            <p class="info-text">
+                                Please note: the availability dates and times shown above apply only to the specific service
+                                provider you have selected. Any dates or times that are unavailable to be selected <span
+                                    class="highlight">(displayed as greyed out)</span> indicate that the provider is either
+                                unavailable or on leave during those periods.
+                            </p>
+                        </div>
+                    </div>
+                    {{-- AVAILABILITY NOTE END --}}
 
                     <div class="tm-multistep-btn-wrapper">
                         <button type="button" class="tm-multi-step-prev-step">Back</button>

@@ -210,8 +210,8 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 fill="none" viewBox="0 0 32 32">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 3C8.82 3 3 8.82 3 16C3 23.18 8.82 29 16 29
-                                                                             C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM11 11
-                                                                             L21 21M21 11L11 21" stroke="#222"
+                                                                                     C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM11 11
+                                                                                     L21 21M21 11L11 21" stroke="#222"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </a>
@@ -221,8 +221,9 @@
                                 <div class="explore-card-heading-para">
                                     <h4>
                                         {{ \Carbon\Carbon::parse($booking->appointment_date)->format('D, M j') }}
-                                        at {{ $booking->appointment_time }}
+                                        at {{ \Carbon\Carbon::parse($booking->appointment_time)->format('g:i A') }}
                                     </h4>
+
                                     <div
                                         class="armie-service-location-type d-flex align-items-center justify-content-between">
                                         <p class="armie-service-type-name">
