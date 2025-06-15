@@ -39,14 +39,28 @@ class HomeController extends Controller {
             $joinUs           = CMS::joinUs();
             $serviceTypes     = CMS::serviceTypes();
 
+            // $approvedServices = Cache::remember('approved_services', 300, function () {
+            //     return UserService::where('status', 'active')
+            //         ->with('service')
+            //         ->selectRaw('user_services.*, (
+            //               SELECT COUNT(DISTINCT us.user_id)
+            //               FROM user_services as us
+            //               WHERE us.service_id = user_services.service_id AND us.status = "active"
+            //           ) as styler_count')
+            //         ->get();
+            // });
+
             $approvedServices = Cache::remember('approved_services', 300, function () {
+                // Sub select that counts distinct users for the same service_id
+                $subQuery = UserService::where('status', 'active')
+                    ->whereColumn('service_id', 'user_services.service_id')
+                    ->selectRaw('COUNT(DISTINCT user_id)');
+
+                // Main query selecting user_services.* and sub select as styler_count
                 return UserService::where('status', 'active')
-                    ->with('service')
-                    ->selectRaw('user_services.*, (
-                          SELECT COUNT(DISTINCT us.user_id)
-                          FROM user_services as us
-                          WHERE us.service_id = user_services.service_id AND us.status = "active"
-                      ) as styler_count')
+                    ->with('service') // eager-load the related service
+                    ->select('user_services.*')
+                    ->selectSub($subQuery, 'styler_count')
                     ->get();
             });
 
