@@ -7,11 +7,7 @@
         <div class="container">
             <div class="client-tax-content-wrapper">
                 <h1>Join as a client or Service Provider</h1>
-                <p class="join-main-para">
-                    Become part of our thriving beauty community! Whether you’re seeking top beauty professionals
-                    for your next treatment or you're a beauty expert ready to showcase your skills and expand your
-                    client base, Glamora is here for you. Sign up now and start connecting within minutes.
-                </p>
+                <p class="join-main-para">{!! $systemSetting->description ?? '' !!}</p>
                 <form method="GET" action="{{ route('register') }}">
                     @csrf
                     <div class="client-tax-preparer-option">
@@ -84,7 +80,7 @@
                         </div>
                     </div>
                     <div class="tm-create-btn-link-wrapper">
-                        <button type="submit">Create Account</button>
+                        <button id="submit-btn" type="submit" disabled>Create Account</button>
                         <p class="tm-create-btn-link">
                             Already have an account? <a href="{{ route('login') }}">Sign In</a>
                         </p>
@@ -94,3 +90,23 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        const roleInput = document.getElementById('role');
+        const submitBtn = document.getElementById('submit-btn');
+        const boxes = document.querySelectorAll('.client-tax-preparer-option-single');
+
+        boxes.forEach(box => {
+            box.addEventListener('click', () => {
+                // set the hidden input
+                roleInput.value = box.id; // 'client' or 'beauty_expert'
+                // enable the button
+                submitBtn.removeAttribute('disabled');
+                // visually highlight
+                boxes.forEach(b => b.classList.remove('selected'));
+                box.classList.add('selected');
+            });
+        });
+    </script>
+@endpush

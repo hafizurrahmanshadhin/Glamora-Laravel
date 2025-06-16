@@ -41,46 +41,40 @@ class RegisteredUserController extends Controller {
      * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse | JsonResponse {
-        try {
-            $request->validate([
-                'first_name'   => ['required', 'string', 'max:255'],
-                'last_name'    => ['required', 'string', 'max:255'],
-                'email'        => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-                'phone_number' => ['required', 'string', 'max:255', 'unique:' . User::class],
-                'address'      => ['required', 'string'],
-                'password'     => ['required', 'confirmed', Rules\Password::defaults()],
-                'role'         => ['required', 'in:client,beauty_expert'],
-            ]);
+        $request->validate([
+            'first_name'   => ['required', 'string', 'max:255'],
+            'last_name'    => ['required', 'string', 'max:255'],
+            'email'        => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'phone_number' => ['required', 'string', 'max:255', 'unique:' . User::class],
+            'address'      => ['required', 'string'],
+            'password'     => ['required', 'confirmed', Rules\Password::defaults()],
+            'role'         => ['required', 'in:client,beauty_expert'],
+        ]);
 
-            $user = User::create([
-                'first_name'   => $request->first_name,
-                'last_name'    => $request->last_name,
-                'email'        => $request->email,
-                'phone_number' => $request->phone_number,
-                'address'      => $request->address,
-                'password'     => Hash::make($request->password),
-                'role'         => $request->role,
-                'status'       => $request->role === 'beauty_expert' ? 'inactive' : 'active',
-            ]);
+        $user = User::create([
+            'first_name'   => $request->first_name,
+            'last_name'    => $request->last_name,
+            'email'        => $request->email,
+            'phone_number' => $request->phone_number,
+            'address'      => $request->address,
+            'password'     => Hash::make($request->password),
+            'role'         => $request->role,
+            'status'       => $request->role === 'beauty_expert' ? 'inactive' : 'active',
+        ]);
 
-            event(new Registered($user));
+        event(new Registered($user));
 
-            if ($user->role === 'beauty_expert' && $user->status === 'inactive') {
-                Auth::login($user);
-                return redirect()->route('questionnaires')->with('status', 'Please complete your business information.');
-            }
+        if ($user->role === 'beauty_expert' && $user->status === 'inactive') {
+            Auth::login($user);
+            return redirect()->route('questionnaires')->with('status', 'Please complete your business information.');
+        }
 
-            if ($user->role === 'admin') {
-                return redirect()->route('dashboard');
-            } elseif ($user->role === 'client') {
-                return redirect()->route('phone-number-verification');
-            } else {
-                return redirect()->route('questionnaires');
-            }
-        } catch (Exception $e) {
-            return Helper::jsonResponse(false, 'An error occurred', 500, [
-                'error' => $e->getMessage(),
-            ]);
+        if ($user->role === 'admin') {
+            return redirect()->route('dashboard');
+        } elseif ($user->role === 'client') {
+            return redirect()->route('phone-number-verification');
+        } else {
+            return redirect()->route('questionnaires');
         }
     }
 }

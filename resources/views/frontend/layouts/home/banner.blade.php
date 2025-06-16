@@ -11,7 +11,7 @@
         </div>
 
         <div class="text-circle-box">
-            <a href="" class="home-circle">
+            <a href="javascript:void(0);" class="home-circle" style="pointer-events: none; cursor: default;">
                 <span class="home-circle-arrow"> → </span>
             </a>
             <svg class="text-svg" xmlns="http://www.w3.org/2000/svg" xml:lang="en"
