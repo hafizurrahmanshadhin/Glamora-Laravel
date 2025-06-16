@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller {
@@ -30,6 +31,27 @@ class NotificationController extends Controller {
                 }
             }
             return redirect()->back();
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'An error occurred', 500, [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Mark a notification as read via AJAX.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function markAsReadAjax(Request $request): JsonResponse {
+        try {
+            $notificationId = $request->input('notification_id');
+            $notification   = Auth::user()->notifications()->findOrFail($notificationId);
+            $notification->markAsRead();
+
+            $updatedCount = Auth::user()->unreadNotifications()->count();
+            return response()->json(['status' => 'success', 'unreadCount' => $updatedCount]);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),

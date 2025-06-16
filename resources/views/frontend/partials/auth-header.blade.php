@@ -75,7 +75,9 @@
                         @endphp
 
                         @if (str_contains($message, 'Declined'))
-                            <div class="item">
+                            {{-- For declined notifications, make them clickable with Ajax --}}
+                            <div class="item declined-notification" data-notification-id="{{ $notificationId }}"
+                                style="cursor: pointer;">
                                 <div class="left">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="19"
                                         viewBox="0 0 16 19" fill="none">
@@ -326,3 +328,38 @@
     </div>
 </div>
 {{-- Edit Profile Modal End --}}
+
+<script>
+    // Ajax-based “Declined” notifications: Mark as read, update count, stay on page
+    document.querySelectorAll('.declined-notification').forEach(item => {
+        item.addEventListener('click', function() {
+            const notifId = this.dataset.notificationId;
+            fetch('{{ route('notification.read.ajax') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        notification_id: notifId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.querySelector('.notification-count').textContent = data
+                            .unreadCount;
+
+                        // Also update the title count
+                        const titleCount = document.querySelector('.title .count');
+                        if (titleCount) {
+                            titleCount.textContent = data.unreadCount;
+                        }
+
+                        // Mark visually as read
+                        this.classList.add('read');
+                    }
+                });
+        });
+    });
+</script>

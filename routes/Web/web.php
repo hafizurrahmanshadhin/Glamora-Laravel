@@ -52,6 +52,7 @@ Route::post('/newsletter-subscription', [NewsletterSubscriptionController::class
 
 // Route for Notification
 Route::get('/notification/read/{id}', [NotificationController::class, 'markAsRead'])->name('notification.read');
+Route::post('/notification/read-ajax', [NotificationController::class, 'markAsReadAjax'])->name('notification.read.ajax');
 
 // Route for Terms and Conditions, Privacy Policy, Inclusions and Cancellation Policy
 Route::controller(LegalPageController::class)->group(function () {

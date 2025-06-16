@@ -22,8 +22,6 @@ return new class extends Migration {
             $table->string('google_id')->nullable()->unique();
 
             $table->enum('availability', ['available', 'unavailable'])->default('available');
-            $table->dateTime('unavailable_from')->nullable();
-            $table->dateTime('unavailable_to')->nullable();
             $table->json('unavailable_ranges')->nullable();
             $table->json('weekend_data')->nullable();
 
