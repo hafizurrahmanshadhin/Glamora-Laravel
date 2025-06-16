@@ -6,7 +6,14 @@ use App\Http\Controllers\Web\Backend\CMS\JoinUsController;
 use App\Http\Controllers\Web\Backend\CMS\QuestionnairesController;
 use App\Http\Controllers\Web\Backend\CMS\ServiceTypeController;
 use App\Http\Controllers\Web\Backend\CMS\TestimonialImageController;
+use App\Http\Controllers\Web\Backend\CMS\UserDashboardController;
 use Illuminate\Support\Facades\Route;
+
+//! Route for User Dashboard Page
+Route::controller(UserDashboardController::class)->prefix('user-dashboard')->name('user-dashboard.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::patch('/', 'update')->name('update');
+});
 
 //! Route for Home Page Image
 Route::controller(HomePageImageController::class)->group(function () {

@@ -35,7 +35,7 @@ class CMSSeeder extends Seeder {
                 'description' => '<p>Join our platform to showcase your skills, connect with clients, and grow your beauty business. Benefit from secure payments and flexible scheduling.</p>',
                 'image'       => 'frontend/uploads/home-user-type-1.png',
                 'status'      => 'active',
-                'created_at'  => null,
+                'created_at'  => '2025-06-10 06:18:42',
                 'updated_at'  => '2025-06-10 06:19:10',
             ],
             [
@@ -45,7 +45,17 @@ class CMSSeeder extends Seeder {
                 'description' => '<p>Find trusted beauty professionals near you, book an appointment for your next glam session, and experience top-tier service right at your convenience.</p>',
                 'image'       => 'frontend/uploads/home-user-type-2.png',
                 'status'      => 'active',
-                'created_at'  => null,
+                'created_at'  => '2025-06-10 06:18:42',
+                'updated_at'  => '2025-06-10 06:18:42',
+            ],
+            [
+                'id'          => 5,
+                'section'     => 'user-dashboard',
+                'title'       => null,
+                'description' => '<p>Start now to connect with trusted tax professionals, book appointments, and manage your documents—all in one place for a smooth tax preparation experience.</p>',
+                'image'       => null,
+                'status'      => 'active',
+                'created_at'  => '2025-06-10 06:18:42',
                 'updated_at'  => '2025-06-10 06:18:42',
             ],
         ]);

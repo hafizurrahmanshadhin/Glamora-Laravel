@@ -40,9 +40,7 @@ class CMS extends Model {
      */
     public static function joinUs(): ?self {
         return Cache::remember('join_us', 3600, fn() =>
-            static::where('section', 'join_us')
-                ->where('status', 'active')
-                ->first()
+            static::where('section', 'join_us')->where('status', 'active')->first()
         );
     }
 
@@ -51,10 +49,16 @@ class CMS extends Model {
      */
     public static function serviceTypes(): Collection {
         return Cache::remember('service_types', 3600, fn() =>
-            static::where('section', 'user-type-container')
-                ->where('status', 'active')
-                ->orderBy('id')
-                ->get()
+            static::where('section', 'user-type-container')->where('status', 'active')->orderBy('id')->get()
+        );
+    }
+
+    /**
+     * Fetch the user dashboard section, cached for 1 hour.
+     */
+    public static function userDashboard(): ?self {
+        return Cache::remember('user_dashboard', 3600, fn() =>
+            static::where('section', 'user-dashboard')->first()
         );
     }
 
@@ -66,6 +70,9 @@ class CMS extends Model {
             if ($cms->section === 'user-type-container') {
                 Cache::forget('service_types');
             }
+            if ($cms->section === 'user-dashboard') {
+                Cache::forget('user_dashboard');
+            }
         });
 
         static::deleted(function ($cms) {
@@ -74,6 +81,9 @@ class CMS extends Model {
             }
             if ($cms->section === 'user-type-container') {
                 Cache::forget('service_types');
+            }
+            if ($cms->section === 'user-dashboard') {
+                Cache::forget('user_dashboard');
             }
         });
     }

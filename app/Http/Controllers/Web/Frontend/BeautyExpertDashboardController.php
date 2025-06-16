@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\BookingCancellationAfterAppointment;
 use App\Models\BusinessInformation;
+use App\Models\CMS;
 use App\Models\Review;
 use App\Models\Service;
 use App\Models\TravelRadius;
@@ -94,6 +95,9 @@ class BeautyExpertDashboardController extends Controller {
                 return Carbon::parse($booking->appointment_date)->format('Y-m-d');
             })->unique()->values()->all();
 
+            // Fetching data using static methods from models
+            $userDashboardContent = CMS::userDashboard();
+
             return view('frontend.layouts.beauty_expert_dashboard.index', compact(
                 'user',
                 'upcomingBookings',
@@ -102,7 +106,8 @@ class BeautyExpertDashboardController extends Controller {
                 'reviewCount',
                 'availability',
                 'unavailableRanges',
-                'highlightDates'
+                'highlightDates',
+                'userDashboardContent'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [

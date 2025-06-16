@@ -425,9 +425,7 @@
                         {{ ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) ?? '' }}
                     </div>
                     <div class="text">
-                        Start now to connect with trusted tax professionals, book appointments, and manage your
-                        documents—all in one
-                        place for a smooth tax preparation experience.
+                        {!! $userDashboardContent->description ?? '' !!}
                     </div>
                 </div>
                 <div class="img-content">

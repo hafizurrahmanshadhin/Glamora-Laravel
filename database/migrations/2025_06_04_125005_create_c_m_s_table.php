@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::create('c_m_s', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('section', ['questionnaires', 'join_us', 'user-type-container'])->nullable(false)->index();
+            $table->enum('section', ['questionnaires', 'join_us', 'user-type-container', 'user-dashboard'])->nullable(false)->index();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable();

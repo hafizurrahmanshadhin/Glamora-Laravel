@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Frontend;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\CMS;
 use App\Models\Report;
 use App\Models\Review;
 use App\Models\Service;
@@ -67,7 +68,14 @@ class ClientDashboardController extends Controller {
                 $booking->servicesText = implode('<br>', $serviceNames);
             }
 
-            return view('frontend.layouts.client_dashboard.index', compact('upcomingBookings', 'pendingRequests'));
+            // Fetching data using static methods from models
+            $userDashboardContent = CMS::userDashboard();
+
+            return view('frontend.layouts.client_dashboard.index', compact(
+                'upcomingBookings',
+                'pendingRequests',
+                'userDashboardContent'
+            ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),
