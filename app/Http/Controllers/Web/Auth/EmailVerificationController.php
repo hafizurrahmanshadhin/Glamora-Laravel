@@ -24,9 +24,8 @@ class EmailVerificationController extends Controller {
      */
     public function index(): View | JsonResponse {
         try {
-            $authBanner = CMSImage::where('page', 'auth')
-                ->where('status', 'active')
-                ->first();
+            // Fetch data using static methods from CMSImage model
+            $authBanner = CMSImage::authBanner();
 
             return view('auth.layouts.verification-using-email', compact('authBanner'));
         } catch (Exception $e) {
@@ -67,10 +66,10 @@ class EmailVerificationController extends Controller {
                     ->subject('Email Verification OTP');
             });
 
-            // Redirect user to the OTP verification page with the email in the session
-            return redirect()->route('otp-verification')
-                ->with('t-success', 'OTP sent to your email.')
-                ->with('email', $request->email);
+            // Redirect user to the OTP verification page with the email
+            return redirect()
+                ->route('otp-verification', ['email' => $request->email])
+                ->with('t-success', 'OTP sent to your email.');
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),
@@ -83,13 +82,18 @@ class EmailVerificationController extends Controller {
      *
      * @return View|JsonResponse
      */
-    public function otpVerificationView(): View | JsonResponse {
+    public function otpVerificationView(Request $request): JsonResponse | RedirectResponse | View {
         try {
-            $authBanner = CMSImage::where('page', 'auth')
-                ->where('status', 'active')
-                ->first();
+            $email = $request->query('email');
+            if (!$email) {
+                return redirect()->route('email-verification')
+                    ->withErrors(['email' => 'Email is required for OTP verification.']);
+            }
 
-            return view('auth.layouts.otp-verification', compact('authBanner'));
+            // Fetch data using static methods from CMSImage model
+            $authBanner = CMSImage::authBanner();
+
+            return view('auth.layouts.otp-verification', compact('authBanner', 'email'));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),

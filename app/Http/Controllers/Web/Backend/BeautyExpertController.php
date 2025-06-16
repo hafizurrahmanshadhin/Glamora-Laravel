@@ -32,13 +32,20 @@ class BeautyExpertController extends Controller {
                         return $data->first_name . ' ' . $data->last_name;
                     })
                     ->addColumn('status', function ($user) {
-                        $status = '<select class="form-select" onchange="changeStatus(' . $user->id . ', this.value)">';
-                        $status .= '<option value="active"' . ($user->status == 'active' ? ' selected' : '') . '>Approved</option>';
-                        $status .= '<option value="inactive"' . ($user->status == 'inactive' ? ' selected' : '') . '>Pending</option>';
-                        $status .= '</select>';
-
-                        return $status;
+                        $sel = '<select class="form-select" onchange="changeStatus(' . $user->id . ', this.value, this)">';
+                        $sel .= '<option value="active" ' . ($user->status == 'active' ? 'selected' : '') . '>Approved</option>';
+                        $sel .= '<option value="inactive" ' . ($user->status == 'inactive' ? 'selected' : '') . '>Pending</option>';
+                        $sel .= '</select>';
+                        return $sel;
                     })
+                // ->addColumn('status', function ($user) {
+                //     $status = '<select class="form-select" onchange="changeStatus(' . $user->id . ', this.value)">';
+                //     $status .= '<option value="active"' . ($user->status == 'active' ? ' selected' : '') . '>Approved</option>';
+                //     $status .= '<option value="inactive"' . ($user->status == 'inactive' ? ' selected' : '') . '>Pending</option>';
+                //     $status .= '</select>';
+
+                //     return $status;
+                // })
                     ->addColumn('action', function ($user) {
                         return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
                                     <a href="javascript:void(0);" onclick="showUserDetails(' . $user->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewUserModal">
@@ -125,10 +132,10 @@ class BeautyExpertController extends Controller {
                 $user->save();
 
                 // Queue the status update email
-                Mail::to($user->email)->queue(new StatusUpdateMail($user));
+                // Mail::to($user->email)->queue(new StatusUpdateMail($user));
 
                 // Send the status update email directly
-                // Mail::to($user->email)->send(new StatusUpdateMail($user));
+                Mail::to($user->email)->send(new StatusUpdateMail($user));
 
                 return response()->json([
                     'success' => true,

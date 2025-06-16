@@ -191,31 +191,74 @@
         });
 
         // Status Change
-        function changeStatus(id, status) {
-            let url = '{{ route('user.beauty-expert.status', ['id' => ':id']) }}'.replace(':id', id);
-            url = url.replace(':id', id);
+        function changeStatus(id, newStatus, selectEl) {
+            const $select = $(selectEl);
+            const oldStatus = $select.val(); // remember what was selected
+            const $cell = $select.parent(); // where we’ll attach the spinner
 
-            axios.post(url, {
-                    status: status,
-                    _token: '{{ csrf_token() }}'
-                })
-                .then(function(response) {
-                    let resp = response.data;
-                    console.log(resp);
-                    $('#datatable').DataTable().ajax.reload();
-                    if (resp.success === true) {
-                        toastr.success(resp.message);
-                    } else if (resp.errors) {
-                        toastr.error(resp.errors[0]);
+            // disable so user can’t click again
+            $select.prop('disabled', true);
+
+            // add a tiny bootstrap spinner
+            const $spin = $(`<div class="spinner-border spinner-border-sm ms-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>`);
+            $cell.append($spin);
+
+            // fire the request
+            axios.post(
+                    '{{ route('user.beauty-expert.status', ['id' => ':id']) }}'.replace(':id', id), {
+                        status: newStatus,
+                        _token: '{{ csrf_token() }}'
+                    }
+                )
+                .then(resp => {
+                    if (resp.data.success) {
+                        toastr.success(resp.data.message);
+                        // make sure select actually shows what the DB says
+                        $select.val(resp.data.data.status);
                     } else {
-                        toastr.error(resp.message);
+                        toastr.error(resp.data.message || 'Invalid status');
+                        // revert on logical failure
+                        $select.val(oldStatus);
                     }
                 })
-                .catch(function(error) {
-                    console.error(error);
+                .catch(err => {
                     toastr.error('An error occurred. Please try again.');
+                    $select.val(oldStatus);
+                })
+                .finally(() => {
+                    // cleanup
+                    $spin.remove();
+                    $select.prop('disabled', false);
                 });
         }
+        // Status Change
+        // function changeStatus(id, status) {
+        //     let url = '{{ route('user.beauty-expert.status', ['id' => ':id']) }}'.replace(':id', id);
+        //     url = url.replace(':id', id);
+
+        //     axios.post(url, {
+        //             status: status,
+        //             _token: '{{ csrf_token() }}'
+        //         })
+        //         .then(function(response) {
+        //             let resp = response.data;
+        //             console.log(resp);
+        //             $('#datatable').DataTable().ajax.reload();
+        //             if (resp.success === true) {
+        //                 toastr.success(resp.message);
+        //             } else if (resp.errors) {
+        //                 toastr.error(resp.errors[0]);
+        //             } else {
+        //                 toastr.error(resp.message);
+        //             }
+        //         })
+        //         .catch(function(error) {
+        //             console.error(error);
+        //             toastr.error('An error occurred. Please try again.');
+        //         });
+        // }
 
         // delete Confirm
         function showDeleteConfirm(id) {
@@ -321,8 +364,8 @@
                                 ${
                                     service.image
                                         ? `<a href="${service.image}" target="_blank">
-                                                <img src="${service.image}" class="img-thumbnail mt-1" width="80">
-                                            </a>`
+                                                        <img src="${service.image}" class="img-thumbnail mt-1" width="80">
+                                                    </a>`
                                         : ''
                                 }
                             </li>

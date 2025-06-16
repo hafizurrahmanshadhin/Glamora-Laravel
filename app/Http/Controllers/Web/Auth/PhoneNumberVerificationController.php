@@ -24,9 +24,8 @@ class PhoneNumberVerificationController extends Controller {
      */
     public function index(): JsonResponse | View {
         try {
-            $authBanner = CMSImage::where('page', 'auth')
-                ->where('status', 'active')
-                ->first();
+            // Fetch data using static methods from CMSImage model
+            $authBanner = CMSImage::authBanner();
 
             return view('auth.layouts.verification-using-phone-number', compact('authBanner'));
         } catch (Exception $e) {

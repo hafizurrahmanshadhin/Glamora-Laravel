@@ -3,16 +3,6 @@
 @section('title', 'OTP Verification')
 
 @section('content')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <section class="sign-in-up-common-section">
         <div class="container">
             <div class="sign-in-up-content-wrapper">
@@ -29,11 +19,19 @@
                         <input type="hidden" name="phone_number" value="{{ session('phone_number') }}">
 
                         <div class="pin-container mb-3">
-                            <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required />
-                            <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required />
-                            <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required />
-                            <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required />
+                            <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                            <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                            <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                            <input type="text" maxlength="1" class="pin-box" name="otp_part[]" required
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
                         </div>
+
+                        @error('otp')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                         <button type="submit">Verify</button>
                     </form>
                 </div>

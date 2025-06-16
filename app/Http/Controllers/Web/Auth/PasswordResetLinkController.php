@@ -18,9 +18,8 @@ class PasswordResetLinkController extends Controller {
      */
     public function create(): View | JsonResponse {
         try {
-            $authBanner = CMSImage::where('page', 'auth')
-                ->where('status', 'active')
-                ->first();
+            // Fetch data using static methods from CMSImage model
+            $authBanner = CMSImage::authBanner();
 
             return view('auth.layouts.forgot-password', compact('authBanner'));
         } catch (Exception $e) {

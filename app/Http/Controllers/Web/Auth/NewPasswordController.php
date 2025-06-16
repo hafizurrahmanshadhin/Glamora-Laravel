@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Auth;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\CMSImage;
 use Exception;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +23,10 @@ class NewPasswordController extends Controller {
      */
     public function create(Request $request): View | JsonResponse {
         try {
-            return view('auth.layouts.reset-password', ['request' => $request]);
+            // Fetch data using static methods from CMSImage model
+            $authBanner = CMSImage::authBanner();
+
+            return view('auth.layouts.reset-password', compact('authBanner'), ['request' => $request]);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
                 'error' => $e->getMessage(),
