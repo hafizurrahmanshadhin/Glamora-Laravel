@@ -51,7 +51,6 @@ class User extends Authenticatable implements JWTSubject {
             'password'                 => 'hashed',
             'avatar'                   => 'string',
             'cover_photo'              => 'string',
-            'google_id'                => 'string',
             'role'                     => 'string',
             'status'                   => 'string',
             'banned_until'             => 'datetime',

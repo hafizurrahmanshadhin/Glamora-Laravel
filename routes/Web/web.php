@@ -22,20 +22,20 @@ Route::get('/reset', [ResetController::class, 'Reset'])->name('reset');
 Route::get('/cache', [ResetController::class, 'Cache'])->name('cache');
 
 // Route for Landing Page
-Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/available-services/{serviceId?}', [AvailableServicesController::class, 'index'])->name('available-services');
-Route::get('/service-category', [ServiceCategoryController::class, 'index'])->name('service-category');
-Route::get('/service-provider-profile/{userId}/service/{serviceId}', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile');
+Route::get('/', [HomeController::class, 'index'])->name('index')->middleware('availability');
+Route::get('/available-services/{serviceId?}', [AvailableServicesController::class, 'index'])->name('available-services')->middleware('availability');
+Route::get('/service-category', [ServiceCategoryController::class, 'index'])->name('service-category')->middleware('availability');
+Route::get('/service-provider-profile/{userId}/service/{serviceId}', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile')->middleware('availability');
 Route::get('/faq', [FAQController::class, 'index'])->name('faq');
 
-Route::controller(BookServiceController::class)->middleware(['auth'])->group(function () {
+Route::controller(BookServiceController::class)->middleware(['auth', 'availability'])->group(function () {
     Route::get('/booking-service', 'index')->name('booking-service');
     Route::post('/booking-store', 'store')->name('booking.store');
     Route::get('/booking-service/negotiate/{booking}', 'viewNegotiate')->name('negotiate-request');
     Route::post('/booking-service/respond-availability', 'respondAvailability')->name('booking.respondAvailability');
 });
 
-Route::controller(PaymentController::class)->middleware(['auth'])->group(function () {
+Route::controller(PaymentController::class)->middleware(['auth', 'availability'])->group(function () {
     Route::get('/make-payment/{booking}', 'makePayment')->name('make-payment');
     Route::post('/checkout/{booking}', 'checkout')->name('checkout');
     Route::get('/payment-success/{booking}', 'success')->name('payment.success');

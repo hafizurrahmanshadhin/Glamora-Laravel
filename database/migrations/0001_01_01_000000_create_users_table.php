@@ -19,7 +19,6 @@ return new class extends Migration {
 
             $table->string('avatar')->nullable();
             $table->string('cover_photo')->nullable();
-            $table->string('google_id')->nullable()->unique();
 
             $table->enum('availability', ['available', 'unavailable'])->default('available');
             $table->json('unavailable_ranges')->nullable();

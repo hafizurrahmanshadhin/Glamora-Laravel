@@ -4,6 +4,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AllowBeautyExpertMiddleware;
 use App\Http\Middleware\BeautyExpertMiddleware;
 use App\Http\Middleware\ClientMiddleware;
+use App\Http\Middleware\UserAvailabilityMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -50,6 +51,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'beauty_expert'       => BeautyExpertMiddleware::class,
             'allow_beauty_expert' => AllowBeautyExpertMiddleware::class,
             'auth.jwt'            => Authenticate::class,
+            'availability'        => UserAvailabilityMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -31,17 +31,26 @@ class MakeService extends Command {
      * Execute the console command.
      */
     public function handle(): void {
-        $name         = $this->argument('name');
-        $namespace    = str_replace('/', '\\', dirname($name)); // Get the namespace without the class name
-        $className    = basename($name); // Get the class name (e.g., 'SocialLoginService')
-        $serviceClass = $this->generateServiceClass($name);
+        $name = $this->argument('name');
+
+        // Split input into path segments and class name
+        $segments  = explode('/', $name);
+        $className = array_pop($segments);
+
+        // Build directory path and namespace
+        $relativeDir = count($segments)
+        ? DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $segments)
+        : '';
+        $namespaceSegment = count($segments)
+        ? '\\' . implode('\\', $segments)
+        : '';
 
         // Define the full path to the services directory
-        $directory = app_path("Services/$namespace");
+        $directory = app_path('Services' . $relativeDir);
 
         // Ensure the directory exists (create it if it doesn't)
         if (!$this->filesystem->exists($directory)) {
-            $this->filesystem->makeDirectory($directory, 0755, true); // Create any missing directories
+            $this->filesystem->makeDirectory($directory, 0755, true);
         }
 
         // Define the path for the new service class file
@@ -53,43 +62,26 @@ class MakeService extends Command {
             return;
         }
 
-        // Create the service class file
+        // Generate and create the service class file
+        $serviceClass = $this->generateServiceClass($className, $namespaceSegment);
         $this->filesystem->put($path, $serviceClass);
 
         $this->info("Service class $name created successfully!");
     }
 
     /**
-     * Generate the PHP code for a service class based on the given name.
+     * Generate the PHP code for a service class based on the given class name and namespace.
      *
-     * This method splits the given service name by the '/' delimiter to separate the namespace
-     * and class name. It then generates the appropriate PHP code for the service class, ensuring
-     * that the namespace and class name are correctly formatted. If a directory structure is
-     * specified, it creates the corresponding namespace. Otherwise, it defaults to the root
-     * namespace.
-     *
-     * @param string $name The name of the service, potentially with a namespace structure.
-     *                     Example: 'Auth/SocialLoginService/Dss' or 'SocialLoginService'.
-     *
-     * @return string The generated PHP code for the service class, including the proper namespace
-     *                and class declaration.
+     * @param string $className The service class name.
+     * @param string $namespaceSegment Namespace segment, e.g. '\\Web\\Frontend'.
+     * @return string
      */
-    private function generateServiceClass(string $name): string {
-        // Split the input string into parts based on '/'
-        $parts = explode('/', $name);
-
-        // Separate the namespace (everything except the last part) and the class name (the last part)
-        $namespaceParts = array_slice($parts, 0, -1); // Get all parts except the last for the namespace
-        $className      = end($parts); // Get the last part as the class name
-
-        // If there are namespace parts, join them with '\' else set it to an empty string
-        $namespace = !empty($namespaceParts) ? '\\' . implode('\\', $namespaceParts) : '';
-
+    private function generateServiceClass(string $className, string $namespaceSegment): string {
         return "<?php
 
-namespace App\\Services$namespace;
+namespace App\\Services{$namespaceSegment};
 
-class $className {
+class {$className} {
     // Your service logic goes here
 }
 ";

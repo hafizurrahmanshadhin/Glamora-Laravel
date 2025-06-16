@@ -127,7 +127,7 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
     php artisan serve
     ```
 
-11. Start corn job:
+11. Start corn job (Not Needed):
 
     ```bash
     php artisan schedule:work
@@ -135,7 +135,7 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
     * * * * * /usr/local/bin/php /home/qfe9ow4285wl/public_html/artisan schedule:work > /dev/null 2>&1
     ```
 
-12. Start reverb websocket server:
+12. Start reverb websocket server (Not Needed Used Pusher for Real-time Messaging):
 
     ```bash
     php artisan reverb:start --debug
