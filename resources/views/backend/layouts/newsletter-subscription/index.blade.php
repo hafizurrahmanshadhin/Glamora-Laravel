@@ -103,7 +103,11 @@
                             data: 'email',
                             name: 'email',
                             orderable: true,
-                            searchable: true
+                            searchable: true,
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: 'status',

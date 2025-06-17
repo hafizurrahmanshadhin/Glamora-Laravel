@@ -30,17 +30,21 @@ class ServiceController extends Controller {
                         return $service->platform_fee . '%';
                     })
                     ->addColumn('status', function ($service) {
-                        $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
-                        $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $service->id . '" ' . ($service->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $service->id . ')">';
-                        $status .= '</div>';
-                        return $status;
+                        return '
+                            <div class="d-flex justify-content-center">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $service->id . '" ' . ($service->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $service->id . ')">
+                                </div>
+                            </div>
+                        ';
                     })
                     ->addColumn('action', function ($service) {
                         return '
-                            <div class="hstack gap-3 fs-base">
+                            <div class="d-flex justify-content-center hstack gap-3 fs-base">
                                 <a href="javascript:void(0);" class="link-primary text-decoration-none edit-service" data-id="' . $service->id . '" title="Edit">
                                     <i class="ri-pencil-line" style="font-size:24px;"></i>
                                 </a>
+
                                 <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $service->id . ')" class="link-danger text-decoration-none" title="Delete">
                                     <i class="ri-delete-bin-5-line" style="font-size:24px;"></i>
                                 </a>

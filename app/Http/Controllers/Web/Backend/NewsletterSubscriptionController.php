@@ -26,14 +26,16 @@ class NewsletterSubscriptionController extends Controller {
                 return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('status', function ($newsletterSubscription) {
-                        $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
-                        $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $newsletterSubscription->id . '" ' . ($newsletterSubscription->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $newsletterSubscription->id . ')">';
-                        $status .= '</div>';
-
-                        return $status;
+                        return '
+                            <div class="d-flex justify-content-center">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $newsletterSubscription->id . '" ' . ($newsletterSubscription->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $newsletterSubscription->id . ')">
+                                </div>
+                            </div>
+                        ';
                     })
                     ->addColumn('action', function ($newsletterSubscription) {
-                        return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
+                        return '<div class="d-flex justify-content-center hstack gap-3 fs-base">
                                     <a href="javascript:void(0);" onclick="showDeleteConfirm(' . $newsletterSubscription->id . ')" class="link-danger text-decoration-none" title="Delete">
                                         <i class="ri-delete-bin-5-line" style="font-size: 24px;"></i>
                                     </a>

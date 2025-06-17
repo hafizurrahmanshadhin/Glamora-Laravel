@@ -55,21 +55,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('cms.home-page.index') }}">Table</a>
-                                </li>
-                                <li class="breadcrumb-item active">Home Page Images</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Home Page Images Gallery</h5>
@@ -80,7 +65,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row" id="image-grid">
-                                <!-- Dynamic images will be loaded here -->
+                                {{-- Dynamic images will be loaded here --}}
                             </div>
                         </div>
                     </div>

@@ -68,7 +68,7 @@ class AfterPaymentController extends Controller {
                         if (!$comment) {
                             return 'N/A';
                         }
-                        return strlen($comment) > 25 ? substr($comment, 0, 25) . '...' : $comment;
+                        return strlen($comment) > 100 ? substr($comment, 0, 100) . '...' : $comment;
                     })
                     ->addColumn('full_comment', function ($group) {
                         $user    = $group->first()->canceledBy;
@@ -78,7 +78,7 @@ class AfterPaymentController extends Controller {
                     ->addColumn('action', function ($group) {
                         $user         = $group->first()->canceledBy;
                         $canceledById = $user ? $user->id : 0;
-                        return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
+                        return '<div class="d-flex justify-content-center hstack gap-3 fs-base">
                                 <a href="javascript:void(0);" onclick="showBanModal(' . $canceledById . ')" class="link-danger text-decoration-none" title="Ban User">
                                     <i class="ri-forbid-line" style="font-size: 24px;"></i>
                                 </a>

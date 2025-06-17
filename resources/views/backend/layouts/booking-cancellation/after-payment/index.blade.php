@@ -1,30 +1,15 @@
 @extends('backend.app')
 
-@section('title', 'Booking Cancellation')
+@section('title', 'Booking Cancellation List')
 
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- Start page title --}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('after-payment.index') }}">Table</a></li>
-                                <li class="breadcrumb-item active">Booking Cancellation List After Payment</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- End page title --}}
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">All User List</h5>
+                            <h5 class="card-title mb-0">All Booking Cancellation List After Payment</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -187,65 +172,82 @@
                                 </div>
                             </div>`,
                     },
+                    // Turn off autoWidth so column widths are respected.
+                    autoWidth: false,
                     columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
+                            className: 'text-center',
+                            width: '5%'
                         },
                         {
                             data: 'canceled_by_name',
                             name: 'canceled_by_name',
                             orderable: true,
                             searchable: true,
+                            width: '15%',
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: 'email',
                             name: 'email',
                             orderable: true,
                             searchable: true,
+                            width: '20%',
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: 'phone_number',
                             name: 'phone_number',
                             orderable: true,
                             searchable: true,
+                            width: '10%',
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: null,
                             name: 'admin_comment',
                             render: function(data) {
-                                return `<a href="javascript:void(0)" style="color:black; text-decoration:none; cursor:pointer;" onclick="showFullCommentModal('${escapeHtml(data.full_comment)}')">
+                                return `<a href="javascript:void(0)" style="color:black; text-decoration:none; cursor:pointer; white-space:normal;word-break:break-word;" onclick="showFullCommentModal('${escapeHtml(data.full_comment)}')">
                                             ${escapeHtml(data.admin_comment)}
                                         </a>`;
                             },
                             orderable: false,
                             searchable: false,
+                            width: '35%',
                         },
                         {
                             data: 'ban_status',
                             name: 'ban_status',
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
+                            className: 'text-center',
+                            width: '10%',
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: 'action',
                             name: 'action',
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
+                            className: 'text-center',
+                            width: '5%'
                         },
                     ],
-                });
-
-                $('#datatable').on('draw.dt', function() {
-                    $('td.column-action').each(function() {
-                        let buttonCount = $(this).find('button').length;
-                        let width = 5 + (buttonCount - 1) * 5;
-                        $(this).css('width', width + '%');
-                    });
                 });
 
                 dTable.buttons().container().appendTo('#file_exports');

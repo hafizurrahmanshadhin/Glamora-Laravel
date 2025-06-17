@@ -1,26 +1,10 @@
 @extends('backend.app')
 
-@section('title', 'Contact')
+@section('title', 'Contact List')
 
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- Start page title --}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('contacts.index') }}">Table</a></li>
-                                <li class="breadcrumb-item active">Contact List</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- End page title --}}
-
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -112,54 +96,62 @@
                                 </div>
                             </div>`,
                     },
+                    // Turn off autoWidth so column widths are respected.
+                    autoWidth: false,
                     columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
+                            className: 'text-center',
+                            width: '5%'
                         },
                         {
                             data: 'name',
                             name: 'name',
                             orderable: true,
-                            searchable: true
+                            searchable: true,
+                            width: '30%',
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: 'email',
                             name: 'email',
                             orderable: true,
-                            searchable: true
+                            searchable: true,
+                            width: '40%',
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: 'phone_number',
                             name: 'phone_number',
                             orderable: true,
-                            searchable: true
+                            searchable: true,
+                            width: '15%'
                         },
                         {
                             data: 'status',
                             name: 'status',
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
+                            className: 'text-center',
+                            width: '5%'
                         },
                         {
                             data: 'action',
                             name: 'action',
                             orderable: false,
                             searchable: false,
-                            className: 'text-center'
+                            className: 'text-center',
+                            width: '5%'
                         },
                     ],
-                });
-
-                $('#datatable').on('draw.dt', function() {
-                    $('td.column-action').each(function() {
-                        let buttonCount = $(this).find('button').length;
-                        let width = 5 + (buttonCount - 1) * 5;
-                        $(this).css('width', width + '%');
-                    });
                 });
 
                 dTable.buttons().container().appendTo('#file_exports');

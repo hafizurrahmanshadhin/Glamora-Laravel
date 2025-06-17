@@ -37,13 +37,6 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            <div class="row mb-3">
-                <div class="col-12">
-                    <h4 class="mb-0">Home Page Testimonial Image</h4>
-                </div>
-            </div>
-
-
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <div class="card auth-image-card">
@@ -53,8 +46,8 @@
                         <div class="card-body">
                             <div class="text-center">
                                 @if ($currentImage)
-                                    <img src="{{ asset($currentImage->image) }}" alt="Home Page Testimonial Image" class="auth-image"
-                                        id="currentImagePreview">
+                                    <img src="{{ asset($currentImage->image) }}" alt="Home Page Testimonial Image"
+                                        class="auth-image" id="currentImagePreview">
                                 @else
                                     <div class="alert alert-info">No Home Page Testimonial Image set. Please upload one.
                                     </div>

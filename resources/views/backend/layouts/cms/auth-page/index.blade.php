@@ -37,13 +37,6 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            <div class="row mb-3">
-                <div class="col-12">
-                    <h4 class="mb-0">Auth Page Image</h4>
-                </div>
-            </div>
-
-
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <div class="card auth-image-card">

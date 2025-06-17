@@ -25,15 +25,17 @@ class ContactController extends Controller {
                 return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('status', function ($data) {
-                        $status = '<div class="form-check form-switch" style="margin-left: 40px; width: 50px; height: 24px;">';
-                        $status .= '<input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $data->id . '" ' . ($data->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $data->id . ')">';
-                        $status .= '</div>';
-
-                        return $status;
+                        return '
+                            <div class="d-flex justify-content-center">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck' . $data->id . '" ' . ($data->status == 'active' ? 'checked' : '') . ' onclick="showStatusChangeAlert(' . $data->id . ')">
+                                </div>
+                            </div>
+                        ';
                     })
                     ->addColumn('action', function ($data) {
                         return '
-                                <div class="hstack gap-3 fs-base">
+                                <div class="d-flex justify-content-center hstack gap-3 fs-base">
                                     <a href="javascript:void(0);" onclick="showContactDetails(' . $data->id . ')" class="link-primary text-decoration-none" data-bs-toggle="modal" data-bs-target="#viewContactModal" title="View">
                                         <i class="ri-eye-line" style="font-size: 24px;"></i>
                                     </a>
@@ -44,7 +46,6 @@ class ContactController extends Controller {
                                 </div>
                             ';
                     })
-
                     ->rawColumns(['status', 'action'])
                     ->make();
             }

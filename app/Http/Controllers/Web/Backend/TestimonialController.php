@@ -30,7 +30,7 @@ class TestimonialController extends Controller {
                     })
                     ->addColumn('review', function ($data) {
                         $review       = $data->review;
-                        $short_review = strlen($review) > 50 ? substr($review, 0, 50) . '...' : $review;
+                        $short_review = strlen($review) > 100 ? substr($review, 0, 100) . '...' : $review;
                         return '<p>' . $short_review . '</p>';
                     })
                     ->addColumn('status', function ($testimonial) {
@@ -42,7 +42,7 @@ class TestimonialController extends Controller {
                         return $status;
                     })
                     ->addColumn('action', function ($testimonial) {
-                        return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
+                        return '<div class="d-flex justify-content-center hstack gap-3 fs-base">
                                     <a href="javascript:void(0);" onclick="showTestimonialDetails(' . $testimonial->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewTestimonialModal">
                                         <i class="ri-eye-line" style="font-size: 24px;"></i>
                                     </a>

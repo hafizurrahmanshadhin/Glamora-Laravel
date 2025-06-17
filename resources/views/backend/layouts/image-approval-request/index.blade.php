@@ -5,23 +5,6 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- Start page title --}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('image-approval-request.index') }}">Table</a>
-                                </li>
-                                <li class="breadcrumb-item active">Image Approval Request</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- End page title --}}
-
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -106,46 +89,54 @@
                                 </div>
                             </div>`,
                     },
+                    // Turn off autoWidth so column widths are respected.
+                    autoWidth: false,
                     columns: [{
                             data: 'DT_RowIndex',
                             className: 'text-center',
                             orderable: false,
-                            searchable: false
+                            searchable: false,
+                            width: '5%'
                         },
                         {
                             data: 'user_name',
                             name: 'user_name',
                             orderable: true,
-                            searchable: true
+                            searchable: true,
+                            width: '30%',
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: 'email',
                             name: 'email',
                             orderable: true,
-                            searchable: true
+                            searchable: true,
+                            width: '35%',
+                            render: function(data) {
+                                return '<div style="white-space:normal;word-break:break-word;">' +
+                                    data + '</div>';
+                            }
                         },
                         {
                             data: 'image',
                             name: 'image',
                             orderable: true,
-                            searchable: true
+                            searchable: true,
+                            width: '10%',
+                            className: 'text-center',
                         },
                         {
                             data: 'status',
                             name: 'status',
                             className: 'text-center',
                             orderable: false,
-                            searchable: false
+                            searchable: false,
+                            width: '20%'
                         },
                     ],
-                });
-
-                $('#datatable').on('draw.dt', function() {
-                    $('td.column-action').each(function() {
-                        let buttonCount = $(this).find('button').length;
-                        let width = 5 + (buttonCount - 1) * 5;
-                        $(this).css('width', width + '%');
-                    });
                 });
 
                 dTable.buttons().container().appendTo('#file_exports');
@@ -164,8 +155,8 @@
 
         // Status Change using Axios
         function changeStatus(id, status) {
-            let url = '{{ route('image-approval-request.status', ':userGallery') }}';
-            url = url.replace(':userGallery', id);
+            let url = '{{ route('image-approval-request.status', ['userGallery' => '__ID__']) }}';
+            url = url.replace('__ID__', id);
 
             axios.post(url, {
                     status: status,

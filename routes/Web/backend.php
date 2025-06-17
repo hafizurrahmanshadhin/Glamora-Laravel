@@ -18,20 +18,20 @@ use Illuminate\Support\Facades\Route;
 //! Route for Admin Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-//! Route for Users Beauty Expert Page
-Route::controller(BeautyExpertController::class)->prefix('user')->group(function () {
-    Route::get('/beauty-expert', 'index')->name('user.beauty-expert.index');
-    Route::get('/beauty-expert/show/{id}', 'show')->name('user.beauty-expert.show');
-    Route::post('/beauty-expert/status/{id}', 'status')->name('user.beauty-expert.status');
-    Route::delete('/beauty-expert/destroy/{id}', 'destroy')->name('user.beauty-expert.destroy');
-});
-
 //! Route for Users Client Page
 Route::controller(ClientController::class)->prefix('user')->group(function () {
     Route::get('/client', 'index')->name('user.client.index');
     Route::get('/client/show/{id}', 'show')->name('user.client.show');
     Route::post('/client/status/{id}', 'status')->name('user.client.status');
     Route::delete('/client/destroy/{id}', 'destroy')->name('user.client.destroy');
+});
+
+//! Route for Users Beauty Expert Page
+Route::controller(BeautyExpertController::class)->prefix('user')->group(function () {
+    Route::get('/beauty-expert', 'index')->name('user.beauty-expert.index');
+    Route::get('/beauty-expert/show/{id}', 'show')->name('user.beauty-expert.show');
+    Route::post('/beauty-expert/status/{id}', 'status')->name('user.beauty-expert.status');
+    Route::delete('/beauty-expert/destroy/{id}', 'destroy')->name('user.beauty-expert.destroy');
 });
 
 //! Route for Service Backend

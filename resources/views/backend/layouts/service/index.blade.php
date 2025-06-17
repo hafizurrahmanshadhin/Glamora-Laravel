@@ -5,21 +5,6 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- Start page title --}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('service.index') }}">Table</a></li>
-                                <li class="breadcrumb-item active">Services</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- End page title --}}
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -161,38 +146,49 @@
                             </div>
                         </div>`,
                 },
+                // Turn off autoWidth so column widths are respected.
+                autoWidth: false,
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
                         searchable: false,
-                        className: 'text-center'
+                        className: 'text-center',
+                        width: '5%'
                     },
                     {
                         data: 'services_name',
                         name: 'services_name',
                         orderable: true,
-                        searchable: true
+                        searchable: true,
+                        width: '70%',
+                        render: function(data) {
+                            return '<div style="white-space:normal;word-break:break-word;">' +
+                                data + '</div>';
+                        }
                     },
                     {
                         data: 'platform_fee',
                         name: 'platform_fee',
                         orderable: true,
-                        searchable: true
+                        searchable: true,
+                        width: '15%'
                     },
                     {
                         data: 'status',
                         name: 'status',
                         orderable: false,
                         searchable: false,
-                        className: 'text-center'
+                        className: 'text-center',
+                        width: '5%'
                     },
                     {
                         data: 'action',
                         name: 'action',
                         orderable: false,
                         searchable: false,
-                        className: 'text-center'
+                        className: 'text-center',
+                        width: '5%'
                     },
                 ],
                 columnDefs: [{
@@ -268,7 +264,7 @@
                 let serviceId = $('#edit_service_id').val();
                 console.log('Edit form submitted for ID:', serviceId, 'Data:', formData);
 
-                axios.put('{{ route('service.update', ':id') }}'.replace(':id', serviceId), formData)
+                axios.put("{{ route('service.update', 0) }}".replace('/0', '/' + serviceId), formData)
                     .then(function(response) {
                         console.log('Update response:', response.data);
                         if (response.data.success) {
@@ -310,7 +306,7 @@
 
         // Status Change
         function statusChange(id) {
-            let url = '{{ route('service.status', ':id') }}'.replace(':id', id);
+            let url = '{{ route('service.status', 0) }}'.replace('/0', '/' + id);
             $.ajax({
                 type: "GET",
                 url: url,
@@ -351,7 +347,7 @@
 
         // Delete Item
         function deleteItem(id) {
-            let url = '{{ route('service.destroy', ':id') }}'.replace(':id', id);
+            let url = '{{ route('service.destroy', 0) }}'.replace('/0', '/' + id);
             let csrfToken = '{{ csrf_token() }}';
             $.ajax({
                 type: "DELETE",

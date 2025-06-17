@@ -31,7 +31,7 @@ class ReportController extends Controller {
                         return '<p>' . $short_message . '</p>';
                     })
                     ->addColumn('action', function ($report) {
-                        return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
+                        return '<div class="d-flex justify-content-center hstack gap-3 fs-base">
                                     <a href="javascript:void(0);" onclick="showReportDetails(' . $report->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewReportModal">
                                         <i class="ri-eye-line" style="font-size: 24px;"></i>
                                     </a>

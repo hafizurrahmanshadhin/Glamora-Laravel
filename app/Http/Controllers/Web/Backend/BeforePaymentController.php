@@ -44,7 +44,7 @@ class BeforePaymentController extends Controller {
                     })
 
                     ->addColumn('action', function ($user) {
-                        return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
+                        return '<div class="d-flex justify-content-center hstack gap-3 fs-base">
                                     <a href="javascript:void(0);" onclick="showUserDetails(' . $user->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewUserModal">
                                         <i class="ri-eye-line" style="font-size: 24px;"></i>
                                     </a>

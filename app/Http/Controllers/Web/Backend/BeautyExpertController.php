@@ -38,16 +38,8 @@ class BeautyExpertController extends Controller {
                         $sel .= '</select>';
                         return $sel;
                     })
-                // ->addColumn('status', function ($user) {
-                //     $status = '<select class="form-select" onchange="changeStatus(' . $user->id . ', this.value)">';
-                //     $status .= '<option value="active"' . ($user->status == 'active' ? ' selected' : '') . '>Approved</option>';
-                //     $status .= '<option value="inactive"' . ($user->status == 'inactive' ? ' selected' : '') . '>Pending</option>';
-                //     $status .= '</select>';
-
-                //     return $status;
-                // })
                     ->addColumn('action', function ($user) {
-                        return '<div class="hstack gap-3 fs-base" style="justify-content: center; align-items: center;">
+                        return '<div class="d-flex justify-content-center hstack gap-3 fs-base">
                                     <a href="javascript:void(0);" onclick="showUserDetails(' . $user->id . ')" class="link-primary text-decoration-none" title="View" data-bs-toggle="modal" data-bs-target="#viewUserModal">
                                         <i class="ri-eye-line" style="font-size: 24px;"></i>
                                     </a>
