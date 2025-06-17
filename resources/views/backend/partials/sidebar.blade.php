@@ -185,6 +185,15 @@
                     </div>
                 </li>
 
+                {{-- User Conversation --}}
+                <li class="nav-item">
+                    <a href="{{ route('user-conversation.index') }}"
+                        class="nav-link menu-link {{ request()->routeIs('user-conversation.index') ? 'active' : '' }}">
+                        <i class="ri-chat-3-line"></i>
+                        <span data-key="t-dashboard">User Conversation</span>
+                    </a>
+                </li>
+
 
                 <hr>
                 {{-- CMS Sidebar --}}

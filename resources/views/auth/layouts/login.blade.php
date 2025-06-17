@@ -54,3 +54,14 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $("form").on("submit", function() {
+                var $submitButton = $(this).find('button[type="submit"]');
+                $submitButton.prop("disabled", true).text("Logging in...");
+            });
+        });
+    </script>
+@endpush

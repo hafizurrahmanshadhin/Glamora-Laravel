@@ -12,6 +12,7 @@ use App\Http\Controllers\Web\Backend\NewsletterSubscriptionController;
 use App\Http\Controllers\Web\Backend\ReportController;
 use App\Http\Controllers\Web\Backend\ServiceController;
 use App\Http\Controllers\Web\Backend\TestimonialController;
+use App\Http\Controllers\Web\Backend\UserConversationController;
 use Illuminate\Support\Facades\Route;
 
 //! Route for Admin Dashboard
@@ -102,4 +103,11 @@ Route::prefix('booking-cancellation')->group(function () {
         Route::post('/ban-user', 'banUser')->name('user.ban');
         Route::post('/comment', 'storeComment')->name('admin-comment');
     });
+});
+
+//! Route for User Conversation Page
+Route::controller(UserConversationController::class)->group(function () {
+    Route::get('user-conversation', 'index')->name('user-conversation.index');
+    Route::get('user-conversation/{expert}/partners', 'partners')->name('user-conversation.partners');
+    Route::get('user-conversation/{expert}/{partner}/messages', 'messages')->name('user-conversation.messages');
 });

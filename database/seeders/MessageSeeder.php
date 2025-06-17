@@ -2,32 +2,30 @@
 
 namespace Database\Seeders;
 
+use App\Models\Message;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class MessageSeeder extends Seeder {
     public function run(): void {
-        DB::table('messages')->insert([
-            [
-                'id'          => 1,
-                'sender_id'   => 2,
-                'receiver_id' => 3,
-                'message'     => 'Hello Beauty Expert!',
-                'status'      => 'active',
-                'created_at'  => '2025-04-05 11:53:57',
-                'updated_at'  => '2025-04-05 11:53:57',
-                'deleted_at'  => null,
-            ],
-            [
-                'id'          => 2,
-                'sender_id'   => 3,
-                'receiver_id' => 2,
-                'message'     => 'Hi Client!',
-                'status'      => 'active',
-                'created_at'  => '2025-04-05 11:54:06',
-                'updated_at'  => '2025-04-05 11:54:06',
-                'deleted_at'  => null,
-            ],
-        ]);
+        $clients = User::where('role', 'client')->get();
+        $experts = User::where('role', 'beauty_expert')->get();
+
+        // For each client-expert pair, create a conversation
+        foreach ($clients as $client) {
+            foreach ($experts as $expert) {
+                $messageCount = rand(50, 100);
+
+                for ($i = 0; $i < $messageCount; $i++) {
+                    // Randomly decide who sends each message in this conversation
+                    $isClientSending = rand(0, 1);
+
+                    Message::factory()->create([
+                        'sender_id'   => $isClientSending ? $client->id : $expert->id,
+                        'receiver_id' => $isClientSending ? $expert->id : $client->id,
+                    ]);
+                }
+            }
+        }
     }
 }

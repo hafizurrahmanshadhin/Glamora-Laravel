@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -63,6 +62,21 @@ class User extends Authenticatable implements JWTSubject {
         ];
     }
 
+    public function getJWTIdentifier() {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array {
+        return [];
+    }
+
+    /**
+     * When saving email, always lowercase
+     */
+    public function setEmailAttribute($value) {
+        $this->attributes['email'] = strtolower($value);
+    }
+
     protected static function booted(): void {
         static::creating(function (User $user) {
             // if not explicitly set, give every new user full‐day availability
@@ -97,14 +111,6 @@ class User extends Authenticatable implements JWTSubject {
             }
             Cache::forget('latest_reviews'); // User relation in reviews
         });
-    }
-
-    public function getJWTIdentifier() {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims(): array {
-        return [];
     }
 
     /**
