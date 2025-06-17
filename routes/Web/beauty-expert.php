@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 //! Route for Beauty Expert Dashboard
 Route::controller(BeautyExpertDashboardController::class)->group(function () {
-    Route::get('/beauty-expert-dashboard', 'index')->name('beauty-expert-dashboard');
+    Route::get('/beauty-expert-dashboard', 'index')->name('beauty-expert-dashboard')->middleware('availability');
     Route::post('/toggle-availability', 'toggleAvailability')->name('toggle-availability');
     Route::post('/delete-unavailable-range', 'deleteUnavailableRange')->name('delete-unavailable-range');
     Route::post('/store-weekend-data', 'storeWeekendData')->name('store-weekend-data');
