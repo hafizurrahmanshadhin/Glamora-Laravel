@@ -3,7 +3,7 @@
     $notifications = Auth::user()->unreadNotifications;
 @endphp
 
-<div class="header dashboard-header section-padding-x">
+<div class="header section-padding-x">
     <div class="d-flex align-items-center gap-3">
         <svg class="mobile-menu-icon" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             <path

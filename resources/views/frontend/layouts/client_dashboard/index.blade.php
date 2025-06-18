@@ -112,7 +112,7 @@
 @endpush
 
 @section('content')
-    <div class="dashboard-layout section-padding-x">
+    <div class="dashboard-layout section-padding-x" style="padding-top: 20px;">
         <div class="dashboard-left">
             <div class="dashboard-profile-container" style="min-height: 300px;">
                 <div class="top">
@@ -209,9 +209,10 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 fill="none" viewBox="0 0 32 32">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 3C8.82 3 3 8.82 3 16C3 23.18 8.82 29 16 29
-                                                                                         C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM11 11
-                                                                                         L21 21M21 11L11 21" stroke="#222"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                             C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM11 11
+                                                                                             L21 21M21 11L11 21"
+                                                    stroke="#222" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
                                             </svg>
                                         </a>
                                     </div>

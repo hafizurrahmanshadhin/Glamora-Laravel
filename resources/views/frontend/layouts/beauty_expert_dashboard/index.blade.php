@@ -246,7 +246,7 @@
 @endpush
 
 @section('content')
-    <div class="dashboard-layout section-padding-x">
+    <div class="dashboard-layout section-padding-x" style="padding-top: 20px;">
         <div class="dashboard-left">
             <div class="dashboard-profile-container">
                 <div class="">
@@ -298,11 +298,6 @@
                                                     <input style="padding-right: 8px" class="range-from"
                                                         placeholder="DD/MM/YY" readonly
                                                         value="{{ isset($range['from_date']) ? \Carbon\Carbon::createFromFormat('d/m/Y', $range['from_date'])->format('d/m/Y') : '' }}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
-                                                        viewBox="0 0 19 20" fill="none">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
-                                                            fill="#767676" />
-                                                    </svg>
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
@@ -311,11 +306,6 @@
                                                     <input style="padding-right: 8px" class="range-to"
                                                         placeholder="DD/MM/YY" readonly
                                                         value="{{ isset($range['to_date']) ? \Carbon\Carbon::createFromFormat('d/m/Y', $range['to_date'])->format('d/m/Y') : '' }}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
-                                                        viewBox="0 0 19 20" fill="none">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
-                                                            fill="#767676" />
-                                                    </svg>
                                                 </div>
                                             </div>
                                             <div class="col-md-2 d-flex align-items-end" style="margin-top: 23.5px">
@@ -337,11 +327,6 @@
                                             <div class="date-picker-container-from">
                                                 <input style="padding-right: 8px" class="range-from" placeholder="DD/MM/YY"
                                                     readonly value="">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
-                                                    viewBox="0 0 19 20" fill="none">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
-                                                        fill="#767676" />
-                                                </svg>
                                             </div>
                                         </div>
 
@@ -350,11 +335,6 @@
                                             <div class="date-picker-container-to">
                                                 <input style="padding-right: 8px" class="range-to" placeholder="DD/MM/YY"
                                                     readonly value="">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
-                                                    viewBox="0 0 19 20" fill="none">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
-                                                        fill="#767676" />
-                                                </svg>
                                             </div>
                                         </div>
 
@@ -795,7 +775,7 @@
                         }
                     }
                 });
-                
+
                 // Initialize "To" picker
                 flatpickr(toInput, {
                     dateFormat: "d/m/Y",
@@ -829,11 +809,7 @@
                                 <h6>From</h6>
                                 <div class="date-picker-container-from">
                                     <input style="padding-right: 8px" class="range-from" placeholder="DD/MM/YY" readonly value="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
-                                        viewBox="0 0 19 20" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
-                                            fill="#767676" />
-                                    </svg>
+
                                 </div>
                             </div>
 
@@ -841,11 +817,7 @@
                                 <h6>To</h6>
                                 <div class="date-picker-container-to">
                                     <input style="padding-right: 8px" class="range-to" placeholder="DD/MM/YY" readonly value="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
-                                        viewBox="0 0 19 20" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
-                                            fill="#767676" />
-                                    </svg>
+
                                 </div>
                             </div>
 
@@ -896,11 +868,7 @@
                                     <h6>From</h6>
                                     <div class="date-picker-container-from">
                                         <input style="padding-right: 8px" class="range-from" placeholder="DD/MM/YY" readonly value="">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
-                                            viewBox="0 0 19 20" fill="none">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
-                                                fill="#767676" />
-                                        </svg>
+
                                     </div>
                                 </div>
 
@@ -908,11 +876,7 @@
                                     <h6>To</h6>
                                     <div class="date-picker-container-to">
                                         <input style="padding-right: 8px" class="range-to" placeholder="DD/MM/YY" readonly value="">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20"
-                                            viewBox="0 0 19 20" fill="none">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9109…"
-                                                fill="#767676" />
-                                        </svg>
+
                                     </div>
                                 </div>
 
@@ -942,6 +906,8 @@
                 for (let row of rows) {
                     const fromVal = row.querySelector(".range-from").value.trim();
                     const toVal = row.querySelector(".range-to").value.trim();
+
+                    // Only push if both dates exist
                     if (fromVal && toVal) {
                         rangesToSend.push({
                             from_date: fromVal,
@@ -949,8 +915,23 @@
                         });
                     }
                 }
+
+                // If user removed every range, mark them as available
                 if (!rangesToSend.length) {
-                    return toastr.error("Please set at least one 'From' and 'To' dates.");
+                    axios.post("{{ route('toggle-availability') }}", {
+                            status: "available"
+                        })
+                        .then(r => {
+                            toastr.success("All unavailability cleared.");
+                            // Force the toggle back to 'checked' state
+                            checkbox.checked = true;
+                            showAvailable(); // or your own UI update function
+                        })
+                        .catch(err => {
+                            toastr.error(err.response?.data?.message || "Error clearing unavailability");
+                        });
+
+                    return;
                 }
 
                 // Post all ranges to the server

@@ -121,39 +121,51 @@ class BeautyExpertDashboardController extends Controller {
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function toggleAvailability(Request $request): JsonResponse {
         try {
-            $user = Auth::user();
+            $user          = Auth::user();
+            $relatedStatus = 'active'; // Initialize with default value
 
             if ($request->input('status') === 'available') {
                 // Clear all unavailability data
                 $user->availability       = 'available';
-                $user->unavailable_from   = null;
-                $user->unavailable_to     = null;
                 $user->unavailable_ranges = null;
+                $relatedStatus            = 'active';
+            } elseif ($request->input('status') === 'unavailable') {
+                if ($request->has('ranges') && is_array($request->input('ranges')) && count($request->input('ranges')) > 0) {
+                    $user->unavailable_ranges = $request->input('ranges');
 
-                $relatedStatus = 'active';
-            } elseif ($request->input('status') === 'unavailable' && $request->has('ranges')) {
-                $user->unavailable_ranges = $request->input('ranges');
+                    // Check if current date falls within any of the ranges
+                    $currentDate         = Carbon::now()->format('Y-m-d');
+                    $shouldBeUnavailable = false;
 
-                // Check if current date falls within any of the ranges
-                $currentDate         = Carbon::now()->format('Y-m-d');
-                $shouldBeUnavailable = false;
+                    foreach ($request->input('ranges') as $range) {
+                        if (isset($range['from_date']) && isset($range['to_date'])) {
+                            try {
+                                $fromDate = Carbon::createFromFormat('d/m/Y', $range['from_date'])->format('Y-m-d');
+                                $toDate   = Carbon::createFromFormat('d/m/Y', $range['to_date'])->format('Y-m-d');
 
-                foreach ($request->input('ranges') as $range) {
-                    $fromDate = Carbon::createFromFormat('d/m/Y', $range['from_date'])->format('Y-m-d');
-                    $toDate   = Carbon::createFromFormat('d/m/Y', $range['to_date'])->format('Y-m-d');
-
-                    if ($currentDate >= $fromDate && $currentDate <= $toDate) {
-                        $shouldBeUnavailable = true;
-                        break;
+                                if ($currentDate >= $fromDate && $currentDate <= $toDate) {
+                                    $shouldBeUnavailable = true;
+                                    break;
+                                }
+                            } catch (Exception $dateException) {
+                                // Invalid date format, skip this range
+                                continue;
+                            }
+                        }
                     }
-                }
 
-                // Set availability based on whether current date is in any range
-                $user->availability = $shouldBeUnavailable ? 'unavailable' : 'available';
-                $relatedStatus      = $shouldBeUnavailable ? 'inactive' : 'active';
+                    $user->availability = $shouldBeUnavailable ? 'unavailable' : 'available';
+                    $relatedStatus      = $shouldBeUnavailable ? 'inactive' : 'active';
+                } else {
+                    // No valid ranges provided, treat as available
+                    $user->availability       = 'available';
+                    $user->unavailable_ranges = null;
+                    $relatedStatus            = 'active';
+                }
             }
 
             $user->save();
@@ -163,11 +175,17 @@ class BeautyExpertDashboardController extends Controller {
             TravelRadius::where('user_id', $user->id)->update(['status' => $relatedStatus]);
             UserService::where('user_id', $user->id)->update(['status' => $relatedStatus]);
 
-            return response()->json(['status' => 'success', 'current_availability' => $user->availability]);
-        } catch (Exception $e) {
-            return Helper::jsonResponse(false, 'An error occurred', 500, [
-                'error' => $e->getMessage(),
+            return response()->json([
+                'status'               => 'success',
+                'current_availability' => $user->availability,
+                'message'              => 'Availability updated successfully',
             ]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'An error occurred while updating availability',
+            ], 500);
         }
     }
 
