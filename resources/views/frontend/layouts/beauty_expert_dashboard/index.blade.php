@@ -783,14 +783,23 @@
                     toInput._flatpickr.destroy();
                 }
 
+                // Initialize "From" picker
                 flatpickr(fromInput, {
                     dateFormat: "d/m/Y",
                     minDate: "today",
-                    defaultDate: fromInput.value || null
+                    defaultDate: fromInput.value || null,
+                    onChange: function(selectedDates, dateStr) {
+                        if (selectedDates.length) {
+                            // As soon as a "From" date is selected, update the "To" picker's minimum
+                            toInput._flatpickr.set("minDate", dateStr);
+                        }
+                    }
                 });
+                
+                // Initialize "To" picker
                 flatpickr(toInput, {
                     dateFormat: "d/m/Y",
-                    minDate: "today",
+                    minDate: fromInput.value || "today",
                     defaultDate: toInput.value || null
                 });
             }

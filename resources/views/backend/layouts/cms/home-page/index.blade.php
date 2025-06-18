@@ -157,7 +157,7 @@
                                         <i class="ri-delete-bin-line"></i>
                                     </button>
                                 </div>
-                                <img src="{{ asset('') }}${image.image}" class="card-img" alt="Home page image">
+                                <img src="{{ url('/') }}/${image.image}" class="card-img" alt="Home page image" />
                             </div>
                         </div>`;
                         });
@@ -196,6 +196,11 @@
         }
 
         function confirmDelete(id) {
+            // Use a placeholder for the param in route()
+            let url = '{{ route('cms.home-page.destroy', [':id']) }}';
+            // Replace ":id" with the actual ID
+            url = url.replace(':id', id);
+
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -206,7 +211,7 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete("{{ route('cms.home-page.destroy', '') }}/" + id, {
+                    axios.delete(url, {
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             }

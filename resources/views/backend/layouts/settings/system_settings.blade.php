@@ -5,21 +5,6 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- start page title --}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('system.index') }}">Settings</a></li>
-                                <li class="breadcrumb-item active">System Settings</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- end page title --}}
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -70,7 +55,8 @@
                                             <label for="phone_number" class="form-label">Phone Number:</label>
                                             <input type="text"
                                                 class="form-control @error('phone_number') is-invalid @enderror"
-                                                name="phone_number" placeholder="Please Enter Phone Number" id="phone_number"
+                                                name="phone_number" placeholder="Please Enter Phone Number"
+                                                id="phone_number"
                                                 value="{{ old('phone_number', $setting->phone_number ?? '') }}">
                                             @error('system_name')
                                                 <span class="text-danger">{{ $message }}</span>
@@ -83,8 +69,7 @@
                                             <label for="address" class="form-label">Address:</label>
                                             <input type="text"
                                                 class="form-control form-control @error('address') is-invalid @enderror"
-                                                name="address" placeholder="Please Enter Copy Address"
-                                                id="address"
+                                                name="address" placeholder="Please Enter Copy Address" id="address"
                                                 value="{{ old('address', $setting->address ?? '') }}">
                                             @error('address')
                                                 <span class="text-danger">{{ $message }}</span>

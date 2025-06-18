@@ -5,28 +5,12 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- start page title --}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('profile.setting') }}">Settings</a></li>
-                                <li class="breadcrumb-item active">Profile Settings</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- end page title --}}
-
             <div class="row">
                 <div class="col-xxl-3">
                     <div class="card overflow-hidden">
                         <div class="cover-photo-wrapper">
                             <img src="{{ Auth::user()->cover_photo ? asset(Auth::user()->cover_photo) : asset('backend/images/small/img-7.jpg') }}"
-                                alt="Cover Photo" class="card-img-top profile-wid-img object-fit-cover"
-                                style="height: 200px;">
+                                alt="Cover Photo" class="card-img-top profile-wid-img object-fit-cover" style="height: 200px;">
                             <div>
                                 <input id="cover_photo_input" type="file" class="cover_photo_input d-none">
                                 <label for="cover_photo_input"

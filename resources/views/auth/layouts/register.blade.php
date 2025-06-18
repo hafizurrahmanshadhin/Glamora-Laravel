@@ -17,10 +17,10 @@
 
                     <form class="tm-sign-in-up-form" method="POST" action="{{ route('register') }}">
                         @csrf
-                        <input type="hidden" name="role" value="{{ request('role') }}">
+                        <input required type="hidden" name="role" value="{{ request('role') }}">
 
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="first_name" name="first_name"
+                            <input required type="text" class="form-control" id="first_name" name="first_name"
                                 placeholder="Enter Your First Name" value="{{ old('first_name') }}">
                             <label for="first_name">First Name</label>
 
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="last_name" name="last_name"
+                            <input required type="text" class="form-control" id="last_name" name="last_name"
                                 placeholder="Enter Your Last Name" value="{{ old('last_name') }}">
                             <label for="last_name">Last Name</label>
 
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="email" name="email"
+                            <input required type="email" class="form-control" id="email" name="email"
                                 placeholder="Please Enter Your Email" value="{{ old('email') }}">
                             <label for="email">Email address</label>
 
@@ -50,17 +50,17 @@
                         </div>
 
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="phone_number" name="phone_number"
+                            <input required type="tel" class="form-control" id="phone_number" name="phone_number"
                                 placeholder="Please Enter Your Phone Number" value="{{ old('phone_number') }}">
                             <label for="phone_number">Phone Number</label>
 
                             @error('phone_number')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="address" name="address"
+                            <input required type="text" class="form-control" id="address" name="address"
                                 placeholder="Enter Your Address" value="{{ old('address') }}">
                             <label for="address">Address</label>
 
@@ -70,7 +70,7 @@
                         </div>
 
                         <div class="form-floating">
-                            <input type="password" class="form-control" id="password-input" name="password"
+                            <input required type="password" class="form-control" id="password-input" name="password"
                                 placeholder="Please Enter Your Password">
                             <label for="password-input">Create Password</label>
 
@@ -80,7 +80,7 @@
                         </div>
 
                         <div class="form-floating">
-                            <input type="password" class="form-control" id="password_confirmation"
+                            <input required type="password" class="form-control" id="password_confirmation"
                                 name="password_confirmation" placeholder="Please Retype Your Password">
                             <label for="password_confirmation">Retype Password</label>
 

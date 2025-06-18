@@ -45,7 +45,7 @@ class BusinessInformationController extends Controller {
                     'business_name'      => 'required|string|max:255',
                     'business_address'   => 'required|string',
                     'professional_title' => 'required|string|max:255',
-                    'license'            => 'required|file|mimes:pdf,jpg,png|max:20480',
+                    'license'            => 'required|file|mimes:pdf|max:20480',
                 ]);
 
                 $avatarPath  = Helper::fileUpload($request->file('avatar'), 'avatars', $validated['name']);

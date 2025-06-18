@@ -5,21 +5,6 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- start page title --}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('privacy-policy.index') }}">Settings</a></li>
-                                <li class="breadcrumb-item active">Privacy Policy</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- end page title --}}
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -43,7 +28,8 @@
                                     <div class="col-md-6">
                                         <div>
                                             <label for="disabledInput" class="form-label">Slug:</label>
-                                            <input type="text" class="form-control" id="disabledInput" value="{{ $privacy_policy->slug ?? '' }}" disabled="">
+                                            <input type="text" class="form-control" id="disabledInput"
+                                                value="{{ $privacy_policy->slug ?? '' }}" disabled="">
                                         </div>
                                     </div>
 

@@ -32,21 +32,6 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            {{-- start page title --}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('social.index') }}">Settings</a></li>
-                                <li class="breadcrumb-item active">Social Media Settings</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- end page title --}}
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -179,12 +164,17 @@
         window.removeSocialField = function(button) {
             const socialLinkId = $(button).data('id');
 
+            // Build the URL using a placeholder
+            let url = '{{ route('social.delete', [':id']) }}';
+            // Replace ":id" with the actual ID
+            url = url.replace(':id', socialLinkId);
+
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 type: 'DELETE',
-                url: '{{ route('social.delete', '') }}/' + socialLinkId,
+                url: url,
                 data: {
                     _token: '{{ csrf_token() }}'
                 },

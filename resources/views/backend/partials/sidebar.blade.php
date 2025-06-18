@@ -6,10 +6,6 @@
     {{-- Logo & Toggle Button --}}
     <div class="navbar-brand-box">
         <a href="{{ route('dashboard') }}" class="logo logo-dark">
-            <span class="logo-sm">
-                <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="Logo"
-                    style="width: 190px; height: 50px;">
-            </span>
             <span class="logo-lg">
                 <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="Logo"
                     style="width: 190px; height: 50px;">
@@ -17,10 +13,6 @@
         </a>
 
         <a href="{{ route('dashboard') }}" class="logo logo-light">
-            <span class="logo-sm">
-                <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="Logo"
-                    style="width: 190px; height: 50px;">
-            </span>
             <span class="logo-lg">
                 <img src="{{ asset($systemSetting->logo ?? 'frontend/logo_black.png') }}" alt="Logo"
                     style="width: 190px; height: 50px;">

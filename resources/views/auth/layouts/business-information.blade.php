@@ -115,7 +115,7 @@
                         </div>
                     </div>
                     <div class="step-actions d-flex align-items-center gap-3 ">
-                        <a href="" id="step-1-back-btn" class="step-back-btn">
+                        <a hidden href="" id="step-1-back-btn" class="step-back-btn">
                             Back
                         </a>
                         <button id="step-1-next-btn" class="step-next-btn">
