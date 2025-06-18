@@ -14,9 +14,11 @@
 @endpush
 
 @section('content')
-    <form method="POST" action="{{ route('update-service-information', $user->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('update-service-information', $user->id) }}" enctype="multipart/form-data"
+        id="main-form">
         @csrf
         @method('PATCH')
+        <input type="hidden" name="step" id="current-step" value="1">
         <div class="section-padding-x m-top m-bottom">
             {{-- step 1 start --}}
             <div id="service-provider-step-form-1">
@@ -26,7 +28,7 @@
 
                 <div class="text-content">
                     <div class="step-count-title">
-                        <span>1</span>/3 Update Profile
+                        <span>1</span>/5 Update Profile
                     </div>
                     <div class="step-title">Tell Us About You and Your Business</div>
                     <div class="step-sub-title mt-5">Upload your profile photo</div>
@@ -96,12 +98,12 @@
                                     fill="none">
                                     <path
                                         d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582
-                                                                                                                            25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
-                                                                                                                            33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
-                                                                                                                            34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
-                                                                                                                            29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
-                                                                                                                            6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
-                                                                                                                            6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                                                                                                                                                        25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601
+                                                                                                                                                                        33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796
+                                                                                                                                                                        34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052
+                                                                                                                                                                        29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218
+                                                                                                                                                                        6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936
+                                                                                                                                                                        6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
                                         stroke="#222222" stroke-width="1.5" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
@@ -120,9 +122,9 @@
                     {{-- step progress start --}}
                     <div class="d-flex align-items-center mt-4 justify-content-between gap-3 flex-wrap">
                         <div class="step-progress-container d-flex align-items-center gap-2">
-                            <div class="step-count">33%</div>
+                            <div class="step-count">20%</div>
                             <div class="step-progress">
-                                <div style="width: 33%;" class="step-progress-inner"></div>
+                                <div style="width: 20%;" class="step-progress-inner"></div>
                             </div>
                         </div>
                         <div class="step-actions d-flex align-items-center gap-3">
@@ -149,7 +151,7 @@
                     value="{{ old('address', $businessInfo->address ?? '') }}">
 
                 <div class="price-range-container">
-                    <div class="step-count-title"><span>2</span>/3 Update Profile</div>
+                    <div class="step-count-title"><span>2</span>/5 Update Profile</div>
                     <div class="step-title">How Far Are You Willing to Travel</div>
 
                     <div class="price-range-content">
@@ -266,9 +268,9 @@
                     {{-- step progress start --}}
                     <div class="d-flex align-items-center mt-4 justify-content-between gap-3 flex-wrap">
                         <div class="step-progress-container d-flex align-items-center gap-2">
-                            <div class="step-count">70%</div>
+                            <div class="step-count">40%</div>
                             <div class="step-progress">
-                                <div style="width: 70%;" class="step-progress-inner"></div>
+                                <div style="width: 40%;" class="step-progress-inner"></div>
                             </div>
                         </div>
                         <div class="step-actions d-flex align-items-center gap-3">
@@ -284,7 +286,7 @@
 
             {{-- step 3 start --}}
             <div style="display: none;" id="service-provider-step-form-3">
-                <div class="step-count-title text-center"><span>3</span>/3 Update Profile</div>
+                <div class="step-count-title text-center"><span>3</span>/5 Update Profile</div>
                 <div class="step-title text-center">Tell Us About You and Your Business</div>
 
                 <div class="table-responsive data-table mt-5">
@@ -376,9 +378,9 @@
                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                 <path
                                                     d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4
-                                                                                                                                    24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
-                                                                                                                                    47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
-                                                                                                                                    0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                                                                                                                                                                24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47
+                                                                                                                                                                                47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9
+                                                                                                                                                                                0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                             </svg>
                                         </div>
                                     </td>
@@ -390,19 +392,173 @@
                 {{-- step progress start --}}
                 <div class="d-flex align-items-center mt-4 justify-content-between gap-3 flex-wrap">
                     <div class="step-progress-container d-flex align-items-center gap-2">
-                        <div class="step-count">85%</div>
+                        <div class="step-count">60%</div>
                         <div class="step-progress">
-                            <div style="width: 85%;" class="step-progress-inner"></div>
+                            <div style="width: 60%;" class="step-progress-inner"></div>
                         </div>
                     </div>
                     <div class="step-actions d-flex align-items-center gap-3">
                         <div id="step-3-back-btn" class="step-back-btn">Back</div>
-                        <button type="submit" id="step-3-next-btn" class="step-next-btn">Next</button>
+                        <button type="button" id="step-3-next-btn" class="step-next-btn">Next</button>
                     </div>
                 </div>
                 {{-- step progress end --}}
             </div>
             {{-- step 3 end --}}
+
+            {{-- Step 4: Profile Information Start --}}
+            <div style="display: none;" id="service-provider-step-form-4">
+                <div class="text-content">
+                    <!-- Centered titles at the top -->
+                    <div class="text-center">
+                        <div class="step-count-title">
+                            <span>4</span>/5 Update Profile
+                        </div>
+                        <div class="step-title">Update Your Personal Information</div>
+                    </div>
+
+                    <!-- Two-column layout container -->
+                    <div class="row mt-5">
+                        <!-- Left Column: Profile Picture -->
+                        <div class="col-md-3">
+                            <div class="step-sub-title">Upload your personal profile photo</div>
+
+                            <div class="step-upload-profile-container mt-3">
+                                <label for="upload-user-profile-input" class="upload-profile-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                                        viewBox="0 0 40 40" fill="none">
+                                        <path
+                                            d="M20 15V25M25 20H15M35 20C35 21.9698 34.612 23.9204 33.8582 25.7403C33.1044 27.5601 31.9995 29.2137 30.6066 30.6066C29.2137 31.9995 27.5601 33.1044 25.7403 33.8582C23.9204 34.612 21.9698 35 20 35C18.0302 35 16.0796 34.612 14.2597 33.8582C12.4399 33.1044 10.7863 31.9995 9.3934 30.6066C8.00052 29.2137 6.89563 27.5601 6.14181 25.7403C5.38799 23.9204 5 21.9698 5 20C5 16.0218 6.58035 12.2064 9.3934 9.3934C12.2064 6.58035 16.0218 5 20 5C23.9782 5 27.7936 6.58035 30.6066 9.3934C33.4196 12.2064 35 16.0218 35 20Z"
+                                            stroke="#222222" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Upload Photo</span>
+                                </label>
+                                <input class="d-none" id="upload-user-profile-input" type="file" name="user_avatar">
+                                <div class="upload-profile-img" style="display: {{ $user->avatar ? 'block' : 'none' }};">
+                                    <img src="{{ $user->avatar ? asset($user->avatar) : '' }}" alt="User Profile Image">
+                                    <svg class="upload-profile-img-close-btn" width="30px"
+                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                        <path
+                                            d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Personal Information -->
+                        <div class="col-md-9">
+                            <div class="step-sub-title">Personal Information</div>
+
+                            <div class="steps-inputs-container mt-3">
+                                <div class="item">
+                                    <label for="first_name">First Name</label>
+                                    <input type="text" name="first_name" id="first_name"
+                                        value="{{ old('first_name', $user->first_name) }}" required>
+                                    @error('first_name')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="item">
+                                    <label for="last_name">Last Name</label>
+                                    <input type="text" name="last_name" id="last_name"
+                                        value="{{ old('last_name', $user->last_name) }}" required>
+                                    @error('last_name')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="item">
+                                    <label for="phone_number">Phone Number</label>
+                                    <input type="text" name="phone_number" id="phone_number"
+                                        value="{{ old('phone_number', $user->phone_number) }}" required>
+                                    @error('phone_number')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="item">
+                                    <label for="address">Address</label>
+                                    <textarea name="address" id="address" required>{{ old('address', $user->address) }}</textarea>
+                                    @error('address')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress and Navigation -->
+                    <div class="d-flex align-items-center mt-4 justify-content-between gap-3 flex-wrap">
+                        <div class="step-progress-container d-flex align-items-center gap-2">
+                            <div class="step-count">80%</div>
+                            <div class="step-progress">
+                                <div style="width: 80%;" class="step-progress-inner"></div>
+                            </div>
+                        </div>
+                        <div class="step-actions d-flex align-items-center gap-3">
+                            <div id="step-4-back-btn" class="step-back-btn">Back</div>
+                            <button type="button" id="step-4-next-btn" class="step-next-btn">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Step 4 end --}}
+
+            {{-- Step 5: Password Update Start --}}
+            <div style="display: none;" id="service-provider-step-form-5">
+                <div class="text-content">
+                    <div class="step-count-title">
+                        <span>5</span>/5 Update Profile
+                    </div>
+                    <div class="step-title">Update Your Password</div>
+                    <div class="step-sub-title mt-5">Secure your account with a new password (Optional)</div>
+
+                    <div class="steps-inputs-container my-4">
+                        <div class="item">
+                            <label for="current_password">Current Password</label>
+                            <input type="password" name="current_password" id="current_password"
+                                placeholder="Enter your current password (leave blank to skip)">
+                            @error('current_password')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="item">
+                            <label for="new_password">New Password</label>
+                            <input type="password" name="new_password" id="new_password"
+                                placeholder="Enter your new password (leave blank to skip)">
+                            @error('new_password')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="item">
+                            <label for="new_password_confirmation">Confirm New Password</label>
+                            <input type="password" name="new_password_confirmation" id="new_password_confirmation"
+                                placeholder="Confirm your new password">
+                            @error('new_password_confirmation')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mt-4 justify-content-between gap-3 flex-wrap">
+                        <div class="step-progress-container d-flex align-items-center gap-2">
+                            <div class="step-count">100%</div>
+                            <div class="step-progress">
+                                <div style="width: 100%;" class="step-progress-inner"></div>
+                            </div>
+                        </div>
+                        <div class="step-actions d-flex align-items-center gap-3">
+                            <div id="step-5-back-btn" class="step-back-btn">Back</div>
+                            <button type="submit" id="step-5-next-btn" class="step-next-btn">Complete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- step 5 end --}}
         </div>
     </form>
 
@@ -1000,30 +1156,72 @@
         });
     </script>
 
+    {{-- User profile image upload script --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const userImgElement = document.querySelector("#service-provider-step-form-4 .upload-profile-img img");
+            const userUploadProfileImgContainer = document.querySelector(
+                "#service-provider-step-form-4 .upload-profile-img");
+            const userFileInput = document.getElementById('upload-user-profile-input');
+
+            if (userImgElement.src && userImgElement.src !== window.location.href) {
+                userUploadProfileImgContainer.style.display = "block";
+            }
+
+            document.querySelector('#service-provider-step-form-4 .upload-profile-img-close-btn').addEventListener(
+                'click', () => {
+                    userImgElement.src = '';
+                    userUploadProfileImgContainer.style.display = 'none';
+                    userFileInput.value = '';
+                });
+
+            userFileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        userImgElement.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                    userUploadProfileImgContainer.style.display = 'block';
+                }
+            });
+        });
+    </script>
+
     {{-- for changing steps --}}
     <script>
         const step1 = document.getElementById('service-provider-step-form-1');
         const step2 = document.getElementById('service-provider-step-form-2');
         const step3 = document.getElementById('service-provider-step-form-3');
+        const step4 = document.getElementById('service-provider-step-form-4');
+        const step5 = document.getElementById('service-provider-step-form-5');
 
         const overlay = document.getElementById('overlay');
-        const form = document.querySelector('form');
+        const form = document.querySelector('#main-form');
+        const currentStepInput = document.getElementById('current-step');
 
         const step1NextBtn = document.getElementById('step-1-next-btn');
         const step2BackBtn = document.getElementById('step-2-back-btn');
         const step2NextBtn = document.getElementById('step-2-next-btn');
         const step3BackBtn = document.getElementById('step-3-back-btn');
         const step3NextBtn = document.getElementById('step-3-next-btn');
+        const step4BackBtn = document.getElementById('step-4-back-btn');
+        const step4NextBtn = document.getElementById('step-4-next-btn');
+        const step5BackBtn = document.getElementById('step-5-back-btn');
+        const step5NextBtn = document.getElementById('step-5-next-btn');
 
         // Track current step
         let currentStep = 1;
 
+        // Step 1 to 2
         step1NextBtn.addEventListener('click', () => {
             step1.style.display = "none";
             step2.style.display = "flex";
             step2.style.opacity = 1;
             step2.style.visibility = "visible";
             currentStep = 2;
+            currentStepInput.value = "2";
 
             setTimeout(() => {
                 sliders.forEach(({
@@ -1035,41 +1233,133 @@
                     updateSliderValue(slider, indicator);
                 });
             }, 100);
-        })
+        });
 
+        // Step 2 back to 1
         step2BackBtn.addEventListener('click', () => {
             step2.style.display = "none";
             step1.style.display = "flex";
             currentStep = 1;
-        })
+            currentStepInput.value = "1";
+        });
 
+        // Step 2 to 3
         step2NextBtn.addEventListener('click', () => {
             step2.style.display = "none";
             step3.style.display = "block";
             currentStep = 3;
-        })
+            currentStepInput.value = "3";
+        });
 
+        // Step 3 back to 2
         step3BackBtn.addEventListener('click', () => {
             step3.style.display = "none";
             step2.style.display = "flex";
             currentStep = 2;
-        })
+            currentStepInput.value = "2";
+        });
 
+        // Step 3 to 4 - Submit Steps 1-3 data
+        step3NextBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
 
-        // Show loader when submit button is clicked
-        step3NextBtn.addEventListener('click', function() {
-            if (currentStep === 3) {
-                console.log('Submit button clicked, showing loader');
+            try {
                 overlay.style.display = 'flex';
-                // Don't disable the button, let the form submit naturally
+                currentStepInput.value = "3";
+
+                // Submit the form for steps 1-3
+                const formData = new FormData(form);
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    }
+                });
+
+                overlay.style.display = 'none';
+
+                if (response.ok) {
+                    // Move to step 4 after successful submission
+                    step3.style.display = "none";
+                    step4.style.display = "block";
+                    currentStep = 4;
+                    currentStepInput.value = "4";
+                } else {
+                    // Handle validation errors
+                    const result = await response.text();
+                    // You may want to parse and display errors here
+                    console.error('Validation failed');
+                }
+            } catch (error) {
+                overlay.style.display = 'none';
+                console.error('Error submitting form:', error);
             }
         });
 
-        // Hide loader if there are form validation errors
-        form.addEventListener('invalid', function() {
-            overlay.style.display = 'none';
-            step3NextBtn.disabled = false;
-            step3NextBtn.textContent = 'Next';
-        }, true);
+        // Step 4 back to 3
+        step4BackBtn.addEventListener('click', () => {
+            step4.style.display = "none";
+            step3.style.display = "block";
+            currentStep = 3;
+            currentStepInput.value = "3";
+        });
+
+        // Step 4 to 5 - Submit Step 4 data
+        step4NextBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            try {
+                overlay.style.display = 'flex';
+                currentStepInput.value = "4";
+
+                // Submit the form for step 4
+                const formData = new FormData(form);
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    }
+                });
+
+                overlay.style.display = 'none';
+
+                if (response.ok) {
+                    // Move to step 5 after successful submission
+                    step4.style.display = "none";
+                    step5.style.display = "block";
+                    currentStep = 5;
+                    currentStepInput.value = "5";
+                } else {
+                    // Handle validation errors
+                    console.error('Step 4 validation failed');
+                }
+            } catch (error) {
+                overlay.style.display = 'none';
+                console.error('Error submitting step 4:', error);
+            }
+        });
+
+        // Step 5 back to 4
+        step5BackBtn.addEventListener('click', () => {
+            step5.style.display = "none";
+            step4.style.display = "block";
+            currentStep = 4;
+            currentStepInput.value = "4";
+        });
+
+        // Final submit - Step 5
+        step5NextBtn.addEventListener('click', function(e) {
+            if (currentStep === 5) {
+                overlay.style.display = 'flex';
+                currentStepInput.value = "5";
+                // Let the form submit naturally
+            }
+        });
     </script>
 @endpush

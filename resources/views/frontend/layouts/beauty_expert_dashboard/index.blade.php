@@ -251,7 +251,7 @@
             <div class="dashboard-profile-container">
                 <div class="">
                     <div style=" padding-bottom: 0 !important; border-bottom: 0 !important; " class="top">
-                        <div class="img-content">
+                        <div class="img-content ">
                             <img src="{{ asset(Auth::user()->avatar ?? 'backend/images/default_images/user_1.jpg') }}"
                                 alt="">
                             <div class="active-status"></div>
@@ -260,7 +260,7 @@
                             <div class="profile-title">
                                 {{ ucfirst(Auth::user()->first_name ?? '') . ' ' . ucfirst(Auth::user()->last_name ?? '') ?? '' }}
                             </div>
-                            <div class="profile-text">{{ Auth::user()->address ?? '' }}</div>
+                            <div class="profile-text text-break">{{ Auth::user()->address ?? '' }}</div>
                         </div>
                     </div>
 

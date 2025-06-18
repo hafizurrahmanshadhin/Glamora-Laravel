@@ -144,8 +144,12 @@
 {{ route('login') }}
                 @endif
             ">Profile</a>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal"
-                        class="tm-profile-dropdown-item">Edit Profile</a>
+
+                    {{-- Show Edit Profile only for clients --}}
+                    @if (Auth::check() && Auth::user()->role == 'client')
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal"
+                            class="tm-profile-dropdown-item">Edit Profile</a>
+                    @endif
                     <a class="tm-profile-dropdown-item" href="javascript:void(0);"
                         onclick="event.preventDefault(); document.getElementById('logoutForm').submit()">Log Out</a>
                     <form action="{{ route('logout') }}" method="post" id="logoutForm">

@@ -16,6 +16,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class ServiceProviderProfileController extends Controller {
@@ -264,100 +266,208 @@ class ServiceProviderProfileController extends Controller {
     public function updateServiceInformation(Request $request, int $userId): RedirectResponse {
         try {
             $user = User::findOrFail($userId);
+            $step = $request->input('step', '3'); // Default to step 3 for backward compatibility
 
-            // Validate business & document fields.
-            $businessRules = [
-                'name'               => 'required|string|max:255',
-                'bio'                => 'required|string',
-                'business_name'      => 'required|string|max:255',
-                'business_address'   => 'required|string',
-                'professional_title' => 'required|string|max:255',
-            ];
-            // Optionally validate file if new ones uploaded.
-            if ($request->hasFile('avatar')) {
-                $businessRules['avatar'] = 'image|mimes:jpeg,png,jpg,gif,svg|max:20480';
-            }
-            if ($request->hasFile('license')) {
-                $businessRules['license'] = 'file|mimes:pdf,jpg,png|max:20480';
-            }
-            $validatedBusiness = $request->validate($businessRules);
+            // Steps 1-3: Service Information (existing logic)
+            if (in_array($step, ['1', '2', '3'])) {
+                // Validate business & document fields.
+                $businessRules = [
+                    'name'               => 'required|string|max:255',
+                    'bio'                => 'required|string',
+                    'business_name'      => 'required|string|max:255',
+                    'business_address'   => 'required|string',
+                    'professional_title' => 'required|string|max:255',
+                ];
 
-            // Update Business Information:
-            $businessData = [
-                'name'               => $validatedBusiness['name'],
-                'bio'                => $validatedBusiness['bio'],
-                'business_name'      => $validatedBusiness['business_name'],
-                'business_address'   => $validatedBusiness['business_address'],
-                'professional_title' => $validatedBusiness['professional_title'],
-            ];
-            if ($request->hasFile('avatar')) {
-                $businessData['avatar'] = Helper::fileUpload($request->file('avatar'), 'avatars', $validatedBusiness['name']);
-            }
-            if ($request->hasFile('license')) {
-                $businessData['license'] = Helper::fileUpload($request->file('license'), 'licenses', $validatedBusiness['name']);
-            }
-            $user->businessInformation->update($businessData);
+                if ($request->hasFile('avatar')) {
+                    $businessRules['avatar'] = 'image|mimes:jpeg,png,jpg,gif,svg|max:20480';
+                }
+                if ($request->hasFile('license')) {
+                    $businessRules['license'] = 'file|mimes:pdf,jpg,png|max:20480';
+                }
 
-            // Validate and update travel radius info.
-            $radiusData = $request->validate([
-                'free_radius'       => 'required|integer|min:0',
-                'travel_radius'     => 'required|integer|min:0',
-                'travel_charge'     => 'required|numeric|min:0',
-                'max_radius'        => 'required|integer|min:0',
-                'max_charge'        => 'required|numeric|min:0',
-                'min_booking_value' => 'nullable|numeric|min:0',
-            ]);
-            TravelRadius::updateOrCreate(
-                ['user_id' => $userId],
-                $radiusData
-            );
+                $validatedBusiness = $request->validate($businessRules);
 
-            if ($request->has('services')) {
-                $services = $request->input('services');
-                foreach ($services as $index => $data) {
-                    // Look for an existing record including soft-deleted ones.
-                    $existingService = UserService::withTrashed()->where([
-                        'user_id'    => $userId,
-                        'service_id' => $data['service_id'],
-                    ])->first();
+                // Update Business Information
+                $businessData = [
+                    'name'               => $validatedBusiness['name'],
+                    'bio'                => $validatedBusiness['bio'],
+                    'business_name'      => $validatedBusiness['business_name'],
+                    'business_address'   => $validatedBusiness['business_address'],
+                    'professional_title' => $validatedBusiness['professional_title'],
+                ];
 
-                    if (empty($data['selected'])) {
-                        // If unselected and the record exists, soft-delete it.
-                        if ($existingService) {
-                            $existingService->delete();
-                        }
-                    } else {
-                        $serviceData = [
-                            'selected'      => $data['selected'],
-                            'offered_price' => $data['offered_price'] ?? 0,
-                            'total_price'   => $data['total_price'] ?? 0,
-                        ];
-                        if ($request->hasFile("services.$index.image")) {
-                            $serviceData['image'] = Helper::fileUpload(
-                                $request->file("services.$index.image"),
-                                'user_services_images',
-                                'service_' . $data['service_id']
-                            );
-                        }
-                        if ($existingService) {
-                            // If the record was soft-deleted, restore it.
-                            if ($existingService->trashed()) {
-                                $existingService->restore();
+                if ($request->hasFile('avatar')) {
+                    $businessData['avatar'] = Helper::fileUpload($request->file('avatar'), 'avatars', $validatedBusiness['name']);
+                }
+                if ($request->hasFile('license')) {
+                    $businessData['license'] = Helper::fileUpload($request->file('license'), 'licenses', $validatedBusiness['name']);
+                }
+
+                $user->businessInformation->update($businessData);
+
+                // Update travel radius
+                $radiusData = $request->validate([
+                    'free_radius'       => 'required|integer|min:0',
+                    'travel_radius'     => 'required|integer|min:0',
+                    'travel_charge'     => 'required|numeric|min:0',
+                    'max_radius'        => 'required|integer|min:0',
+                    'max_charge'        => 'required|numeric|min:0',
+                    'min_booking_value' => 'nullable|numeric|min:0',
+                ]);
+
+                TravelRadius::updateOrCreate(['user_id' => $userId], $radiusData);
+
+                // Update services
+                if ($request->has('services')) {
+                    $services = $request->input('services');
+                    foreach ($services as $index => $data) {
+                        $existingService = UserService::withTrashed()->where([
+                            'user_id'    => $userId,
+                            'service_id' => $data['service_id'],
+                        ])->first();
+
+                        if (empty($data['selected'])) {
+                            if ($existingService) {
+                                $existingService->delete();
                             }
-                            $existingService->update($serviceData);
                         } else {
-                            // Create new record if none exists.
-                            $serviceData['user_id']    = $userId;
-                            $serviceData['service_id'] = $data['service_id'];
-                            UserService::create($serviceData);
+                            $serviceData = [
+                                'selected'      => $data['selected'],
+                                'offered_price' => $data['offered_price'] ?? 0,
+                                'total_price'   => $data['total_price'] ?? 0,
+                            ];
+
+                            if ($request->hasFile("services.$index.image")) {
+                                $serviceData['image'] = Helper::fileUpload(
+                                    $request->file("services.$index.image"),
+                                    'user_services_images',
+                                    'service_' . $data['service_id']
+                                );
+                            }
+
+                            if ($existingService) {
+                                if ($existingService->trashed()) {
+                                    $existingService->restore();
+                                }
+                                $existingService->update($serviceData);
+                            } else {
+                                $serviceData['user_id']    = $userId;
+                                $serviceData['service_id'] = $data['service_id'];
+                                UserService::create($serviceData);
+                            }
                         }
                     }
                 }
+
+                // Check if this is an AJAX request (from step navigation)
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Steps 1-3 updated successfully',
+                    ]);
+                }
+
+                return redirect()->back()->with('t-success', 'Information updated successfully.');
             }
 
-            return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Service information updated successfully.');
-        } catch (Exception) {
-            return redirect()->back()->with('t-error', 'An error occurred while updating service information.');
+            // Step 4: Profile Information Update
+            if ($step === '4') {
+                $profileRules = [
+                    'first_name'   => 'required|string|max:255',
+                    'last_name'    => 'required|string|max:255',
+                    'phone_number' => 'required|string|max:25|regex:/^\+?[0-9\s\-\(\)]+$/|unique:users,phone_number,' . $userId,
+                    'address'      => 'required|string',
+                ];
+
+                if ($request->hasFile('user_avatar')) {
+                    $profileRules['user_avatar'] = 'image|mimes:jpeg,png,jpg,gif,svg|max:20480';
+                }
+
+                $validatedProfile = $request->validate($profileRules);
+
+                $user->first_name   = $validatedProfile['first_name'];
+                $user->last_name    = $validatedProfile['last_name'];
+                $user->phone_number = $validatedProfile['phone_number'];
+                $user->address      = $validatedProfile['address'];
+
+                if ($request->hasFile('user_avatar')) {
+                    if ($user->avatar) {
+                        Helper::fileDelete(public_path($user->avatar));
+                    }
+                    $user->avatar = Helper::fileUpload($request->file('user_avatar'), 'avatars', $validatedProfile['first_name']);
+                }
+
+                $user->save();
+
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Profile information updated successfully',
+                    ]);
+                }
+
+                return redirect()->back()->with('t-success', 'Profile updated successfully.');
+            }
+
+            // Step 5: Password Update (Optional)
+            if ($step === '5') {
+                // Check if user wants to update password
+                $hasPasswordFields = $request->filled('current_password') || $request->filled('new_password') || $request->filled('new_password_confirmation');
+
+                if ($hasPasswordFields) {
+                    // Validate password fields only if they're provided
+                    $passwordRules = [
+                        'current_password' => 'required',
+                        'new_password'     => 'required|min:8|confirmed',
+                    ];
+
+                    $validatedPassword = $request->validate($passwordRules);
+
+                    // Verify current password
+                    if (!Hash::check($validatedPassword['current_password'], $user->password)) {
+                        return redirect()->back()
+                            ->withErrors(['current_password' => 'Current password is incorrect.'])
+                            ->withInput();
+                    }
+
+                    // Update password
+                    $user->password = Hash::make($validatedPassword['new_password']);
+                    $user->save();
+
+                    return redirect()->route('beauty-expert-dashboard')
+                        ->with('t-success', 'All information and password updated successfully.');
+                } else {
+                    // No password update, just complete the process
+                    return redirect()->route('beauty-expert-dashboard')
+                        ->with('t-success', 'All information updated successfully.');
+                }
+            }
+
+            return redirect()->back()->with('t-success', 'Information updated successfully.');
+
+        } catch (ValidationException $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors'  => $e->validator->errors(),
+                ], 422);
+            }
+
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('t-error', 'Please check the form for errors.');
+        } catch (Exception $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->with('t-error', 'An error occurred: ' . $e->getMessage());
         }
     }
 
