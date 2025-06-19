@@ -86,7 +86,7 @@
 
                     <div class="tm-multistep-btn-wrapper ">
                         <a href="{{ url()->previous() }}" type="button" class="tm-multi-step-prev-step-2">Back</a>
-                        <button type="button" class="tm-multi-step-next-step">Continue</button>
+                        <button type="button" class="tm-multi-step-next-step step1-continue" disabled>Continue</button>
                     </div>
                 </div>
                 {{-- Step - 1: How you want to take this service? END --}}
@@ -136,7 +136,7 @@
 
                     <div class="tm-multistep-btn-wrapper">
                         <button type="button" class="tm-multi-step-prev-step">Back</button>
-                        <button type="button" class="tm-multi-step-next-step">Continue</button>
+                        <button type="button" class="tm-multi-step-next-step step2-continue" disabled>Continue</button>
                     </div>
                 </div>
                 {{-- Step - 2 END --}}
@@ -277,6 +277,29 @@
             let currentStep = 0;
             const steps = $(".tm-multi-step-form-step");
 
+            // Disable or enable "Continue" button on Step 1
+            function checkStep1() {
+                // If user has chosen a service type, enable the next button (step 1)
+                const serviceType = $('#serviceType').val();
+                if (!serviceType) {
+                    $('.step1-continue').prop('disabled', true);
+                } else {
+                    $('.step1-continue').prop('disabled', false);
+                }
+            }
+
+            // Disable or enable "Continue" button on Step 2
+            function checkStep2() {
+                const date = $('#appointmentDate').val();
+                const time = $('#appointmentTime').val();
+                // If both date and time are selected, enable next button (step 2)
+                if (!date || !time) {
+                    $('.step2-continue').prop('disabled', true);
+                } else {
+                    $('.step2-continue').prop('disabled', false);
+                }
+            }
+
             function showStep(step) {
                 steps.removeClass("active").eq(step).addClass("active");
                 if (step === 2) {
@@ -302,11 +325,16 @@
             $('#client, #tax-preparer').click(function() {
                 let type = $(this).attr('id') === 'client' ? 'mobile_services' : 'salon_services';
                 $('#serviceType').val(type);
+                checkStep1();
             });
+
+            // Initially check step 1 on page load (in case nothing is selected)
+            checkStep1();
 
 
             const weekendData = @json($weekendData);
             const ranges = @json($unavailableRanges);
+            const bookedTimeSlots = @json($bookedTimeSlots);
 
             function parseTime(str) {
                 let [t, ampm] = str.split(' ');
@@ -357,23 +385,43 @@
                     let start = parseTime(avail.time_from),
                         end = parseTime(avail.time_to);
 
+                    // Filter bookings for the currently selected date
+                    let bookedTimesForThisDate = bookedTimeSlots
+                        .filter(slot => slot.date === dateText)
+                        .map(slot => slot.time.trim());
+
+                    // Generate times in 60 min increments
                     for (let t = start; t <= end; t += 60) {
-                        $opts.append(`<button type="button">${formatTime(t)}</button>`);
+                        let thisSlot = formatTime(t);
+                        // If thisSlot is in bookedTimesForThisDate, show it as disabled
+                        if (bookedTimesForThisDate.includes(thisSlot)) {
+                            $opts.append(`<button type="button" disabled>${thisSlot} (Booked)</button>`);
+                        } else {
+                            $opts.append(`<button type="button">${thisSlot}</button>`);
+                        }
                     }
-                    $opts.find('button').click(function() {
+
+                    // On click => store time, highlight chosen button
+                    $opts.find('button:not([disabled])').click(function() {
                         $opts.find('button').removeClass('active');
                         $(this).addClass('active');
                         $('#appointmentTime').val($(this).text());
+                        checkStep2();
                     });
+
+                    // If no time is clicked yet, step2 next remains disabled
+                    checkStep2();
                 }
             });
 
-            // Time option
-            $(".tm-multi-step-time-options button").click(function() {
-                $(".tm-multi-step-time-options button").removeClass("active");
-                $(this).addClass("active");
+            // If user clicks on any time before the date is changed again
+            $("#timeOptions").on('click', 'button', function() {
                 $('#appointmentTime').val($(this).text());
+                checkStep2();
             });
+
+            // Step 2 initial check
+            checkStep2();
 
             // Update summary
             function updateSummary() {

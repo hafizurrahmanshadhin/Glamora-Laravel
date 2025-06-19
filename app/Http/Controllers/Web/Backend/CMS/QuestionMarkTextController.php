@@ -10,23 +10,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
-class UserDashboardController extends Controller {
+class QuestionMarkTextController extends Controller {
     /**
-     * Display the user-dashboard Section of the CMS.
+     * Display the question-mark-text Section of the CMS.
      *
      * @return RedirectResponse|View
      */
     public function index(): RedirectResponse | View {
         try {
-            $userDashboard = CMS::firstOrNew(['section' => 'user-dashboard']);
-            return view('backend.layouts.cms.user-dashboard.index', compact('userDashboard'));
+            $questionMarkText = CMS::firstOrNew(['section' => 'question-mark-text']);
+            return view('backend.layouts.cms.question-mark-text.index', compact('questionMarkText'));
         } catch (Exception $e) {
             return back()->with('t-error', $e->getMessage());
         }
     }
 
     /**
-     * Update the user-dashboard section.
+     * Update the question-mark-text section.
      *
      * @param Request $request
      * @return RedirectResponse
@@ -41,12 +41,12 @@ class UserDashboardController extends Controller {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $userDashboard              = CMS::firstOrNew(['section' => 'user-dashboard']);
-            $userDashboard->description = $request->input('description');
-            $userDashboard->section     = 'user-dashboard';
-            $userDashboard->save();
+            $questionMarkText              = CMS::firstOrNew(['section' => 'question-mark-text']);
+            $questionMarkText->description = $request->input('description');
+            $questionMarkText->section     = 'question-mark-text';
+            $questionMarkText->save();
 
-            return redirect()->route('cms.user-dashboard.index')->with('t-success', 'User dashboard updated successfully.');
+            return redirect()->route('cms.question-mark-text.index')->with('t-success', 'Question mark text updated successfully.');
         } catch (Exception $e) {
             return back()->with('t-error', $e->getMessage());
         }

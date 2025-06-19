@@ -17,10 +17,34 @@
             </li>
 
             <li class="nav-item">
+                <a href="{{ route('cms.question-mark-text.index') }}"
+                    class="nav-link {{ request()->routeIs('cms.question-mark-text.index') ? 'active' : '' }}"
+                    data-key="t-question-mark-text">
+                    Question Mark Text
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('cms.profile-review-message.index') }}"
+                    class="nav-link {{ request()->routeIs('cms.profile-review-message.index') ? 'active' : '' }}"
+                    data-key="t-profile-review-message">
+                    Profile Review Message
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a href="{{ route('cms.home-page.index') }}"
                     class="nav-link {{ request()->routeIs('cms.home-page.index') ? 'active' : '' }}"
                     data-key="t-home-page">
-                    Home Page
+                    Home Page (Image)
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('cms.home-page-banner.index') }}"
+                    class="nav-link {{ request()->routeIs('cms.home-page-banner.index') ? 'active' : '' }}"
+                    data-key="t-home-page-banner">
+                    Home Page (Banner)
                 </a>
             </li>
 

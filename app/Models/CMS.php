@@ -4,16 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class CMS extends Model {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $table = 'c_m_s';
 
     protected $fillable = [
         'section',
         'title',
+        'sub_title',
+        'content',
         'description',
         'image',
         'status',
@@ -22,12 +25,15 @@ class CMS extends Model {
     protected $hidden = [
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     protected $casts = [
         'id'          => 'integer',
         'section'     => 'string',
         'title'       => 'string',
+        'sub_title'   => 'string',
+        'content'     => 'string',
         'description' => 'string',
         'image'       => 'string',
         'status'      => 'string',
@@ -39,7 +45,7 @@ class CMS extends Model {
      * Fetch the Join Us block, cached for 1 hour.
      */
     public static function joinUs(): ?self {
-        return Cache::remember('join_us', 3600, fn() =>
+        return Cache::remember('join_us', 36, fn() =>
             static::where('section', 'join_us')->where('status', 'active')->first()
         );
     }
@@ -57,8 +63,35 @@ class CMS extends Model {
      * Fetch the user dashboard section, cached for 1 hour.
      */
     public static function userDashboard(): ?self {
-        return Cache::remember('user_dashboard', 3600, fn() =>
+        return Cache::remember('user_dashboard', 36, fn() =>
             static::where('section', 'user-dashboard')->first()
+        );
+    }
+
+    /**
+     * Fetch the home page banner, cached for 1 hour.
+     */
+    public static function homePageBanner(): ?self {
+        return Cache::remember('home-page-banner', 36, fn() =>
+            static::where('section', 'home-page-banner')->first()
+        );
+    }
+
+    /**
+     * Fetch the question mark text, cached for 1 hour.
+     */
+    public static function questionMarkText(): ?self {
+        return Cache::remember('question-mark-text', 36, fn() =>
+            static::where('section', 'question-mark-text')->first()
+        );
+    }
+
+    /**
+     * Fetch the profile review message, cached for 1 hour.
+     */
+    public static function profileReviewMessage(): ?self {
+        return Cache::remember('profile-review-message', 36, fn() =>
+            static::where('section', 'profile-review-message')->first()
         );
     }
 
@@ -73,6 +106,15 @@ class CMS extends Model {
             if ($cms->section === 'user-dashboard') {
                 Cache::forget('user_dashboard');
             }
+            if ($cms->section === 'home-page-banner') {
+                Cache::forget('home-page-banner');
+            }
+            if ($cms->section === 'question-mark-text') {
+                Cache::forget('question-mark-text');
+            }
+            if ($cms->section === 'profile-review-message') {
+                Cache::forget('profile-review-message');
+            }
         });
 
         static::deleted(function ($cms) {
@@ -84,6 +126,15 @@ class CMS extends Model {
             }
             if ($cms->section === 'user-dashboard') {
                 Cache::forget('user_dashboard');
+            }
+            if ($cms->section === 'home-page-banner') {
+                Cache::forget('home-page-banner');
+            }
+            if ($cms->section === 'question-mark-text') {
+                Cache::forget('question-mark-text');
+            }
+            if ($cms->section === 'profile-review-message') {
+                Cache::forget('profile-review-message');
             }
         });
     }

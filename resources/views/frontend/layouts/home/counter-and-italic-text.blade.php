@@ -102,6 +102,6 @@
 
 <div class="home-italic-text-container m-bottom">
     <div data-aos="fade-up" data-aos-delay="100" class="text">
-        {!! $systemSetting->description ?? '' !!}
+        {!! $homePageBanner->description ?? '' !!}
     </div>
 </div>

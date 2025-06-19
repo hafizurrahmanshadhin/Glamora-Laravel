@@ -1,0 +1,268 @@
+/* Make the new SVG responsive */
+.profile-availability .profile-availability-left svg {
+    width: 100%;
+    max-width: 20px;
+    height: auto;
+    transition: all 0.2s ease;
+}
+
+/* Adjust container to keep toggle close to "Availability" */
+.profile-availability-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.toggle-tip {
+    position: relative;
+    cursor: help;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.toggle-tip:hover {
+    background-color: rgba(79, 96, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.toggle-tip:hover svg {
+    transform: scale(1.05);
+}
+
+/* Modern dark gradient tooltip */
+.tooltip-content {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    max-width: 280px;
+    width: max-content;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: normal;
+}
+
+/* Tooltip arrow */
+.tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #2d3748;
+}
+
+/* Show tooltip on hover */
+.toggle-tip:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-12px);
+}
+
+/* Fix for responsive layout - MAIN CONTAINER */
+.profile-availability {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    /* Prevent wrapping */
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    /* Allow shrinking */
+}
+
+.profile-availability-left h4 {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 600;
+    flex-shrink: 0;
+    /* Prevent text from shrinking */
+}
+
+.form-check.form-switch {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px;
+    flex-shrink: 0;
+    margin: 0;
+}
+.form-switch {
+
+ padding-left: 1.5rem;
+}
+.profile-availability-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.availability-status {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.point {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    flex-shrink: 0;
+}
+
+.point.available {
+    background-color: #28a745;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .profile-availability {
+        gap: 8px;
+        flex-wrap: nowrap;
+        /* Ensure no wrapping */
+    }
+
+    .profile-availability-left {
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .profile-availability-left h4 {
+        font-size: 14px;
+    }
+
+    .availability-status {
+        font-size: 13px;
+    }
+
+    .toggle-tip {
+        width: 28px;
+        height: 28px;
+    }
+
+    .tooltip-content {
+        max-width: 220px;
+        font-size: 12px;
+        padding: 10px 14px;
+        left: auto;
+        right: -10px;
+        transform: translateY(-8px);
+    }
+
+    .tooltip-content::after {
+        left: auto;
+        right: 20px;
+        transform: none;
+    }
+
+    .toggle-tip:hover .tooltip-content {
+        transform: translateY(-12px);
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .profile-availability {
+        gap: 6px;
+        flex-wrap: nowrap;
+        /* Critical: prevent wrapping */
+    }
+
+    .profile-availability-left {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 4px;
+        flex-shrink: 0;
+    }
+
+    .profile-availability-left h4 {
+        font-size: 13px;
+    }
+
+    .availability-status {
+        font-size: 12px;
+    }
+
+    .form-check.form-switch {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .toggle-tip {
+        width: 24px;
+        height: 24px;
+    }
+
+    .tooltip-content {
+        max-width: 200px;
+        font-size: 11px;
+        padding: 8px 12px;
+        right: -15px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .profile-availability {
+        gap: 4px;
+    }
+
+    .profile-availability-left {
+        gap: 3px;
+    }
+
+    .profile-availability-left h4 {
+        font-size: 12px;
+    }
+
+    .availability-status {
+        font-size: 11px;
+    }
+
+    .toggle-tip {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Animation for better UX */
+@keyframes tooltipSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-4px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-12px) scale(1);
+    }
+}
+
+.toggle-tip:hover .tooltip-content {
+    animation: tooltipSlideIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}

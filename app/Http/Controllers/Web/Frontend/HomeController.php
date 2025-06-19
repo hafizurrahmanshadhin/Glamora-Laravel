@@ -33,6 +33,7 @@ class HomeController extends Controller {
             $testimonialImage = CMSImage::testimonialImage();
             $joinUs           = CMS::joinUs();
             $serviceTypes     = CMS::serviceTypes();
+            $homePageBanner   = CMS::homePageBanner();
 
             // Get all approved services with their users and services (cache for 5 minutes)
             $approvedServices = Cache::remember('approved_services_base', 300, function () {
@@ -97,7 +98,8 @@ class HomeController extends Controller {
                 'homeBanners',
                 'testimonialImage',
                 'joinUs',
-                'serviceTypes'
+                'serviceTypes',
+                'homePageBanner'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [

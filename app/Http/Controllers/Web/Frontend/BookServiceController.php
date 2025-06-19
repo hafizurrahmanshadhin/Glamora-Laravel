@@ -64,6 +64,20 @@ class BookServiceController extends Controller {
             // Get the expert's weekend availability data
             $weekendData = $user->weekend_data ?? [];
 
+            // Fetch all future active bookings for this userService
+            $bookedTimeSlots = Booking::where('user_service_id', $userService->id)
+                ->where('status', 'active')
+                ->where('appointment_date', '>=', now())
+                ->select(['appointment_date', 'appointment_time'])
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'date' => $item->appointment_date->format('Y-m-d'),
+                        'time' => $item->appointment_time, // e.g. "7:00 PM"
+                    ];
+                })
+                ->toArray();
+
             return view('frontend.layouts.booking.index', compact(
                 'serviceProviderId',
                 'serviceId',
@@ -73,7 +87,8 @@ class BookServiceController extends Controller {
                 'totalPrice',
                 'serviceIds',
                 'unavailableRanges',
-                'weekendData'
+                'weekendData',
+                'bookedTimeSlots'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
@@ -103,6 +118,9 @@ class BookServiceController extends Controller {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
+            // Convert the incoming time to a 12-hour format with AM/PM
+            $formattedTime = Carbon::parse($request->appointment_time)->format('g:i A');
+
             // Fetch the UserService from user_services table
             $userService = UserService::where('user_id', $request->service_provider_id)
                 ->where('service_id', $request->service_id)
@@ -118,7 +136,7 @@ class BookServiceController extends Controller {
                 'service_ids'      => $request->input('service_ids'),
                 'service_type'     => $request->service_type,
                 'appointment_date' => $request->appointment_date,
-                'appointment_time' => $request->appointment_time,
+                'appointment_time' => $formattedTime,
                 'price'            => $price,
             ]);
 
@@ -205,10 +223,12 @@ class BookServiceController extends Controller {
                 return redirect()->route('beauty-expert-dashboard')->with('t-success', 'Availability confirmed.');
 
             case 'offer':
+                $timeFormatted = Carbon::parse($request->new_time)->format('g:i A');
+
                 // Update booking record with new offer details
                 $booking->update([
                     'appointment_date' => $request->new_date,
-                    'appointment_time' => $request->new_time,
+                    'appointment_time' => $timeFormatted,
                     'price'            => $request->new_price,
                 ]);
 

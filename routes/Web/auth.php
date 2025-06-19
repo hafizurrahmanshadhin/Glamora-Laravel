@@ -11,6 +11,7 @@ use App\Http\Controllers\Web\Auth\NewPasswordController;
 use App\Http\Controllers\Web\Auth\PasswordController;
 use App\Http\Controllers\Web\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Web\Auth\PhoneNumberVerificationController;
+use App\Http\Controllers\Web\Auth\ProfileSubmittedController;
 use App\Http\Controllers\Web\Auth\QuestionnairesController;
 use App\Http\Controllers\Web\Auth\RegisteredUserController;
 use App\Http\Controllers\Web\Auth\VerificationSuccessController;
@@ -73,6 +74,5 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
-Route::get('/profile-submitted', function () {
-    return view('auth.layouts.profile-submitted');
-})->name('profile-submitted');
+// Route for profile submitted page
+Route::get('/profile-submitted', ProfileSubmittedController::class)->name('profile-submitted');

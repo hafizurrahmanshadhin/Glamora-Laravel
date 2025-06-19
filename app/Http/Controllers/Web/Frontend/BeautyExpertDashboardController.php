@@ -97,6 +97,7 @@ class BeautyExpertDashboardController extends Controller {
 
             // Fetching data using static methods from models
             $userDashboardContent = CMS::userDashboard();
+            $questionMarkText     = CMS::questionMarkText();
 
             return view('frontend.layouts.beauty_expert_dashboard.index', compact(
                 'user',
@@ -107,7 +108,8 @@ class BeautyExpertDashboardController extends Controller {
                 'availability',
                 'unavailableRanges',
                 'highlightDates',
-                'userDashboardContent'
+                'userDashboardContent',
+                'questionMarkText'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [

@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\Web\Backend\CMS\AuthPageImageController;
+use App\Http\Controllers\Web\Backend\CMS\HomePageBannerController;
 use App\Http\Controllers\Web\Backend\CMS\HomePageImageController;
 use App\Http\Controllers\Web\Backend\CMS\JoinUsController;
+use App\Http\Controllers\Web\Backend\CMS\ProfileReviewMessageController;
+use App\Http\Controllers\Web\Backend\CMS\QuestionMarkTextController;
 use App\Http\Controllers\Web\Backend\CMS\QuestionnairesController;
 use App\Http\Controllers\Web\Backend\CMS\ServiceTypeController;
 use App\Http\Controllers\Web\Backend\CMS\TestimonialImageController;
@@ -15,11 +18,29 @@ Route::controller(UserDashboardController::class)->prefix('user-dashboard')->nam
     Route::patch('/', 'update')->name('update');
 });
 
+//! Route for User Question Mark Text Page
+Route::controller(QuestionMarkTextController::class)->prefix('question-mark-text')->name('question-mark-text.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::patch('/', 'update')->name('update');
+});
+
+//! Route for User Profile Review Message Page
+Route::controller(ProfileReviewMessageController::class)->prefix('profile-review-message')->name('profile-review-message.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::patch('/', 'update')->name('update');
+});
+
 //! Route for Home Page Image
 Route::controller(HomePageImageController::class)->group(function () {
     Route::get('/home-page', 'index')->name('home-page.index');
     Route::post('/home-page/store', 'store')->name('home-page.store');
     Route::delete('/home-page/{id}', 'destroy')->name('home-page.destroy');
+});
+
+//! Route for Home Page Banner
+Route::controller(HomePageBannerController::class)->prefix('home-page-banner')->name('home-page-banner.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::patch('/', 'update')->name('update');
 });
 
 //! Route for Auth Page Image

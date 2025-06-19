@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/css/categories.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/tarek.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/availability-tooltip-content.css') }}">
 
     <style>
         .profile-availability {
@@ -246,7 +247,7 @@
 @endpush
 
 @section('content')
-    <div class="dashboard-layout section-padding-x" style="padding-top: 20px;">
+    <div class="dashboard-layout section-padding-x">
         <div class="dashboard-left">
             <div class="dashboard-profile-container">
                 <div class="">
@@ -267,12 +268,35 @@
                     <div class="profile-availability">
                         <div class="profile-availability-left">
                             <h4>Availability</h4>
-                            <div class="form-check form-switch">
+                            <div class="form-check form-switch" style="display: flex; align-items: center;">
                                 <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
                                     {{ $availability === 'available' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+
+                                <div class="toggle-tip">
+                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"
+                                        style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
+                                        <g>
+                                            <linearGradient id="a" x1="256.787" x2="253.727" y1="520.97"
+                                                y2="3.18" gradientTransform="matrix(1 0 0 -1 0 512)"
+                                                gradientUnits="userSpaceOnUse">
+                                                <stop offset="0" stop-color="#0fc8ff"></stop>
+                                                <stop offset="1" stop-color="#4760ff"></stop>
+                                            </linearGradient>
+                                            <path fill="url(#a)"
+                                                d="M295.5 414.5a54.99 54.99 0 0 0-39.5-16.7h-1c-31.6 0-57.1 25.6-57.1 57.1S223.4 512 255 512h1c31.6-.5 56.7-26.5 56.2-58.1-.3-14.8-6.3-28.9-16.7-39.4zm67.1-375.2C337.4 13.4 301.5.2 256 0h-1c-36 0-66.7 9.8-91.3 29.2-11.7 9.2-22.1 19.9-31 31.8-8.6 11.6-15.6 24.4-20.6 38-2.2 6.1.6 12.8 6.5 15.4l53.9 23.7c6.2 2.7 13.4 0 16.1-6.2.1-.1.1-.3.2-.4 5-12.2 13-24.2 23.8-35.6 9.6-10.2 23.5-15.1 42.4-15.1h1c19.4.2 33.9 5.3 44.3 15.7 10.5 10.6 15.6 23.4 15.6 39.4 0 13.4-4 25.7-12.2 37.6-9 13.1-22.3 27.6-39.5 43.1-2.8 2.6-5.6 5.1-8.1 7.6-15.3 15-25.9 28.9-32.2 42.4-3.7 7.9-6.5 17.8-8.5 29.8-2.1 14.1-3.2 28.3-3.2 42.6-.1 6.8 5.3 12.3 12 12.5h64.5c6.7 0 12.1-5.3 12.2-12 .5-27.3 3.6-40.6 6.2-47 2.5-6.2 10.6-18.5 34.9-41.9 20.1-19.2 35.1-38 44.4-55.8 9.6-18.4 14.5-39.1 14.5-61.5-.2-36.3-13-68-38.3-94z"
+                                                opacity="1" data-original="url(#a)" class=""></path>
+                                        </g>
+                                    </svg>
+                                    <div class="tooltip-content">
+                                        {!! $questionMarkText->description ??
+                                            'Turn off the toggle to mark yourself as on leave or not accepting bookings—whether currently or for specific future dates. After switching it off, select your unavailable dates and save them. These will be reflected in your calendar automatically.' !!}
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                         <div class="profile-availability-right">
                             <h4 class="availability-status">
                                 {{ $availability === 'available' ? 'Available' : 'Unavailable' }}

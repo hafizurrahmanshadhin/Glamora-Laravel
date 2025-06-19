@@ -10,23 +10,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
-class UserDashboardController extends Controller {
+class HomePageBannerController extends Controller {
     /**
-     * Display the user-dashboard Section of the CMS.
+     * Display the home-page-banner Section of the CMS.
      *
      * @return RedirectResponse|View
      */
     public function index(): RedirectResponse | View {
         try {
-            $userDashboard = CMS::firstOrNew(['section' => 'user-dashboard']);
-            return view('backend.layouts.cms.user-dashboard.index', compact('userDashboard'));
+            $homePageBanner = CMS::firstOrNew(['section' => 'home-page-banner']);
+            return view('backend.layouts.cms.home-page-banner.index', compact('homePageBanner'));
         } catch (Exception $e) {
             return back()->with('t-error', $e->getMessage());
         }
     }
 
     /**
-     * Update the user-dashboard section.
+     * Update the home-page-banner section.
      *
      * @param Request $request
      * @return RedirectResponse
@@ -41,12 +41,12 @@ class UserDashboardController extends Controller {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $userDashboard              = CMS::firstOrNew(['section' => 'user-dashboard']);
-            $userDashboard->description = $request->input('description');
-            $userDashboard->section     = 'user-dashboard';
-            $userDashboard->save();
+            $homePageBanner              = CMS::firstOrNew(['section' => 'home-page-banner']);
+            $homePageBanner->description = $request->input('description');
+            $homePageBanner->section     = 'home-page-banner';
+            $homePageBanner->save();
 
-            return redirect()->route('cms.user-dashboard.index')->with('t-success', 'User dashboard updated successfully.');
+            return redirect()->route('cms.home-page-banner.index')->with('t-success', 'Home page banner updated successfully.');
         } catch (Exception $e) {
             return back()->with('t-error', $e->getMessage());
         }

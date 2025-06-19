@@ -130,6 +130,10 @@ class Helper {
                 'faq',
                 'contact',
                 'contact.store',
+                'custom.page',
+                'terms-and-conditions',
+                'privacy-policy',
+                'inclusions-cancellation',
             ];
 
             return in_array(Route::currentRouteName(), $routesWithFooter);

@@ -20,5 +20,5 @@
         @include('frontend.partials.join-us')
     </main>
 
-    @include('frontend.partials.footer')
+    {{-- @include('frontend.partials.footer') --}}
 @endsection

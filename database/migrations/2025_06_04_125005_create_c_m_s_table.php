@@ -12,13 +12,25 @@ return new class extends Migration {
         Schema::create('c_m_s', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('section', ['questionnaires', 'join_us', 'user-type-container', 'user-dashboard'])->nullable(false)->index();
+            $table->enum('section', [
+                'questionnaires',
+                'join_us',
+                'user-type-container',
+                'user-dashboard',
+                'home-page-banner',
+                'question-mark-text',
+                'profile-review-message',
+            ])->nullable(false)->index();
+
             $table->string('title')->nullable();
+            $table->string('sub_title')->nullable();
+            $table->text('content')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index('section', 'idx_cms_section');
             $table->index(['section', 'status'], 'idx_cms_section_status');
