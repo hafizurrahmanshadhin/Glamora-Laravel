@@ -149,7 +149,7 @@ Beauty service providers (beauty experts) can view client bookings, receive noti
 
 ................................................................................................................................
 
-## [Live Link Client Server](https://glamora.au)
+## [Live Link Client Server](https://glamora.com.au)
 
 ---
 
