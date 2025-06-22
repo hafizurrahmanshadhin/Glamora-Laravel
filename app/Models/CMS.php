@@ -110,9 +110,7 @@ class CMS extends Model {
      */
     public static function homeBanners(): Collection {
         return Cache::remember('home_banners', 36, fn() =>
-            static::where('section', 'home')
-                ->where('status', 'active')
-                ->get()
+            static::where('section', 'home')->where('status', 'active')->get()
         );
     }
 
@@ -121,10 +119,7 @@ class CMS extends Model {
      */
     public static function testimonialImage(): ?self {
         return Cache::remember('testimonial_image', 36, fn() =>
-            static::where('section', 'testimonial')
-                ->where('status', 'active')
-                ->latest()
-                ->first()
+            static::where('section', 'testimonial')->where('status', 'active')->latest()->first()
         );
     }
 
