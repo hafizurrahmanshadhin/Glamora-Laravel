@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Web\Frontend;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\CMS;
-use App\Models\CMSImage;
 use App\Models\Review;
 use App\Models\Service;
 use App\Models\SystemSetting;
@@ -29,8 +28,8 @@ class HomeController extends Controller {
             // Fetching data using static methods from models
             $systemSetting    = SystemSetting::current();
             $services         = Service::activeServices();
-            $homeBanners      = CMSImage::homeBanners();
-            $testimonialImage = CMSImage::testimonialImage();
+            $homeBanners      = CMS::homeBanners();
+            $testimonialImage = CMS::testimonialImage();
             $joinUs           = CMS::joinUs();
             $serviceTypes     = CMS::serviceTypes();
             $homePageBanner   = CMS::homePageBanner();

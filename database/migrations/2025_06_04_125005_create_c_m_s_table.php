@@ -21,6 +21,9 @@ return new class extends Migration {
                 'question-mark-text',
                 'profile-review-message',
                 'home-counter',
+                'testimonial',
+                'auth',
+                'home',
             ])->nullable(false)->index();
 
             $table->string('title')->nullable();

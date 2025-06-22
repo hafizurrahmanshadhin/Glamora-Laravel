@@ -105,6 +105,38 @@ class CMS extends Model {
         );
     }
 
+    /**
+     * Get all "home" banners, cached for 1 hour.
+     */
+    public static function homeBanners(): Collection {
+        return Cache::remember('home_banners', 36, fn() =>
+            static::where('section', 'home')
+                ->where('status', 'active')
+                ->get()
+        );
+    }
+
+    /**
+     * Get the latest "testimonial" image, cached for 1 hour.
+     */
+    public static function testimonialImage(): ?self {
+        return Cache::remember('testimonial_image', 36, fn() =>
+            static::where('section', 'testimonial')
+                ->where('status', 'active')
+                ->latest()
+                ->first()
+        );
+    }
+
+    /**
+     * Get the latest "authBanner" image, cached for 1 hour.
+     */
+    public static function authBanner(): ?self {
+        return Cache::remember('authBanner', 36, fn() =>
+            static::where('section', 'auth')->where('status', 'active')->first()
+        );
+    }
+
     protected static function booted(): void {
         static::saved(function ($cms) {
             if ($cms->section === 'join_us') {
@@ -127,6 +159,15 @@ class CMS extends Model {
             }
             if ($cms->section === 'home-counter') {
                 Cache::forget('home-counter');
+            }
+            if ($cms->section === 'home') {
+                Cache::forget('home_banners');
+            }
+            if ($cms->section === 'testimonial') {
+                Cache::forget('testimonial_image');
+            }
+            if ($cms->section === 'auth') {
+                Cache::forget('authBanner');
             }
         });
 
@@ -151,6 +192,15 @@ class CMS extends Model {
             }
             if ($cms->section === 'home-counter') {
                 Cache::forget('home-counter');
+            }
+            if ($cms->section === 'home') {
+                Cache::forget('home_banners');
+            }
+            if ($cms->section === 'testimonial') {
+                Cache::forget('testimonial_image');
+            }
+            if ($cms->section === 'auth') {
+                Cache::forget('authBanner');
             }
         });
     }

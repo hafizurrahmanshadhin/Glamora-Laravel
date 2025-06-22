@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web\Backend\CMS;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\CMSImage;
+use App\Models\CMS;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,11 +17,12 @@ class HomePageImageController extends Controller {
      *
      * @param Request $request
      * @return View|JsonResponse
+     * @throws Exception
      */
     public function index(Request $request): View | JsonResponse {
         try {
             if ($request->ajax()) {
-                $data = CMSImage::where('page', 'home')->latest()->get();
+                $data = CMS::where('section', 'home')->latest()->get();
                 return response()->json([
                     'status' => true,
                     'data'   => $data,
@@ -40,6 +41,7 @@ class HomePageImageController extends Controller {
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function store(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
@@ -58,9 +60,9 @@ class HomePageImageController extends Controller {
                 return Helper::jsonResponse(false, 'File upload failed. Please try again.', 500);
             }
 
-            CMSImage::create([
-                'image' => $filePath,
-                'page'  => 'home',
+            CMS::create([
+                'section' => 'home',
+                'image'   => $filePath,
             ]);
 
             return Helper::jsonResponse(true, 'Home page image created successfully.', 200);
@@ -69,9 +71,16 @@ class HomePageImageController extends Controller {
         }
     }
 
+    /**
+     * Remove the specified home page image from storage.
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @throws Exception
+     */
     public function destroy($id): JsonResponse {
         try {
-            $image = CMSImage::findOrFail($id);
+            $image = CMS::findOrFail($id);
             Helper::fileDelete(public_path($image->image));
             $image->delete();
             return Helper::jsonResponse(true, 'Image deleted successfully.', 200);

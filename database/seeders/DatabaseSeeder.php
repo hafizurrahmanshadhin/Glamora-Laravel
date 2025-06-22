@@ -7,7 +7,6 @@ use Database\Seeders\BookingCancellationAfterAppointmentSeeder;
 use Database\Seeders\BookingCancellationBeforeAppointmentSeeder;
 use Database\Seeders\BookingSeeder;
 use Database\Seeders\BusinessInformationSeeder;
-use Database\Seeders\CMSImageSeeder;
 use Database\Seeders\CMSSeeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\ContentSeeder;
@@ -54,7 +53,6 @@ class DatabaseSeeder extends Seeder {
             NewsletterSubscriptionSeeder::class,
             UserToolSeeder::class,
             UserGallerySeeder::class,
-            CMSImageSeeder::class,
             BookingCancellationBeforeAppointmentSeeder::class,
             BookingCancellationAfterAppointmentSeeder::class,
             AdminCommentSeeder::class,

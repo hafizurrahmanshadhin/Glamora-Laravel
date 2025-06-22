@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web\Auth;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\CMSImage;
+use App\Models\CMS;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,8 +18,8 @@ class PasswordResetLinkController extends Controller {
      */
     public function create(): View | JsonResponse {
         try {
-            // Fetch data using static methods from CMSImage model
-            $authBanner = CMSImage::authBanner();
+            // Fetch data using static methods from CMS model
+            $authBanner = CMS::authBanner();
 
             return view('auth.layouts.forgot-password', compact('authBanner'));
         } catch (Exception $e) {

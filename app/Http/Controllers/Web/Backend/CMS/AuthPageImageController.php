@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web\Backend\CMS;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\CMSImage;
+use App\Models\CMS;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,17 +17,18 @@ class AuthPageImageController extends Controller {
      *
      * @param Request $request
      * @return View|JsonResponse
+     * @throws Exception
      */
     public function index(Request $request): View | JsonResponse {
         try {
             if ($request->ajax()) {
-                $data = CMSImage::where('page', 'auth')->latest()->get();
+                $data = CMS::where('section', 'auth')->latest()->get();
                 return response()->json([
                     'status' => true,
                     'data'   => $data,
                 ]);
             }
-            $currentImage = CMSImage::where('page', 'auth')->latest()->first();
+            $currentImage = CMS::where('section', 'auth')->latest()->first();
             return view('backend.layouts.cms.auth-page.index', compact('currentImage'));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [
@@ -41,6 +42,7 @@ class AuthPageImageController extends Controller {
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function store(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
@@ -59,7 +61,7 @@ class AuthPageImageController extends Controller {
                 return Helper::jsonResponse(false, 'File upload failed. Please try again.', 500);
             }
 
-            $existingImage = CMSImage::where('page', 'auth')->first();
+            $existingImage = CMS::where('section', 'auth')->first();
             if ($existingImage) {
                 // Delete the old file and update the record.
                 Helper::fileDelete(public_path($existingImage->image));
@@ -67,9 +69,9 @@ class AuthPageImageController extends Controller {
                     'image' => $filePath,
                 ]);
             } else {
-                CMSImage::create([
-                    'image' => $filePath,
-                    'page'  => 'auth',
+                CMS::create([
+                    'section' => 'auth',
+                    'image'   => $filePath,
                 ]);
             }
 

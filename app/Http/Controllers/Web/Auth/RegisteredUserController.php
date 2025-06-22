@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web\Auth;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\CMSImage;
+use App\Models\CMS;
 use App\Models\User;
 use Exception;
 use Illuminate\Auth\Events\Registered;
@@ -23,8 +23,8 @@ class RegisteredUserController extends Controller {
      */
     public function create(): View | JsonResponse {
         try {
-            // Fetch data using static methods from CMSImage model
-            $authBanner = CMSImage::authBanner();
+            // Fetch data using static methods from CMS model
+            $authBanner = CMS::authBanner();
 
             return view('auth.layouts.register', compact('authBanner'));
         } catch (Exception $e) {

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web\Auth;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\CMSImage;
+use App\Models\CMS;
 use App\Models\PasswordReset;
 use App\Models\User;
 use Carbon\Carbon;
@@ -24,8 +24,8 @@ class PhoneNumberVerificationController extends Controller {
      */
     public function index(): JsonResponse | View {
         try {
-            // Fetch data using static methods from CMSImage model
-            $authBanner = CMSImage::authBanner();
+            // Fetch data using static methods from CMS model
+            $authBanner = CMS::authBanner();
 
             return view('auth.layouts.verification-using-phone-number', compact('authBanner'));
         } catch (Exception $e) {
