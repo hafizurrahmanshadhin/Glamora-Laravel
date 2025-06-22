@@ -11,6 +11,7 @@ class ReportsView extends Model {
     // Since views are read-only
     // Prevents the model from trying to increment an ID field
     public $incrementing = false;
+
     // Views typically don't have timestamps
     public $timestamps = false;
 

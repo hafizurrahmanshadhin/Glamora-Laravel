@@ -8,16 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RegisterQuestionSurvey extends Model {
     use HasFactory, SoftDeletes;
-    protected $table    = 'register_question_surveys';
+
+    protected $table = 'register_question_surveys';
+
     protected $fillable = [
         'description',
         'status',
     ];
+
     protected $hidden = [
         'created_at',
         'updated_at',
         'deleted_at',
     ];
+
     protected $casts = [
         'id'          => 'integer',
         'description' => 'string',
