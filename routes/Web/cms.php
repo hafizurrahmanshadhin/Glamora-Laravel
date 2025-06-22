@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\Backend\CMS\AuthPageImageController;
+use App\Http\Controllers\Web\Backend\CMS\HomeCounterAndTextController;
 use App\Http\Controllers\Web\Backend\CMS\HomePageBannerController;
 use App\Http\Controllers\Web\Backend\CMS\HomePageImageController;
 use App\Http\Controllers\Web\Backend\CMS\JoinUsController;
@@ -16,6 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::controller(UserDashboardController::class)->prefix('user-dashboard')->name('user-dashboard.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::patch('/', 'update')->name('update');
+});
+
+Route::controller(HomeCounterAndTextController::class)->prefix('home-counter')->name('home-counter.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::put('/update/{id}', 'update')->name('update');
+    Route::get('/status/{id}', 'status')->name('status');
 });
 
 //! Route for User Question Mark Text Page

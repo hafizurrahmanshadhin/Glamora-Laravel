@@ -24,7 +24,7 @@ class HomeController extends Controller {
      * @return View|JsonResponse
      * @throws Exception
      */
-    public function index(): View | JsonResponse {
+    public function __invoke(): JsonResponse | View {
         try {
             // Fetching data using static methods from models
             $systemSetting    = SystemSetting::current();
@@ -34,6 +34,7 @@ class HomeController extends Controller {
             $joinUs           = CMS::joinUs();
             $serviceTypes     = CMS::serviceTypes();
             $homePageBanner   = CMS::homePageBanner();
+            $homeCounters     = CMS::homeCounter();
 
             // Get all approved services with their users and services (cache for 5 minutes)
             $approvedServices = Cache::remember('approved_services_base', 300, function () {
@@ -99,7 +100,8 @@ class HomeController extends Controller {
                 'testimonialImage',
                 'joinUs',
                 'serviceTypes',
-                'homePageBanner'
+                'homePageBanner',
+                'homeCounters'
             ));
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [

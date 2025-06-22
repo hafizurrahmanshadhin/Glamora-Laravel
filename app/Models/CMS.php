@@ -39,6 +39,7 @@ class CMS extends Model {
         'status'      => 'string',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
+        'deleted_at'  => 'datetime',
     ];
 
     /**
@@ -95,6 +96,15 @@ class CMS extends Model {
         );
     }
 
+    /**
+     * Fetch the home counter section, cached for 1 hour.
+     */
+    public static function homeCounter(): Collection {
+        return Cache::remember('home-counter', 36, fn() =>
+            static::where('section', 'home-counter')->where('status', 'active')->orderBy('id', 'asc')->get()
+        );
+    }
+
     protected static function booted(): void {
         static::saved(function ($cms) {
             if ($cms->section === 'join_us') {
@@ -114,6 +124,9 @@ class CMS extends Model {
             }
             if ($cms->section === 'profile-review-message') {
                 Cache::forget('profile-review-message');
+            }
+            if ($cms->section === 'home-counter') {
+                Cache::forget('home-counter');
             }
         });
 
@@ -135,6 +148,9 @@ class CMS extends Model {
             }
             if ($cms->section === 'profile-review-message') {
                 Cache::forget('profile-review-message');
+            }
+            if ($cms->section === 'home-counter') {
+                Cache::forget('home-counter');
             }
         });
     }

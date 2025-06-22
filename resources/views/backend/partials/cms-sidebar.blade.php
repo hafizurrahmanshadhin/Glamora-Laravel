@@ -17,6 +17,14 @@
             </li>
 
             <li class="nav-item">
+                <a href="{{ route('cms.home-counter.index') }}"
+                    class="nav-link {{ request()->routeIs('cms.home-counter.index') ? 'active' : '' }}"
+                    data-key="t-home-counter">
+                    Home Counter & Text
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a href="{{ route('cms.question-mark-text.index') }}"
                     class="nav-link {{ request()->routeIs('cms.question-mark-text.index') ? 'active' : '' }}"
                     data-key="t-question-mark-text">

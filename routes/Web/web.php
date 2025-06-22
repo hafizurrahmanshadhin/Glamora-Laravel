@@ -22,7 +22,7 @@ Route::get('/reset', [ResetController::class, 'Reset'])->name('reset');
 Route::get('/cache', [ResetController::class, 'Cache'])->name('cache');
 
 // Route for Landing Page
-Route::get('/', [HomeController::class, 'index'])->name('index')->middleware('availability');
+Route::get('/', HomeController::class)->name('index')->middleware('availability');
 Route::get('/available-services/{serviceId?}', [AvailableServicesController::class, 'index'])->name('available-services')->middleware('availability');
 Route::get('/service-category', [ServiceCategoryController::class, 'index'])->name('service-category')->middleware('availability');
 Route::get('/service-provider-profile/{userId}/service/{serviceId}', [ServiceProviderProfileController::class, 'index'])->name('service-provider-profile')->middleware('availability');

@@ -20,6 +20,7 @@ return new class extends Migration {
                 'home-page-banner',
                 'question-mark-text',
                 'profile-review-message',
+                'home-counter',
             ])->nullable(false)->index();
 
             $table->string('title')->nullable();
