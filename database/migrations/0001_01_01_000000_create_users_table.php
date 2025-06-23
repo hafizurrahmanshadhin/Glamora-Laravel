@@ -8,15 +8,15 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('email')->unique()->nullable(false)->index();
-            $table->string('phone_number')->unique()->nullable(false)->index();
+            $table->string('first_name', 100)->nullable();
+            $table->string('last_name', 100)->nullable();
+            $table->string('email', 200)->unique()->nullable(false)->index();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone_number', 25)->unique()->nullable(false)->index();
             $table->timestamp('phone_number_verified_at')->nullable();
-            $table->text('address');
             $table->string('password')->nullable();
 
+            $table->text('address')->nullable();
             $table->string('avatar')->nullable();
             $table->string('cover_photo')->nullable();
 
@@ -34,6 +34,12 @@ return new class extends Migration {
             $table->softDeletes();
 
             $table->index(['role', 'status'], 'idx_users_role_status');
+            $table->index(['email_verified_at'], 'idx_users_email_verified_at');
+            $table->index(['phone_number_verified_at'], 'idx_users_phone_verified_at');
+            $table->index(['availability'], 'idx_users_availability');
+            $table->index(['created_at'], 'idx_users_created_at');
+            $table->index(['deleted_at', 'status'], 'idx_users_soft_delete_status');
+            $table->index(['banned_until'], 'idx_users_banned_until');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

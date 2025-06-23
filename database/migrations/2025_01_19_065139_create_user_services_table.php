@@ -34,6 +34,11 @@ return new class extends Migration {
 
             $table->index('status', 'idx_user_services_status');
             $table->index('service_id', 'idx_user_services_service_id');
+            $table->index(['user_id', 'status'], 'idx_user_services_user_status');
+            $table->index(['selected'], 'idx_user_services_selected');
+            $table->index(['deleted_at', 'status'], 'idx_user_services_soft_delete_status');
+            $table->index(['service_id', 'status'], 'idx_user_services_service_status');
+            $table->index(['user_id', 'selected'], 'idx_user_services_user_selected');
         });
     }
 

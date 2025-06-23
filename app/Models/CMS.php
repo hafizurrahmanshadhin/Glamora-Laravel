@@ -13,6 +13,7 @@ class CMS extends Model {
     protected $table = 'c_m_s';
 
     protected $fillable = [
+        'id',
         'section',
         'title',
         'sub_title',
@@ -20,6 +21,9 @@ class CMS extends Model {
         'description',
         'image',
         'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     protected $hidden = [

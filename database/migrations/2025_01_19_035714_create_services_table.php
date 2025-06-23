@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('services_name')->nullable(false);
+            $table->string('services_name', 200)->nullable(false);
             $table->integer('platform_fee')->nullable(false);
 
             $table->enum('status', ['active', 'inactive'])->default('active');

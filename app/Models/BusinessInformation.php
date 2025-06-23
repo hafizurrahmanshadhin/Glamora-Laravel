@@ -14,7 +14,26 @@ use Illuminate\Support\Facades\Cache;
 class BusinessInformation extends Model {
     use HasFactory, Notifiable, SoftDeletes;
 
-    protected $guarded = [];
+    protected $table = 'business_information';
+
+    protected $fillable = [
+        'id',
+        'user_id',
+        'avatar',
+        'name',
+        'bio',
+        'business_name',
+        'business_address',
+        'professional_title',
+        'license',
+        'latitude',
+        'longitude',
+        'address',
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     protected function casts(): array {
         return [
@@ -27,6 +46,9 @@ class BusinessInformation extends Model {
             'business_address'   => 'string',
             'professional_title' => 'string',
             'license'            => 'string',
+            'latitude'           => 'decimal:8',
+            'longitude'          => 'decimal:8',
+            'address'            => 'string',
             'status'             => 'string',
             'created_at'         => 'datetime',
             'updated_at'         => 'datetime',

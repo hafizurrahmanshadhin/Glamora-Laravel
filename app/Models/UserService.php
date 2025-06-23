@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Cache;
 class UserService extends Model {
     use HasFactory, Notifiable, SoftDeletes;
 
+    protected $table = 'user_services';
+
     protected $fillable = [
         'id',
         'user_id',
@@ -24,6 +26,9 @@ class UserService extends Model {
         'total_price',
         'image',
         'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     protected $casts = [

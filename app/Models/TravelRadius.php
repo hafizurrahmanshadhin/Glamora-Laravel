@@ -24,6 +24,9 @@ class TravelRadius extends Model {
         'max_charge',
         'min_booking_value',
         'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     protected function casts(): array {

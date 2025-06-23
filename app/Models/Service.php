@@ -14,11 +14,16 @@ use Illuminate\Support\Facades\Cache;
 class Service extends Model {
     use HasFactory, Notifiable, SoftDeletes;
 
+    protected $table = 'services';
+
     protected $fillable = [
         'id',
         'services_name',
         'platform_fee',
         'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     protected $casts = [
