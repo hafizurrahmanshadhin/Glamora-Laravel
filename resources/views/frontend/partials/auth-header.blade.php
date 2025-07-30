@@ -133,7 +133,8 @@
                     <a class="tm-profile-dropdown-item tm-see-profile"
                         href="
                 @if (Auth::check()) @if (Auth::user()->role == 'beauty_expert')
-                        {{ route('beauty-expert-dashboard') }}
+                        {{-- {{ route('beauty-expert-dashboard') }} --}}
+                        {{ route('edit-profile') }}
                     @elseif(Auth::user()->role == 'client')
                         {{ route('client-dashboard') }}
                     @elseif(Auth::user()->role == 'admin')
