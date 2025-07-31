@@ -64,7 +64,7 @@ Route::controller(LegalPageController::class)->group(function () {
 // This Route is for Dynamic Page in the frontend footer
 Route::get('/page/{page_slug}', [DynamicPageController::class, 'index'])->name('custom.page');
 
-// Route for Chatting Message
+// Route for Messages
 Route::controller(MessageController::class)->middleware(['auth', 'verified'])->group(function () {
     Route::get('/chat/{id}', 'show')->name('chat');
     Route::post('/chat/send', 'sendMessage')->name('chat.send');

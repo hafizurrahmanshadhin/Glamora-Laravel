@@ -58,6 +58,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -406,14 +407,23 @@
             animation: typing 1.4s infinite ease-in-out;
         }
 
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
 
         @keyframes typing {
-            0%, 80%, 100% {
+
+            0%,
+            80%,
+            100% {
                 transform: scale(0.8);
                 opacity: 0.5;
             }
+
             40% {
                 transform: scale(1);
                 opacity: 1;
@@ -518,9 +528,7 @@
                         <div class="message-container">
                             <div class="message-container-top">
                                 <div class="title">{{ $receiver->first_name ?? '' }} {{ $receiver->last_name ?? '' }}</div>
-                                {{-- <div class="time">7min</div> --}}
                             </div>
-                            {{-- <div class="text">If the super sale starts</div> --}}
                         </div>
                     </div>
                 </div>
@@ -557,11 +565,19 @@
                                             @foreach ($msg->attachments as $relPath)
                                                 @php
                                                     $extension = strtolower(pathinfo($relPath, PATHINFO_EXTENSION));
-                                                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']);
+                                                    $isImage = in_array($extension, [
+                                                        'jpg',
+                                                        'jpeg',
+                                                        'png',
+                                                        'gif',
+                                                        'webp',
+                                                        'svg',
+                                                    ]);
                                                 @endphp
                                                 <div class="attachment">
                                                     @if ($isImage)
-                                                        <img src="{{ asset($relPath) }}" alt="Image" onclick="openImageModal('{{ asset($relPath) }}')">
+                                                        <img src="{{ asset($relPath) }}" alt="Image"
+                                                            onclick="openImageModal('{{ asset($relPath) }}')">
                                                     @else
                                                         <a href="{{ asset($relPath) }}" target="_blank"
                                                             class="text-decoration-none">
@@ -601,11 +617,19 @@
                                             @foreach ($msg->attachments as $relPath)
                                                 @php
                                                     $extension = strtolower(pathinfo($relPath, PATHINFO_EXTENSION));
-                                                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']);
+                                                    $isImage = in_array($extension, [
+                                                        'jpg',
+                                                        'jpeg',
+                                                        'png',
+                                                        'gif',
+                                                        'webp',
+                                                        'svg',
+                                                    ]);
                                                 @endphp
                                                 <div class="attachment">
                                                     @if ($isImage)
-                                                        <img src="{{ asset($relPath) }}" alt="Image" onclick="openImageModal('{{ asset($relPath) }}')">
+                                                        <img src="{{ asset($relPath) }}" alt="Image"
+                                                            onclick="openImageModal('{{ asset($relPath) }}')">
                                                     @else
                                                         <a href="{{ asset($relPath) }}" target="_blank"
                                                             class="text-decoration-none">
@@ -829,9 +853,13 @@
         // Handle form submission for sending new messages
         document.getElementById('chatForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(this);
+            const form = this;
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerText = "Sending...";
 
-            // Add selected files to formData
+            const formData = new FormData(form);
+
             selectedFiles.forEach((file, index) => {
                 formData.append(`attachments[${index}]`, file);
             });
@@ -844,8 +872,21 @@
                     },
                     body: formData
                 })
-                .then(res => res.json())
-                .then(data => {
+                .then(async res => {
+                    const data = await res.json();
+
+                    // Always re-enable button and reset text
+                    submitButton.disabled = false;
+                    submitButton.innerText = "";
+                    // Optionally, restore the SVG icon:
+                    submitButton.innerHTML =
+                        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.963 7.12523L3.43173 1.23148C3.25625 1.12915 3.05419 1.08162 2.8515 1.09498C2.64881 1.10835 2.45475 1.182 2.29423 1.30648C2.13029 1.43582 2.01127 1.61352 1.95405 1.81434C1.89683 2.01516 1.90433 2.22891 1.97548 2.42523L3.73173 7.33148C3.74949 7.3804 3.78173 7.42275 3.82416 7.45289C3.86659 7.48304 3.91719 7.49955 3.96923 7.50023H8.48173C8.61147 7.49817 8.73717 7.54541 8.83345 7.63241C8.92972 7.71941 8.98942 7.83969 9.00048 7.96898C9.00475 8.03722 8.99498 8.10561 8.97178 8.16993C8.94857 8.23425 8.91242 8.29312 8.86556 8.34291C8.81869 8.3927 8.76212 8.43235 8.69932 8.45941C8.63653 8.48647 8.56885 8.50036 8.50048 8.50023H3.96923C3.91719 8.50091 3.86659 8.51742 3.82416 8.54757C3.78173 8.57771 3.74949 8.62006 3.73173 8.66898L1.97548 13.5752C1.92278 13.7264 1.9069 13.8879 1.92916 14.0464C1.95142 14.2049 2.01117 14.3559 2.10345 14.4866C2.19574 14.6174 2.31789 14.7243 2.45977 14.7984C2.60165 14.8725 2.75916 14.9117 2.91923 14.9127C3.08956 14.912 3.25704 14.869 3.40673 14.7877L13.963 8.87523C14.1176 8.7874 14.2462 8.66016 14.3357 8.50645C14.4252 8.35275 14.4723 8.17808 14.4723 8.00023C14.4723 7.82238 14.4252 7.64771 14.3357 7.494C14.2462 7.3403 14.1176 7.21305 13.963 7.12523Z" fill="white"/></svg>`;
+
+                    if (!res.ok) {
+                        // Show error message (you can display it above the form or as a toast)
+                        // alert(data.message || 'Failed to send message.');
+                        return;
+                    }
                     // Immediately display the sent message
                     addChatMessage(data, true);
 
@@ -862,7 +903,13 @@
                     const fileInput = this.querySelector('input[name="attachments[]"]');
                     fileInput.value = null;
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML =
+                        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.963 7.12523L3.43173 1.23148C3.25625 1.12915 3.05419 1.08162 2.8515 1.09498C2.64881 1.10835 2.45475 1.182 2.29423 1.30648C2.13029 1.43582 2.01127 1.61352 1.95405 1.81434C1.89683 2.01516 1.90433 2.22891 1.97548 2.42523L3.73173 7.33148C3.74949 7.3804 3.78173 7.42275 3.82416 7.45289C3.86659 7.48304 3.91719 7.49955 3.96923 7.50023H8.48173C8.61147 7.49817 8.73717 7.54541 8.83345 7.63241C8.92972 7.71941 8.98942 7.83969 9.00048 7.96898C9.00475 8.03722 8.99498 8.10561 8.97178 8.16993C8.94857 8.23425 8.91242 8.29312 8.86556 8.34291C8.81869 8.3927 8.76212 8.43235 8.69932 8.45941C8.63653 8.48647 8.56885 8.50036 8.50048 8.50023H3.96923C3.91719 8.50091 3.86659 8.51742 3.82416 8.54757C3.78173 8.57771 3.74949 8.62006 3.73173 8.66898L1.97548 13.5752C1.92278 13.7264 1.9069 13.8879 1.92916 14.0464C1.95142 14.2049 2.01117 14.3559 2.10345 14.4866C2.19574 14.6174 2.31789 14.7243 2.45977 14.7984C2.60165 14.8725 2.75916 14.9117 2.91923 14.9127C3.08956 14.912 3.25704 14.869 3.40673 14.7877L13.963 8.87523C14.1176 8.7874 14.2462 8.66016 14.3357 8.50645C14.4252 8.35275 14.4723 8.17808 14.4723 8.00023C14.4723 7.82238 14.4252 7.64771 14.3357 7.494C14.2462 7.3403 14.1176 7.21305 13.963 7.12523Z" fill="white"/></svg>`;
+                    // alert('Failed to send message.');
+                    // console.error(err);
+                });
         });
 
         // Listen for Enter key (without Shift) in the textarea to submit the form
@@ -965,7 +1012,6 @@
         const typingIndicator = document.getElementById('typingIndicator');
 
         messageTextarea.addEventListener('input', function() {
-            // Show typing indicator for other users (you'd implement this with websockets)
             clearTimeout(typingTimer);
             typingTimer = setTimeout(() => {
                 // Hide typing indicator after user stops typing

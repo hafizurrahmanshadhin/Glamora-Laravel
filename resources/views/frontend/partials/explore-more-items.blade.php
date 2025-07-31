@@ -20,7 +20,8 @@
     </div>
     <div class="explore-items">
         @foreach ($services as $service)
-            <a href="" class="explore-item">{{ $service->services_name }}</a>
+            <a href="{{ route('available-services', ['serviceId' => $service->id]) }}"
+                class="explore-item">{{ $service->services_name }}</a>
         @endforeach
         <a href="{{ route('service-category') }}" class="explore-item">Explore More
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="9" viewBox="0 0 16 9" fill="none">

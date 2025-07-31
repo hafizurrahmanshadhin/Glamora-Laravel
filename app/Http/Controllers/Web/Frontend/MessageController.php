@@ -59,9 +59,19 @@ class MessageController extends Controller {
             $validated = $request->validate([
                 'message'       => 'nullable|string',
                 'receiver_id'   => 'required|exists:users,id',
-                // Validate multiple files, each up to 30 MB
                 'attachments.*' => 'nullable|file|max:30720',
             ]);
+
+            // Require at least message or attachments
+            $hasText  = !empty(trim($validated['message'] ?? ''));
+            $hasFiles = $request->hasFile('attachments') && count($request->file('attachments')) > 0;
+
+            if (!$hasText && !$hasFiles) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please enter a message or attach a file.',
+                ], 422);
+            }
 
             $message              = new Message();
             $message->sender_id   = Auth::id();
@@ -75,17 +85,14 @@ class MessageController extends Controller {
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
                     if ($file->isValid()) {
-                        // Use Helper::fileUpload to store under public/uploads/chat_attachments/
                         $path = Helper::fileUpload($file, 'chat_attachments', null);
                         if ($path) {
-                            // e.g. 'uploads/chat_attachments/abcd1234_1685808589.pdf'
                             $savedPaths[] = $path;
                         }
                     }
                 }
             }
 
-            // Only assign if we have at least one
             if (count($savedPaths) > 0) {
                 $message->attachments = $savedPaths;
             }
@@ -93,13 +100,10 @@ class MessageController extends Controller {
             $message->save();
             $message->load('sender');
 
-            // Broadcast it
             broadcast(new MessageSendEvent($message))->toOthers();
 
             // Build avatar URL
-            $avatar = $message->sender->avatar
-            ? asset($message->sender->avatar)
-            : asset('backend/images/default_images/user_1.jpg');
+            $avatar = $message->sender->avatar ? asset($message->sender->avatar) : asset('backend/images/default_images/user_1.jpg');
 
             // Build public URLs for each attachment
             $publicAttachmentUrls = [];
@@ -112,7 +116,7 @@ class MessageController extends Controller {
             return response()->json([
                 'id'          => $message->id,
                 'message'     => $message->message,
-                'attachments' => $publicAttachmentUrls, // array of URLs
+                'attachments' => $publicAttachmentUrls,
                 'created_at'  => $message->created_at->format('h:i A'),
                 'sender'      => [
                     'id'         => $message->sender->id,

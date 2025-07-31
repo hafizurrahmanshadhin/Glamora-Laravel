@@ -11,49 +11,6 @@
 
 @section('content')
     <div class="dashboard-layout section-padding-x">
-        <div class="dashboard-left">
-            <div class="dashboard-profile-container">
-                <div class="top">
-                    <div class="img-content">
-                        <img src="{{ Auth::user()->businessInformation?->avatar ? asset(Auth::user()->businessInformation->avatar) : asset('backend/images/default_images/user_1.jpg') }}"
-                            alt>
-                        <div class="active-status"></div>
-                    </div>
-                    <div class="text-content">
-                        <div class="profile-title">
-                            {{ ucfirst(Auth::user()->first_name) . ' ' . ucfirst(Auth::user()->last_name) ?? '' }}</div>
-                        <div class="profile-text">
-                            @if (Auth::user()->role === 'beauty_expert')
-                                {{ Auth::user()->businessInformation?->business_address ?? '' }}
-                            @else
-                                {{ Auth::user()->email ?? '' }}
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bottom">
-                    <div class="bottom-top">
-                        <div class="item">
-                            <div class="title">Rating as buyer</div>
-                            <div class="ratings">
-                                ★★★★☆ <span>(4.5)</span>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="title">Upcoming Bookings (4)</div>
-                            <a class="profile-view-btn" href>View</a>
-                        </div>
-                    </div>
-                    <div class="bottom-bottom">
-                        <a href class="common-btn">
-                            View Bookings
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="dashboard-main-content">
             <div class="multistepform-section-2">
                 <div class="tm-multi-step-form-container">
@@ -115,14 +72,16 @@
                                     </div>
                                 </div>
 
-
                                 <div class="tm-multi-step-summary-item">
                                     <h3>Pricing & Inclusions</h3>
                                     <div class="tm-new-summary-important-info-wrapper">
                                         <div class="tm-new-summary-important-info">
                                             <p class="genarel-para-new">Book with a deposit of $0 $250 payable on the day
                                             </p>
-                                            <a href="#" class="location-p"> View inclusions & cancellation policy</a>
+                                            <a href="{{ route('inclusions-cancellation') }}" class="location-p"
+                                                target="_blank">
+                                                View inclusions & cancellation policy
+                                            </a>
                                             <p class="genarel-para-new tm-bonus-para">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none">

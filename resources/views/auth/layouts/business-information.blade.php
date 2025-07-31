@@ -11,6 +11,38 @@
     <script src="{{ asset('frontend/custom-downloaded-cdn/flatpickr.js') }}"></script>
     <link href="{{ asset('frontend/custom-downloaded-cdn/aos.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('frontend/css/loader-logo.css') }}" />
+
+    <style>
+        .upload-service-img-container {
+            position: relative;
+            /* establish positioning context */
+            display: inline-block;
+            /* shrink-wrap to the upload button */
+        }
+
+        .service-img-error {
+            position: absolute;
+            /* remove from normal flow */
+            top: 100%;
+            /* just below the container’s bottom edge */
+            left: 0;
+            /* align to its left edge */
+            margin-top: 4px;
+            /* small gap */
+            color: #d32f2f;
+            background: #fff4f4;
+            border: 1px solid #ffd6d6;
+            border-radius: 4px;
+            font-size: 13px;
+            padding: 6px 10px;
+            white-space: nowrap;
+            /* keep on one line */
+            display: none;
+            /* show only when you add `.show()` or inline style */
+            z-index: 10;
+            /* so it floats above table borders */
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -48,6 +80,7 @@
                                 d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                         </svg>
                     </div>
+                    <div id="profile-img-error" style="color: red; display: none; margin-top: 8px;"></div>
                 </div>
 
                 {{-- steps-inputs-container start --}}
@@ -103,6 +136,7 @@
                         <p style="color: #6B6B6B;" id="upload-btn">Upload Documents</p>
                     </div>
                     <div class="uploaded-files-list" id="uploaded-files-list"></div>
+                    <div id="document-upload-error" style="color: red; display: none; margin-top: 8px;"></div>
                 </div>
                 {{-- upload documents end --}}
 
@@ -378,6 +412,8 @@
                                             <path
                                                 d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                                         </svg>
+
+                                        <div class="service-img-error">Only image files (JPG, PNG, etc.) are allowed.</div>
                                     </div>
                                 </td>
                             </tr>
@@ -732,23 +768,33 @@
         document.querySelector('.upload-profile-circle').addEventListener('click', function() {
             document.getElementById('upload-profile-input').click();
         });
+
         document.querySelector('.upload-profile-img-close-btn').addEventListener('click', () => {
             const imgElement = document.querySelector('.upload-profile-img img');
             imgElement.src = '';
             document.querySelector('.upload-profile-img').style.display = 'none';
             document.getElementById('upload-profile-input').value = '';
-        })
+            document.getElementById('profile-img-error').style.display = 'none';
+        });
+
         document.getElementById('upload-profile-input').addEventListener('change', function(event) {
             const file = event.target.files[0];
+            const errorDiv = document.getElementById('profile-img-error');
             if (file) {
-
+                // Only allow image types
+                if (!file.type.startsWith('image/')) {
+                    errorDiv.textContent = 'Only image files (JPG, PNG, etc.) are allowed.';
+                    errorDiv.style.display = 'block';
+                    this.value = '';
+                    document.querySelector('.upload-profile-img').style.display = 'none';
+                    return;
+                }
+                errorDiv.style.display = 'none';
                 const imgElement = document.querySelector('.upload-profile-img img');
                 const reader = new FileReader();
-
                 reader.onload = function(e) {
                     imgElement.src = e.target.result;
                 };
-
                 reader.readAsDataURL(file);
                 document.querySelector('.upload-profile-img').style.display = 'block';
             }
@@ -802,6 +848,8 @@
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
                 "text/plain"
             ];
+            const errorDiv = document.getElementById('document-upload-error');
+            let errorShown = false;
 
             for (const file of files) {
                 if (allowedTypes.includes(file.type)) {
@@ -810,14 +858,20 @@
 
                     const fileElement = document.createElement('div');
                     fileElement.classList.add('uploaded-file');
-                    fileElement.innerHTML = `
-        <span>${file.name}</span>
-        <button class="close-btn" onclick="removeFile(this, '${file.name}')">X</button>
-    `;
+                    fileElement.innerHTML =
+                        `
+                            <span>${file.name}</span>
+                            <button class="close-btn" onclick="removeFile(this, '${file.name}')">X</button>
+                        `;
                     uploadedFilesList.appendChild(fileElement);
                 } else {
-                    console.log(`File type not allowed: ${file.name}`);
+                    errorDiv.textContent = 'Only document files (PDF, DOC, DOCX, XLS, XLSX, TXT) are allowed.';
+                    errorDiv.style.display = 'block';
+                    errorShown = true;
                 }
+            }
+            if (!errorShown) {
+                errorDiv.style.display = 'none';
             }
         }
 
@@ -842,35 +896,44 @@
             const uploadFileInput = container.querySelector('.service-file-input');
             const uploadedImg = container.querySelector('.service-uploaded-img');
             const serviceImgDeleteBtn = container.querySelector('.service-delete-btn');
+            const errorDiv = container.querySelector('.service-img-error'); // Get error div
 
-            // Add click event to the upload button
             uploadFileBtn.addEventListener('click', () => {
-                uploadFileInput.click(); // Simulate click on the file input
+                uploadFileInput.click();
             });
 
-            // Add change event to the file input
             uploadFileInput.addEventListener('change', (event) => {
                 const file = event.target.files[0];
                 if (file) {
+                    // Only allow image types
+                    if (!file.type.startsWith('image/')) {
+                        errorDiv.textContent = 'Only image files (JPG, PNG, etc.) are allowed.';
+                        errorDiv.style.display = 'block';
+                        uploadFileInput.value = '';
+                        uploadedImg.src = '';
+                        uploadedImg.style.display = 'none';
+                        uploadFileBtn.style.display = 'flex';
+                        serviceImgDeleteBtn.style.display = 'none';
+                        return;
+                    }
+                    errorDiv.style.display = 'none';
                     const reader = new FileReader();
-
-                    // Load the selected file
                     reader.onload = function(e) {
-                        uploadedImg.src = e.target.result; // Update the image source
+                        uploadedImg.src = e.target.result;
+                        uploadedImg.style.display = 'block';
                         uploadFileBtn.style.display = 'none';
                         serviceImgDeleteBtn.style.display = 'block';
                     };
-
-                    reader.readAsDataURL(file); // Read the file as a Data URL
+                    reader.readAsDataURL(file);
                 }
             });
 
-            // Add click event to delete the image
             serviceImgDeleteBtn.addEventListener('click', () => {
-                uploadedImg.src = ''; // Clear the image source
+                uploadedImg.src = '';
                 uploadFileBtn.style.display = 'flex';
                 serviceImgDeleteBtn.style.display = 'none';
-                uploadFileInput.value = ''; // Clear the file input
+                uploadFileInput.value = '';
+                errorDiv.style.display = 'none';
             });
         });
     </script>

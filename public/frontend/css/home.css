@@ -1104,3 +1104,74 @@
         font-size: 80px;
     }
 }
+
+/* Add at the end of your CSS file */
+@media only screen and (max-width: 650px) {
+    .dashboard-banner {
+        flex-direction: column !important;
+        padding: 12px !important;
+    }
+
+    .dashboard-banner .img-content {
+        width: 100% !important;
+        padding: 0 !important;
+        display: block !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .dashboard-banner .img-content input#calendar {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .flatpickr-calendar {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .dashboard-banner .img-content.ps-4 {
+        padding-left: 0 !important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .dashboard-banner {
+        flex-direction: column !important;
+        padding: 16px !important;
+    }
+
+    .dashboard-banner .img-content {
+        width: 100% !important;
+        padding: 0 !important;
+        display: block !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .dashboard-banner .img-content input#calendar {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    .dashboard-banner .img-content.ps-4 {
+        padding-left: 0 !important;
+    }
+
+    .flatpickr-calendar {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
+    }
+}

@@ -24,11 +24,8 @@ class MessageSendEvent implements ShouldBroadcastNow {
     }
 
     public function broadcastWith(): array {
-        $avatar = $this->message->sender->avatar
-            ? asset($this->message->sender->avatar)
-            : asset('backend/images/default_images/user_1.jpg');
+        $avatar = $this->message->sender->avatar ? asset($this->message->sender->avatar) : asset('backend/images/default_images/user_1.jpg');
 
-        // Build full URLs for each attachment
         $publicUrls = [];
         if (!empty($this->message->attachments) && is_array($this->message->attachments)) {
             foreach ($this->message->attachments as $relPath) {
